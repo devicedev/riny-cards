@@ -1,4 +1,4 @@
-.cards-tab {
+.decks-tab {
   flex: 3;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
   border: 1px solid #e8e8e8;
@@ -7,4 +7,4 @@
   flex-direction: column;
 }
 
-/*# sourceMappingURL=cards-tab.styles.css.map */
+/*# sourceMappingURL=decks-tab.styles.css.map */

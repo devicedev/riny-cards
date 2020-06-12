@@ -1,28 +1,28 @@
 import React, {Component} from 'react'
 
-import './cards-container.styles.css'
+import './decks-container.styles.css'
 import RinyCard from '../riny-card/riny-card.component'
 
-class CardsContainer extends Component {
+class DecksContainer extends Component {
   state = {
-    cards: [
+    decks: [
       {
         title: 'Unbekannte Wörter B2',
         description: '15.06.20',
-        numerOfElements:
+        numerOfElements: 5
       }
 
     ]
   }
 
   render() {
-    const {cards} = this.state
+    const {decks} = this.state
     return (
-      <div className={'cards-container'}>
-        {cards.map((card) => <RinyCard/>)}
+      <div className={'decks-container'}>
+        {decks.map((deck) => <RinyCard/>)}
       </div>
     )
   }
 }
 
-export default CardsContainer
+export default DecksContainer

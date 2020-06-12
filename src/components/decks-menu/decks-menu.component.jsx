@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 
 import MenuItem from '../menu-item/menu-item.component'
 
-import './cards-menu.styles.css'
+import './decks-menu.styles.css'
 
-class CardsMenu extends Component {
+class DecksMenu extends Component {
   state = {
     items: [
       {
@@ -27,11 +27,11 @@ class CardsMenu extends Component {
   render() {
     const {items} = this.state
     return (
-      <div className={'cards-menu'}>
+      <div className={'decks-menu'}>
         {items.map((item) => <MenuItem key={item.key} item={item}/>)}
       </div>
     )
   }
 }
 
-export default CardsMenu
+export default DecksMenu

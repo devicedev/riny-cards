@@ -1,0 +1,21 @@
+@import 'colors.scss';
+
+html {
+  font-size: 62.5%;
+  line-height: 1.5rem;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: $backGroundColor;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  padding-left: 15rem;
+  padding-right: 15rem;
+
+}

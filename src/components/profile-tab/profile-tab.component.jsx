@@ -1,9 +1,9 @@
 import React from 'react'
-import './profiletab.styles.css'
+import './profile-tab.styles.css'
 
 const ProfileTab = () => {
   return (
-    <div>
+    <div className={"profile-tab"}>
 
     </div>
   )
