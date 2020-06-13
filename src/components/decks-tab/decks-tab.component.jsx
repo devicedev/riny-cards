@@ -1,17 +1,17 @@
-import React from 'react'
+import React from "react";
 
-import DecksMenu from '../decks-menu/decks-menu.component'
-import DecksContainer from '../decks-container/decks-container.component'
+import { DecksMenu } from "..";
+import DecksContainer from "../decks-container/decks-container.component";
 
-import './decks-tab.styles.css'
+import "./decks-tab.styles.css";
 
 const DecksTab = () => {
   return (
-    <div className={'decks-tab'}>
-      <DecksMenu/>
+    <div className={"decks-tab"}>
+      <DecksMenu />
       <DecksContainer />
     </div>
-  )
-}
+  );
+};
 
-export default DecksTab
+export default DecksTab;
