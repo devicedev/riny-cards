@@ -1,15 +1,20 @@
-import React from 'react';
-import './App.css';
-import Navbar from './components/navbar/navbar.component'
-import Content from './components/content/content.component'
+import React from 'react'
+import {ThemeProvider} from 'styled-components'
+
+import {Navbar, Content} from './components/profile'
+
+import GlobalStyle from './theme/globalStyles'
+import Theme from './theme/theme'
 
 function App() {
   return (
-    <div className="App">
-        <Navbar />
-        <Content />
-    </div>
-  );
+    <ThemeProvider theme={Theme}>
+      <GlobalStyle/>
+      <div>
+        <Navbar/>
+        <Content/>
+      </div>
+    </ThemeProvider>)
 }
 
-export default App;
+export default App

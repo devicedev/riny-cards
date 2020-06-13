@@ -1,13 +1,13 @@
-import React from "react";
-import styled, { css } from "styled-components";
+import React from 'react'
+import styled, {css} from 'styled-components'
 
-export const MenuItem = ({ item: { name, active } }) => (
+export const MenuItem = ({item: {name, active}}) => (
   <Wrapper active={active}>{name}</Wrapper>
-);
+)
 
 const Wrapper = styled.div`
   font-size: 1.5rem;
-  color: $textColor;
+  color: ${({theme}) => theme.colors.textColor};
   font-weight: bold;
   padding-top: 2rem;
   padding-bottom: 1rem;
@@ -16,9 +16,9 @@ const Wrapper = styled.div`
   margin-left: 5rem;
 
   ${(props) =>
-    props.active &&
-    css`
+  props.active &&
+  css`
       border-bottom: 4px solid #32cdff;
       color: #32cdff;
     `}
-`;
+`
