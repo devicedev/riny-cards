@@ -5,7 +5,7 @@ const GlobalStyle = createGlobalStyle`
   html {
     font-size: 62.5%;
     line-height: 1.5rem;
-    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-family: 'Roboto', sans-serif;
     letter-spacing: 0.1rem;
   }
   

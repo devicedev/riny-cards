@@ -8,7 +8,6 @@ export const Navbar = () => {
     </Wrapper>
   )
 }
-
 const Wrapper = styled.div`
 
 `

@@ -5,7 +5,6 @@ import { MenuItem } from ".";
 
 export const DecksMenu = () => {
   const [items] = useState(initialState);
-
   return (
     <Wrapper>
       {items.map((item) => (
@@ -14,14 +13,12 @@ export const DecksMenu = () => {
     </Wrapper>
   );
 };
-
 const Wrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
   border-bottom: 1px solid #c5c5c5;
 `;
-
 const initialState = [
   {
     name: "Decks",

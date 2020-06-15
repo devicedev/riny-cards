@@ -12,10 +12,9 @@ export const Content = () => {
     </Wrapper>
   )
 }
-
 const Wrapper = styled.div`
   display: flex;
   padding-top: 10rem;
   padding-bottom: 10rem;
-  height: 100vh;
+  min-height: 100vh;
 `

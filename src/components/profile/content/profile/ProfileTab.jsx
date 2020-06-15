@@ -8,7 +8,6 @@ export const ProfileTab = () => {
     </Wrapper>
   )
 }
-
 const Wrapper = styled.div`
   flex: 1.5;
 `
