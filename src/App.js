@@ -1,10 +1,10 @@
-import React from 'react'
-import {ThemeProvider} from 'styled-components'
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
 
-import {Navbar, Content} from './components/profile'
+import { Navbar, Content } from './components/profile';
 
-import GlobalStyle from './theme/globalStyles'
-import Theme from './theme/theme'
+import GlobalStyle from './theme/globalStyles';
+import Theme from './theme/theme';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Navbar/>
         <Content/>
       </div>
-    </ThemeProvider>)
+    </ThemeProvider>);
 }
 
-export default App
+export default App;
