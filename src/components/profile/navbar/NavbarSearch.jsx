@@ -1,0 +1,69 @@
+import React, { useContext, useState } from 'react'
+import styled, { ThemeContext } from 'styled-components'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
+
+export const NavbarSearch = () => {
+  const theme = useContext(ThemeContext)
+  const [isFocused, setIsFocused] = useState(false)
+  const [search, setSearch] = useState('')
+  const searchBox = React.createRef()
+
+  const handleClear = () => {
+    searchBox.current.focus()
+    setSearch('')
+  }
+  return (
+    <Wrapper isFocused={isFocused}>
+      <FontAwesomeIcon
+        className={'nav-search-icon'} icon={faSearch}
+        color={isFocused ? theme.colors.primaryColor : '#FFF'}
+      />
+      <InputWrapper
+        ref={searchBox}
+        type="text"
+        placeholder={'SEARCH'}
+        value={search}
+        onChange={(e) => setSearch(searchBox.current.value)}
+        isFocused={isFocused}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+      />
+      {search && <FontAwesomeIcon
+        onClick={handleClear}
+        className={'nav-close-icon'} icon={faTimes}
+        color={isFocused ? theme.colors.primaryColor : '#FFF'}
+      />}
+    </Wrapper>
+  )
+}
+const Wrapper = styled.div`
+  flex: auto;
+  margin-left: 2rem;
+  margin-right: 5rem;
+  padding: 1rem 0;
+  background-color: ${({ isFocused }) => isFocused ? '#FFF' : '#6fdcff'};
+  border-radius: 10px;
+  display: flex;
+  .nav-search-icon{
+    font-size: 2rem;
+    margin-left: 1rem;
+  }
+  .nav-close-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+  }
+`
+const InputWrapper = styled.input`
+  flex: auto;
+  font-size: 1.5rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  background-color: inherit;
+  outline: none;
+  border: none;
+  color: ${({ isFocused }) => isFocused ? '#000' : '#FFF'};
+  &::placeholder {
+    color: #FFF;
+  }
+`

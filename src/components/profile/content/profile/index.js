@@ -1,1 +1,1 @@
-export {ProfileTab} from './ProfileTab'
+export { ProfileTab } from './ProfileTab'

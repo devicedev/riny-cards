@@ -1,19 +1,24 @@
-import React from 'react';
-import { ThemeProvider } from 'styled-components';
+import React from 'react'
+import styled, { ThemeProvider } from 'styled-components'
 
-import { Navbar, Content } from './components/profile';
+import { Navbar, Content } from './components/profile'
 
-import GlobalStyle from './theme/globalStyles';
-import Theme from './theme/theme';
+import GlobalStyle from './theme/globalStyles'
+import Theme from './theme/theme'
 
 function App() {
   return (
     <ThemeProvider theme={Theme}>
       <GlobalStyle/>
-      <div>
+      <Wrapper>
         <Navbar/>
         <Content/>
-      </div>
-    </ThemeProvider>);
+      </Wrapper>
+    </ThemeProvider>
+  )
 }
-export default App;
+
+const Wrapper = styled.div`
+`
+
+export default App

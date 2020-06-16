@@ -1,7 +1,6 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
-  
   html {
     font-size: 62.5%;
     line-height: 1.5rem;
@@ -19,11 +18,6 @@ const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
   }
-  
-  #root {
-    padding-left: 15rem;
-    padding-right: 15rem;
-  }
-`;
+`
 
-export default GlobalStyle;
+export default GlobalStyle
