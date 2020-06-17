@@ -15,8 +15,8 @@ export const NavbarSearch = () => {
   }
   return (
     <Wrapper isFocused={isFocused}>
-      <FontAwesomeIcon
-        className={'nav-search-icon'} icon={faSearch}
+      <NavSearchIcon
+        icon={faSearch}
         color={isFocused ? theme.colors.primaryColor : '#FFF'}
       />
       <InputWrapper
@@ -29,11 +29,13 @@ export const NavbarSearch = () => {
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
-      {search && <FontAwesomeIcon
-        onClick={handleClear}
-        className={'nav-close-icon'} icon={faTimes}
-        color={isFocused ? theme.colors.primaryColor : '#FFF'}
-      />}
+      {search && (
+        <NavCloseIcon
+          onClick={handleClear}
+          icon={faTimes}
+          color={isFocused ? theme.colors.primaryColor : '#FFF'}
+        />
+      )}
     </Wrapper>
   )
 }
@@ -42,17 +44,18 @@ const Wrapper = styled.div`
   margin-left: 2rem;
   margin-right: 5rem;
   padding: 1rem 0;
-  background-color: ${({ isFocused }) => isFocused ? '#FFF' : '#6fdcff'};
+  background-color: ${({ isFocused }) => (isFocused ? '#FFF' : '#6fdcff')};
   border-radius: 10px;
   display: flex;
-  .nav-search-icon{
-    font-size: 2rem;
-    margin-left: 1rem;
-  }
-  .nav-close-icon {
-    font-size: 2rem;
-    margin-right: 1rem;
-  }
+  transition: all 0.5s;
+`
+const NavSearchIcon = styled(FontAwesomeIcon)`
+  font-size: 2rem;
+  margin-left: 1rem;
+`
+const NavCloseIcon = styled(FontAwesomeIcon)`
+  font-size: 2rem;
+  margin-right: 1rem;
 `
 const InputWrapper = styled.input`
   flex: auto;
@@ -62,8 +65,8 @@ const InputWrapper = styled.input`
   background-color: inherit;
   outline: none;
   border: none;
-  color: ${({ isFocused }) => isFocused ? '#000' : '#FFF'};
+  color: ${({ isFocused }) => (isFocused ? '#000' : '#FFF')};
   &::placeholder {
-    color: #FFF;
+    color: #fff;
   }
 `

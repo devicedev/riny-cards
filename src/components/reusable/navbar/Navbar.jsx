@@ -1,14 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { NavbarLeft } from './NavbarLeft'
-import { NavbarRight } from './NavbarRight'
-
-export const Navbar = () => {
-  return <Wrapper>
-    <NavbarLeft/>
-    <NavbarRight/>
-  </Wrapper>
+export const Navbar = ({ children }) => {
+  return <Wrapper>{children}</Wrapper>
 }
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.primaryColor};

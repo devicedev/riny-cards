@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { MenuItem } from '.'
 
 export const DecksMenu = () => {
-  const [items] = useState(initialState)
+  const [items] = useState(initialDecksMenuItems)
   return (
     <Wrapper>
       {items.map((item) => (
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   align-items: center;
   border-bottom: 1px solid #c5c5c5;
 `
-const initialState = [
+const initialDecksMenuItems = [
   {
     name: 'Decks',
     active: true,
