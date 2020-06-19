@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { faHome, faPlus, faUser } from '@fortawesome/free-solid-svg-icons'
 
 import { NavbarRight, NavItem } from '../../reusable'
@@ -8,16 +8,15 @@ const user = {
 }
 
 export const ProfileNavbarRight = () => {
-  const [navItems] = useState(initialNavItems)
   return (
     <NavbarRight>
-      {navItems.map((item) => (
-        <NavItem key={item.title} item={item} />
+      {navItems.map((item, index) => (
+        <NavItem key={index} item={item} />
       ))}
     </NavbarRight>
   )
 }
-const initialNavItems = [
+const navItems = [
   {
     title: 'HOME',
     icon: faHome,

@@ -1,28 +1,25 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { NavbarRight, NavItem } from '../../reusable'
 import { faSignInAlt, faUser } from '@fortawesome/free-solid-svg-icons'
 
 export const MainNavbarRight = () => {
-  const [navItems] = useState(initialNavItems)
   return (
     <NavbarRight>
-      {navItems.map((item) => (
-        <NavItem key={item.title} item={item} />
+      {navItems.map((item, index) => (
+        <NavItem key={index} item={item} />
       ))}
     </NavbarRight>
   )
 }
-const initialNavItems = [
+const navItems = [
   {
-    title: 'SIGNIN',
+    title: 'SIGN UP',
     icon: faSignInAlt,
-    url: '/signin',
-    active: false,
+    url: '/signup',
   },
   {
-    title: 'LOGIN',
+    title: 'LOG IN',
     icon: faUser,
     url: '/login',
-    active: false,
   },
 ]

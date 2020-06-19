@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navbar, NavbarLeft, Content, SiteTitle } from '../reusable'
+import { Navbar, NavbarLeft, Content, SiteTitle, Footer } from '../reusable'
 import { NavbarSearch, ProfileNavbarRight } from './navbar'
 import { ProfileTab, DecksTab } from './content'
 
@@ -17,6 +17,7 @@ export const Profile = () => {
         <ProfileTab />
         <DecksTab />
       </Content>
+      <Footer />
     </>
   )
 }

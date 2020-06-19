@@ -1,6 +1,7 @@
 import React from 'react'
-import { Navbar, NavbarLeft, SiteTitle, Content } from '../reusable'
+import { Navbar, NavbarLeft, SiteTitle, Content, Footer } from '../reusable'
 import { MainNavbarRight } from './navbar'
+import { Authentication } from './'
 
 export const Main = ({ children }) => {
   return (
@@ -11,7 +12,10 @@ export const Main = ({ children }) => {
         </NavbarLeft>
         <MainNavbarRight />
       </Navbar>
-      <Content>{children}</Content>
+      <Content>
+        <Authentication>{children}</Authentication>
+      </Content>
+      <Footer />
     </>
   )
 }
