@@ -1,5 +1,5 @@
 import React from 'react'
-import { faHome, faPlus, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faPlus, faUser,faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { NavbarRight, NavItem } from '../../reusable'
 
@@ -28,8 +28,13 @@ const navItems = [
     url: '/create',
   },
   {
+    title: "LOGOUT",
+    icon: faSignOutAlt,
+    url: '/logout',
+  },
+  {
     title: user.name.toUpperCase(),
     icon: faUser,
-    url: '/profile',
+    url: '/',
   },
 ]

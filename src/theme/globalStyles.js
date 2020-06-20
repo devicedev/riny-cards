@@ -5,7 +5,6 @@ const GlobalStyle = createGlobalStyle`
     font-size: 62.5%;
     line-height: 1.5rem;
     font-family: 'Roboto', sans-serif;
-    letter-spacing: 0.1rem;
   }
   
   body {
@@ -17,6 +16,13 @@ const GlobalStyle = createGlobalStyle`
   
   * {
     box-sizing: border-box;
+  }
+  .Toastify__toast--success,
+  .Toastify__toast--info,
+  .Toastify__toast--error {
+    font-size: 1.5rem;
+    border-radius: 10px;
+    
   }
 `
 

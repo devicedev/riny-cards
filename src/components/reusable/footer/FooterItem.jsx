@@ -24,5 +24,4 @@ const NavLinkWrapper = styled(NavLink)`
 `
 const FooterItemTitle = styled.div`
   font-weight: 500;
-  letter-spacing: normal;
 `

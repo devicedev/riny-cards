@@ -32,5 +32,4 @@ const NavItemIcon = styled(FontAwesomeIcon)`
 `
 const NavItemTitle = styled.div`
   font-weight: 500;
-  letter-spacing: normal;
 `
