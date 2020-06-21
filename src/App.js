@@ -1,5 +1,6 @@
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
+import {ToastContainer} from 'react-toastify'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
 import { Profile, LogIn, SignUp, NotFound, LogOut, ProtectedRoute } from './components'
@@ -13,6 +14,7 @@ const App = () => {
   return (
     <ThemeProvider theme={Theme}>
       <GlobalStyle/>
+      <ToastContainer/>
       <Router>
         <Switch>
           <ProtectedRoute path={'/'} fail={'/login'} exact component={Profile}/>

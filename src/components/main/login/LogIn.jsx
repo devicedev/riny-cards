@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Formik, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
@@ -30,12 +30,13 @@ const validationSchema = Yup.object({
   password: Yup.string().required('Password field is required')
 })
 
-export const LogIn = ({history}) => {
+export const LogIn = ({ history }) => {
   const onSubmit = ({ email, password }, { setSubmitting }) => {
-    const apiCall = async() => {
+    const apiCall = async () => {
       try {
         await authService.login(email, password)
-        history.replace({ pathname: '/', state: { from: history.location.pathname } })
+        history.replace('/')
+        toast.success('You have successfully logged in', { position: toast.POSITION.BOTTOM_RIGHT })
       } catch ({ response }) {
         if (response && response.data) {
           toast.error(response.data, { position: toast.POSITION.BOTTOM_RIGHT })

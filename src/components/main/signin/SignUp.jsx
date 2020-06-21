@@ -48,7 +48,8 @@ export const SignUp = ({ history }) => {
       try {
         const { headers } = await userService.register({ name, email, password })
         authService.loginJwt(headers['x-auth-token'])
-        history.replace({ pathname: '/', state: { from: history.location.pathname } })
+        history.replace('/')
+        toast.success('You have successfully signed up', { position: toast.POSITION.BOTTOM_RIGHT })
       } catch ({ response }) {
         if (response && response.data)
           toast.error(response.data,{position:toast.POSITION.BOTTOM_RIGHT})
