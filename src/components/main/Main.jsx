@@ -1,10 +1,11 @@
 import React from 'react'
+import { ToastContainer } from 'react-toastify'
+
 import { Navbar, NavbarLeft, SiteTitle, Content, Footer } from '../reusable'
 import { MainNavbarRight } from './navbar'
 import { Authentication } from './'
-import { ToastContainer } from 'react-toastify'
 
-export const Main = ({ children }) => {
+export const Main = (Child) => {
   return (
     <>
       <ToastContainer/>
@@ -15,7 +16,9 @@ export const Main = ({ children }) => {
         <MainNavbarRight/>
       </Navbar>
       <Content>
-        <Authentication>{children}</Authentication>
+        <Authentication>
+          {Child}
+        </Authentication>
       </Content>
       <Footer/>
     </>

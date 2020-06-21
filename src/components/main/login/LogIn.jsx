@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Redirect } from 'react-router-dom'
 import { Formik, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 
 import authService from '../../../services/authService'
 
+import { Main } from '../'
 import {
   ContentWrapper,
   TitleWrapper,
@@ -23,19 +23,6 @@ const initialValues = {
   email: '',
   password: ''
 }
-const onSubmit = async ({ email, password }, { setSubmitting }) => {
-  try {
-    await authService.login(email, password)
-    toast.success('You have successfully logged in')
-    window.location = '/'
-  } catch ({ response }) {
-    if (response && response.data) {
-      toast.error(response.data)
-    }
-  } finally {
-    setSubmitting(false)
-  }
-}
 const validationSchema = Yup.object({
   email: Yup.string()
     .email('Invalid email format')
@@ -43,10 +30,20 @@ const validationSchema = Yup.object({
   password: Yup.string().required('Password field is required')
 })
 
-export const LogIn = () => {
-  const user = authService.getCurrentUser()
-  if (user) return <Redirect to={'/'}/>
-  return (
+export const LogIn = ({history}) => {
+  const onSubmit = async ({ email, password }, { setSubmitting }) => {
+    try {
+      await authService.login(email, password)
+      history.replace({ pathname: '/', state: { from: history.location.pathname } })
+    } catch ({ response }) {
+      if (response && response.data) {
+        toast.error(response.data)
+      }
+    } finally {
+      setSubmitting(false)
+    }
+  }
+  return Main(
     <ContentWrapper>
       <TitleWrapper>Log in</TitleWrapper>
       <SubTitle>
@@ -57,7 +54,6 @@ export const LogIn = () => {
         initialValues={initialValues}
         onSubmit={onSubmit}
         validationSchema={validationSchema}
-        validateOnMount
       >
         {({ isValid, isSubmitting }) => (
           <FormWrapper>

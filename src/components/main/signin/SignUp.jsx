@@ -1,5 +1,4 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
 import { Formik, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
@@ -7,6 +6,7 @@ import { toast } from 'react-toastify'
 import userService from '../../../services/userService'
 import authService from '../../../services/authService'
 
+import { Main } from '../'
 import {
   ContentWrapper,
   TitleWrapper,
@@ -23,19 +23,6 @@ const initialValues = {
   name: '',
   email: '',
   password: ''
-}
-const onSubmit = async ({ name, email, password }, { setSubmitting }) => {
-  try {
-    const { headers } = await userService.register({ name, email, password })
-    authService.loginJwt(headers['x-auth-token'])
-    toast.success('You have successfully signed up')
-    window.location = '/'
-  } catch ({ response }) {
-    if (response && response.data)
-      toast.error(response.data)
-  } finally {
-    setSubmitting(false)
-  }
 }
 const validationSchema = Yup.object({
   name: Yup
@@ -55,10 +42,20 @@ const validationSchema = Yup.object({
     )
     .required('Password field is required')
 })
-export const SignUp = () => {
-  const user = authService.getCurrentUser()
-  if (user) return <Redirect to={'/'}/>
-  return (<ContentWrapper>
+export const SignUp = ({history}) => {
+  const onSubmit = async ({ name, email, password }, { setSubmitting }) => {
+    try {
+      const { headers } = await userService.register({ name, email, password })
+      authService.loginJwt(headers['x-auth-token'])
+      history.replace({ pathname: '/', state: { from: history.location.pathname } })
+    } catch ({ response }) {
+      if (response && response.data)
+        toast.error(response.data)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+  return Main(<ContentWrapper>
       <TitleWrapper>Create a rinycards account</TitleWrapper>
       <SubTitle> Already have an account? <LinkWrapper to={'/login'}> Log In</LinkWrapper> </SubTitle>
       <Formik
