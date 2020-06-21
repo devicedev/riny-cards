@@ -22,7 +22,7 @@ const GlobalStyle = createGlobalStyle`
   .Toastify__toast--error {
     font-size: 1.5rem;
     border-radius: 10px;
-    
+    filter: brightness(110%);
   }
 `
 

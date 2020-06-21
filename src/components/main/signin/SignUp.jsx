@@ -42,18 +42,21 @@ const validationSchema = Yup.object({
     )
     .required('Password field is required')
 })
-export const SignUp = ({history}) => {
-  const onSubmit = async ({ name, email, password }, { setSubmitting }) => {
-    try {
-      const { headers } = await userService.register({ name, email, password })
-      authService.loginJwt(headers['x-auth-token'])
-      history.replace({ pathname: '/', state: { from: history.location.pathname } })
-    } catch ({ response }) {
-      if (response && response.data)
-        toast.error(response.data)
-    } finally {
-      setSubmitting(false)
+export const SignUp = ({ history }) => {
+  const onSubmit = ({ name, email, password }, { setSubmitting }) => {
+    const apiCall = async () => {
+      try {
+        const { headers } = await userService.register({ name, email, password })
+        authService.loginJwt(headers['x-auth-token'])
+        history.replace({ pathname: '/', state: { from: history.location.pathname } })
+      } catch ({ response }) {
+        if (response && response.data)
+          toast.error(response.data,{position:toast.POSITION.BOTTOM_RIGHT})
+      }
     }
+    apiCall()
+    setSubmitting(false)
+
   }
   return Main(<ContentWrapper>
       <TitleWrapper>Create a rinycards account</TitleWrapper>
@@ -89,7 +92,7 @@ export const SignUp = ({history}) => {
               />
               <ErrorMessage name={'password'} component={ErrorWrapper}/>
             </FormControl>
-            <Button disabled={!isValid || isSubmitting}>Sign Up</Button>
+            <Button type={'submit'} disabled={!isValid || isSubmitting}>Sign Up</Button>
           </FormWrapper>
         )}
       </Formik>

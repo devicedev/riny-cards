@@ -31,17 +31,19 @@ const validationSchema = Yup.object({
 })
 
 export const LogIn = ({history}) => {
-  const onSubmit = async ({ email, password }, { setSubmitting }) => {
-    try {
-      await authService.login(email, password)
-      history.replace({ pathname: '/', state: { from: history.location.pathname } })
-    } catch ({ response }) {
-      if (response && response.data) {
-        toast.error(response.data)
+  const onSubmit = ({ email, password }, { setSubmitting }) => {
+    const apiCall = async() => {
+      try {
+        await authService.login(email, password)
+        history.replace({ pathname: '/', state: { from: history.location.pathname } })
+      } catch ({ response }) {
+        if (response && response.data) {
+          toast.error(response.data, { position: toast.POSITION.BOTTOM_RIGHT })
+        }
       }
-    } finally {
-      setSubmitting(false)
     }
+    apiCall()
+    setSubmitting(false)
   }
   return Main(
     <ContentWrapper>

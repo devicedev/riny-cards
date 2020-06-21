@@ -17,7 +17,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  border-bottom: 1px solid #c5c5c5;
+  border-bottom: .1px solid ${({theme}) => theme.colors.menuTextColor};
 `
 const initialDecksMenuItems = [
   {
