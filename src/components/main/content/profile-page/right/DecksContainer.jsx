@@ -2,20 +2,24 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { toast } from 'react-toastify'
 
-import { RinyDeck } from '.'
-
-import { getDecks } from '../../../../services/decksService'
-import testInitialState from '../../../../res/testInitialState'
+import { RinyDeck } from './index'
+import decksService from '../../../../../services/decksService'
 
 export const DecksContainer = () => {
   const [decks, setDecks] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchData = async () => {
-    const { data } = await getDecks()
-    setDecks(data.slice(0, 15))
-    setIsLoading(false)
+    try {
+      const { data } = await decksService.getDecks()
+      setDecks(data.slice(0, 15))
+    } catch ({ response }) {
+      toast.error(response.data)
+    } finally {
+      setIsLoading(false)
+    }
   }
   useEffect(() => {
     fetchData()
@@ -24,9 +28,9 @@ export const DecksContainer = () => {
   return (
     <Wrapper>
       {isLoading ? (
-        <LoadingIconWrapper icon={faSpinner} pulse />
+        <LoadingIconWrapper icon={faSpinner} pulse/>
       ) : (
-        decks.map((deck) => <RinyDeck key={deck._id} deck={deck} />)
+        decks.map((deck) => <RinyDeck key={deck._id} deck={deck}/>)
       )}
     </Wrapper>
   )

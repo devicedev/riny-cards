@@ -14,15 +14,16 @@ export const ProtectedRoute = ({ fail, condition = 'loggedIn', component: Compon
             from: props.location
           }
         }}/>
+        const user = authService.getCurrentUser()
         switch (condition) {
           case 'loggedIn':
-            if (authService.getCurrentUser())
+            if (user)
               return Component ? <Component {...props}/> : render(props)
             else
               redirect = true
             break
           case 'loggedOut':
-            if (!authService.getCurrentUser())
+            if (!user)
               return Component ? <Component {...props}/> : render(props)
             else
               redirect = true

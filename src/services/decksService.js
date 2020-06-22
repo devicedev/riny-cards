@@ -1,8 +1,16 @@
 import httpService from './httpService'
-import { apiUrl } from '../config'
 
-const apiEndpoint = `${apiUrl}decks`
+const apiEndpoint = `decks`
 
-export function getDecks() {
+function getDecks() {
   return httpService.get(apiEndpoint)
+}
+
+function getDeck(id) {
+  return httpService.get(`${apiEndpoint}/${id}`)
+}
+
+export default {
+  getDecks,
+  getDeck
 }

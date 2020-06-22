@@ -3,16 +3,31 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { Field, Form } from 'formik'
 
-export const Authentication = ({ children }) => {
-  return <Wrapper>{children}</Wrapper>
+import { Root, NavbarLeft, SiteTitle } from '../reusable'
+import { MainNavbarRight } from './navbar'
+
+export const Auth = (authContent) => {
+  const navbar = {
+    navbarLeft:
+      <NavbarLeft>
+        <SiteTitle/>
+      </NavbarLeft>,
+    navbarRight:
+      <MainNavbarRight/>
+  }
+  const content =
+    <Wrapper>
+      {authContent}
+    </Wrapper>
+  return Root(navbar, content)
 }
+
 const Wrapper = styled.div`
   flex: 1;
   padding: 0 35rem;
   text-align: center;
   height: 70vh; 
 `
-
 export const ContentWrapper = styled.div`
   border-radius: 25px;
   background-color: #fff;

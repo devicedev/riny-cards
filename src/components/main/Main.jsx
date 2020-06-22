@@ -1,24 +1,20 @@
 import React from 'react'
 
-import { Navbar, NavbarLeft, SiteTitle, Content, Footer } from '../reusable'
-import { MainNavbarRight } from './navbar'
-import { Authentication } from './'
+import { Root, NavbarLeft, SiteTitle } from '../reusable'
+import { NavbarSearch, ProfileNavbarRight } from './navbar'
 
-export const Main = (Child) => {
-  return (
-    <>
-      <Navbar>
-        <NavbarLeft>
-          <SiteTitle/>
-        </NavbarLeft>
-        <MainNavbarRight/>
-      </Navbar>
-      <Content>
-        <Authentication>
-          {Child}
-        </Authentication>
-      </Content>
-      <Footer/>
-    </>
-  )
+export const Main = (tabs) => {
+  const navbar = {
+    navbarLeft:
+      <NavbarLeft>
+        <SiteTitle/>
+        <NavbarSearch/>
+      </NavbarLeft>,
+    navbarRight:
+      <ProfileNavbarRight/>
+  }
+  const content = <>
+    {tabs}
+  </>
+  return Root(navbar, content)
 }

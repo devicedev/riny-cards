@@ -1,0 +1,1 @@
+export { LogInPage } from './LogInPage'

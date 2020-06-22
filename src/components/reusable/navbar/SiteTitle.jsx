@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBitcoin } from '@fortawesome/free-brands-svg-icons'
+import {faReact} from '@fortawesome/free-brands-svg-icons'
 
 import { siteTitle } from '../../../config'
 
 export const SiteTitle = () => {
   return (
     <>
-      <NavLeftLogo icon={faBitcoin} />
+      <NavLeftLogo icon={faReact} />
       <SiteTitleWrapper>{siteTitle}</SiteTitleWrapper>
     </>
   )

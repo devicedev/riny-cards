@@ -1,4 +1,5 @@
-export { Content } from './Content'
 export { ProtectedRoute } from './ProtectedRoute'
+export { Root } from './Root'
 export * from './navbar'
+export * from './content'
 export * from './footer'

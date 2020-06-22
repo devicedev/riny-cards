@@ -1,1 +1,2 @@
-export { MainNavbarRight } from './MainNavbarRight'
+export { ProfileNavbarRight } from './ProfileNavbarRight'
+export { NavbarSearch } from './NavbarSearch'

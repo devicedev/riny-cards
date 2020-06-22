@@ -21,7 +21,7 @@ const Wrapper = styled.div`
 const footerItems = [
   {
     title: 'About',
-    url: '/profile',
+    url: '/main',
   },
   {
     title: 'Terms',
