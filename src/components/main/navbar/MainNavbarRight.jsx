@@ -4,9 +4,9 @@ import { faHome, faPlus, faUser,faSignOutAlt } from '@fortawesome/free-solid-svg
 import { NavbarRight, NavItem } from '../../reusable'
 import authService from '../../../services/authService'
 
-const user = authService.getCurrentUser()
-
 export const MainNavbarRight = () => {
+  const user = authService.getCurrentUser()
+  navItems.slice(-1)[0].title = user.name.toUpperCase();
   return (
     <NavbarRight>
       {navItems.map((item, index) => (
@@ -32,7 +32,6 @@ const navItems = [
     url: '/logout',
   },
   {
-    title: user.name.toUpperCase(),
     icon: faUser,
     url: '/',
   },
