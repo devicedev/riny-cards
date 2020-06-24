@@ -33,8 +33,6 @@ export const ProtectedRoute = ({ fail, condition = 'loggedIn', component: Compon
         }
         if (redirect)
           return RedirectComponent
-
-
       }}
     />
   )

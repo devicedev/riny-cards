@@ -1,7 +1,7 @@
 import http from "./httpService";
 import jwtDecode from "jwt-decode";
 
-import { jwtTokenKey } from "../config";
+const {REACT_APP_JWT_TOKEN_KEY} = process.env
 
 const apiEndpoint = `auth`;
 
@@ -15,10 +15,10 @@ async function login(email, password) {
   http.setJwt(token)
 }
 function loginJwt(token) {
-  localStorage.setItem(jwtTokenKey, token);
+  localStorage.setItem(REACT_APP_JWT_TOKEN_KEY, token);
 }
 function getJwt() {
-  return localStorage.getItem(jwtTokenKey);
+  return localStorage.getItem(REACT_APP_JWT_TOKEN_KEY);
 }
 function getCurrentUser() {
   try {
@@ -29,6 +29,6 @@ function getCurrentUser() {
   }
 }
 function logoutJwt() {
-  localStorage.removeItem(jwtTokenKey);
+  localStorage.removeItem(REACT_APP_JWT_TOKEN_KEY);
 }
 export default { getCurrentUser, getJwt, login, loginJwt, logoutJwt };
