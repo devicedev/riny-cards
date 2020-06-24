@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Root, NavbarLeft, SiteTitle } from '../reusable'
-import { NavbarSearch, ProfileNavbarRight } from './navbar'
+import { NavbarSearch, MainNavbarRight } from './navbar'
 
 export const Main = (tabs) => {
   const navbar = {
@@ -11,7 +11,7 @@ export const Main = (tabs) => {
         <NavbarSearch/>
       </NavbarLeft>,
     navbarRight:
-      <ProfileNavbarRight/>
+      <MainNavbarRight/>
   }
   const content = <>
     {tabs}

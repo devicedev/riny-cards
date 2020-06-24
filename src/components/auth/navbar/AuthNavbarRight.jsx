@@ -2,7 +2,7 @@ import React from 'react'
 import { NavbarRight, NavItem } from '../../reusable'
 import { faSignInAlt, faUser } from '@fortawesome/free-solid-svg-icons'
 
-export const MainNavbarRight = () => {
+export const AuthNavbarRight = () => {
   return (
     <NavbarRight>
       {navItems.map((item, index) => (

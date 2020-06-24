@@ -1,14 +1,17 @@
 import React from 'react'
-import { Menu, RightTab } from '../../../../reusable/content'
+import { Menu, RightTab } from '../../../../reusable/'
+import { CardsContainer } from './'
 
-export const CardsTab = () => {
+export const CardsTab = ({ deckId }) => {
   const content = <>
-
+    <CardsMenu deckId={deckId}/>
+    <CardsContainer/>
   </>
   return RightTab(content)
 }
 
-const CardsMenu = () => {
+const CardsMenu = ({ deckId }) => {
+  cardsMenuItems[0].url = `/decks/${deckId}`
   return (
     <Menu items={cardsMenuItems}/>
   )
@@ -16,10 +19,10 @@ const CardsMenu = () => {
 const cardsMenuItems = [
   {
     name: 'Lessons',
-    url: '/'
+    url: '/decks/'
   },
   {
     name: 'Cards',
     url: '/cards'
-  },
+  }
 ]

@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom'
 export const NavItem = ({ item: { icon, title, url } }) => {
   return (
     <NavLinkWrapper to={url}>
-      {icon && <NavItemIcon icon={icon} />}
+      {icon && <NavItemIcon icon={icon}/>}
       <NavItemTitle>{title}</NavItemTitle>
     </NavLinkWrapper>
   )
@@ -21,7 +21,7 @@ const NavLinkWrapper = styled(NavLink)`
   cursor: pointer;
   text-decoration: none;
   &:hover {
-    opacity: 0.7;
+      opacity: .8;
   }
   &.active {
     border-bottom: 2px #fff solid;

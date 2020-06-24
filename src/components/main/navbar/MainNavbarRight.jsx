@@ -2,12 +2,11 @@ import React from 'react'
 import { faHome, faPlus, faUser,faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { NavbarRight, NavItem } from '../../reusable'
+import authService from '../../../services/authService'
 
-const user = {
-  name: 'Radu',
-}
+const user = authService.getCurrentUser()
 
-export const ProfileNavbarRight = () => {
+export const MainNavbarRight = () => {
   return (
     <NavbarRight>
       {navItems.map((item, index) => (

@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 import { Main } from '../../'
 import { DeckTab, CardsTab } from './'
+import { DeckContext, DeckProvider } from './DeckContext'
 
 import decksService from '../../../../services/decksService'
 
-export const DeckPage = ({ match }) => {
-  const [deck, setDeck] = useState({})
-  const [loading, setLoading] = useState(true)
+export const DeckPageWrapper = ({ match }) => {
+  const { deck: { setDeck }, loading: { setLoading } } = useContext(DeckContext)
 
   const fetchData = async () => {
     const { id } = match.params
@@ -25,9 +25,15 @@ export const DeckPage = ({ match }) => {
   useEffect(() => {
     fetchData()
   }, [])
-  const tabs = <>
-    <DeckTab/>
-    <CardsTab/>
-  </>
+  const tabs =
+    <>
+      <DeckTab/>
+      <CardsTab deckId={match.params.id}/>
+    </>
   return Main(tabs)
+}
+export const DeckPage = (props) => {
+  return <DeckProvider>
+    <DeckPageWrapper {...props}/>
+  </DeckProvider>
 }

@@ -2,6 +2,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import logger from './logService'
 
+axios.defaults.baseURL = process.env.REACT_APP_API_URL
 axios.interceptors.response.use(null, error => {
   const clientError =
     error.response &&
@@ -14,7 +15,6 @@ axios.interceptors.response.use(null, error => {
   return Promise.reject(error)
 })
 
-axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
 function setJwt(jwt) {
   if (jwt) axios.defaults.headers.common["x-auth-token"] = jwt;

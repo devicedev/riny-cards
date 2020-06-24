@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 
-import { RinyDeck } from './index'
+import { RinyDeck } from './'
+import { LoadingIconWrapper } from '../../../../'
+
 import decksService from '../../../../../services/decksService'
 
 export const DecksContainer = () => {
@@ -40,9 +41,4 @@ const Wrapper = styled.div`
   flex-direction: column;
   padding: 4rem 5rem;
   height: auto;
-`
-const LoadingIconWrapper = styled(FontAwesomeIcon)`
-  align-self: center;
-  font-size: 5rem;
-  color: ${({ theme }) => theme.colors.primaryColor};
 `

@@ -11,4 +11,5 @@ const Wrapper = styled.div`
   position: fixed;
   padding: 0 15rem;
   display: flex;
+  z-index: 100;
 `

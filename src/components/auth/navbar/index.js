@@ -1,1 +1,1 @@
-export { MainNavbarRight } from './MainNavbarRight'
+export { AuthNavbarRight } from './AuthNavbarRight'

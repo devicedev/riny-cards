@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Field, Form } from 'formik'
 
 import { Root, NavbarLeft, SiteTitle } from '../reusable'
-import { MainNavbarRight } from './navbar'
+import { AuthNavbarRight } from './navbar'
 
 export const Auth = (authContent) => {
   const navbar = {
@@ -13,7 +13,7 @@ export const Auth = (authContent) => {
         <SiteTitle/>
       </NavbarLeft>,
     navbarRight:
-      <MainNavbarRight/>
+      <AuthNavbarRight/>
   }
   const content =
     <Wrapper>

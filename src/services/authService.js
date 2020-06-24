@@ -25,6 +25,7 @@ function getCurrentUser() {
     const jwt = getJwt();
     return jwtDecode(jwt);
   } catch (e) {
+    console.log(e)
     return null;
   }
 }
