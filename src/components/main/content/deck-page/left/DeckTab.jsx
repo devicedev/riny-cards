@@ -5,7 +5,6 @@ import { LeftTab } from '../../../../'
 
 export const DeckTab = () => {
   const content = <Wrapper>
-
   </Wrapper>
   return LeftTab(content)
 }

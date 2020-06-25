@@ -28,7 +28,7 @@ export const DeckPageWrapper = ({ match }) => {
   const tabs =
     <>
       <DeckTab/>
-      <CardsTab deckId={match.params.id}/>
+      <CardsTab/>
     </>
   return Main(tabs)
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faReact} from '@fortawesome/free-brands-svg-icons'
 
@@ -7,12 +8,17 @@ import { siteTitle } from '../../../config'
 
 export const SiteTitle = () => {
   return (
-    <>
+    <LinkWrapper to={'/'}>
       <NavLeftLogo icon={faReact} />
       <SiteTitleWrapper>{siteTitle}</SiteTitleWrapper>
-    </>
+    </LinkWrapper>
   )
 }
+const LinkWrapper = styled(Link)`
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+`
 const NavLeftLogo = styled(FontAwesomeIcon)`
   color: #fff;
   font-size: 4rem;
