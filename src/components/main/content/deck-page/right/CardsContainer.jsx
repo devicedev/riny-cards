@@ -1,23 +1,15 @@
 import React, { useContext } from 'react'
-import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 import { Card } from './'
 import { DeckContext } from '../DeckContext'
-import { LoadingIconWrapper } from '../../../../reusable/content'
-import { ContainerWrapper, LoadingIconWrapperCards } from './CardsTab'
+import { Container } from './'
+
 
 export const CardsContainer = () => {
-  const { deck: { deck }, loading: { loading } } = useContext(DeckContext)
-  return (
-    <>
-      {loading ? (
-        <LoadingIconWrapperCards> <LoadingIconWrapper icon={faSpinner} pulse/></LoadingIconWrapperCards>
-      ) : (
-        <ContainerWrapper>
-          {deck.cards.map((card, index) => <Card key={index} card={card}/>)}
-        </ContainerWrapper>
-      )}
-    </>
-  )
+  const { deck: { deck } } = useContext(DeckContext)
+  const empty = Object.keys(deck).length === 0
+  return <Container>
+    {!empty && deck.cards.map((card, index) => <Card key={index} card={card}/>)}
+  </Container>
 }
 

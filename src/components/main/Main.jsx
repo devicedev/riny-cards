@@ -3,7 +3,7 @@ import React from 'react'
 import { Root, NavbarLeft, SiteTitle } from '../reusable'
 import { NavbarSearch, MainNavbarRight } from './navbar'
 
-export const Main = (tabs) => {
+export const Main = (content) => {
   const navbar = {
     navbarLeft:
       <NavbarLeft>
@@ -13,8 +13,5 @@ export const Main = (tabs) => {
     navbarRight:
       <MainNavbarRight/>
   }
-  const content = <>
-    {tabs}
-  </>
   return Root(navbar, content)
 }

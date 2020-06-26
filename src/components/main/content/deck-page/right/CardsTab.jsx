@@ -1,11 +1,13 @@
-import React, {  useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
-import {Menu, RightTab } from '../../../../reusable/'
+import { LoadingIconWrapper, Menu, RightTab } from '../../../../reusable/'
 import { CardsContainer, LessonsContainer } from './'
+import { DeckContext } from '../DeckContext'
 
 export const CardsTab = () => {
-  const [activeTab, setActiveTab] = useState(<CardsContainer/>)
+  const [activeTab, setActiveTab] = useState(<LessonsContainer/>)
   const handleOnChange = (component) => setActiveTab(component)
   const content = <>
     <CardsMenu onChange={handleOnChange}/>
@@ -15,23 +17,43 @@ export const CardsTab = () => {
 }
 
 const CardsMenu = ({ onChange }) => {
-  const cardsMenuItems = [
+  const { deck: { deck }, loading: { loading } } = useContext(DeckContext)
+  const cardsName = `Cards${loading ? '' : ` (${deck.cards.length})`}`
+  const initialCardMenuItems = [
     {
       name: 'Lessons',
       change: () => onChange(<LessonsContainer/>),
-      active: false
+      active: true
     },
     {
-      name: 'Cards',
+      name: cardsName,
       change: () => onChange(<CardsContainer/>),
-      active: true
+      active: false
     }
   ]
+  const [menuItems, setMenuItems] = useState(initialCardMenuItems)
+  useEffect(() => {
+    setMenuItems(initialCardMenuItems)
+  }, [loading])
   return (
-    <Menu items={cardsMenuItems}/>
+    <Menu items={menuItems} updateMenuItems={setMenuItems}/>
   )
 }
 
+export const Container = ({ children }) => {
+  const { loading: { loading } } = useContext(DeckContext)
+  return (
+    <>
+      {loading ? (
+        <LoadingIconWrapperCards> <LoadingIconWrapper icon={faSpinner} pulse/></LoadingIconWrapperCards>
+      ) : (
+        <ContainerWrapper>
+          {children}
+        </ContainerWrapper>
+      )}
+    </>
+  )
+}
 export const Wrapper = styled.div`
   display: inline-flex;
   padding: 4rem 7rem;

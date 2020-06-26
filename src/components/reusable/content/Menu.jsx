@@ -1,20 +1,19 @@
-import React, { useState } from 'react'
+import React  from 'react'
 import styled, { css } from 'styled-components'
 
-export const Menu = ({ items }) => {
-  const [menuItems, setMenuItems] = useState(items)
+export const Menu = ({ items, updateMenuItems }) => {
   const handleItemClicked = (name) => {
-    const oldItems = menuItems.map(item => {
+    const oldItems = items.map(item => {
       return { ...item, active: false }
     })
     const activeItem = oldItems.filter(item => item.name === name)[0]
     activeItem.active = true
-    setMenuItems(oldItems)
+    updateMenuItems(oldItems)
     activeItem.change()
   }
   return (
     <Wrapper>
-      {menuItems.map((item) => (
+      {items.map((item) => (
         <MenuItem key={item.name} onClick={handleItemClicked} item={item}/>
       ))}
     </Wrapper>

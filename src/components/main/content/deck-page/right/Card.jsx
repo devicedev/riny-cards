@@ -5,10 +5,10 @@ export const Card = ({ card }) => {
   const [flipped, setFlipped] = useState(false)
   const degree = flipped ? '180deg' : '0'
   const style = { transform: `rotateY(${degree})` }
-  const onClick = () => setFlipped(!flipped)
+  const handleOnClick = () => setFlipped(!flipped)
   return <Wrapper>
     <CardWrapper
-      onClick={onClick}
+      onClick={handleOnClick}
       style={style}>
       <Front>
         <Text>

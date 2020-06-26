@@ -17,20 +17,21 @@ const DecksMenu = ({ onChange }) => {
     {
       name: 'Decks',
       change: () => onChange(<DecksContainer/>),
-      active:true,
+      active: true
     },
     {
       name: 'Followers',
       change: () => onChange(<></>),
-      active:false,
+      active: false
     },
     {
       name: 'Following',
       change: () => onChange(<></>),
-      active:false
+      active: false
     }
   ]
+  const [menuItems, setMenuItems] = useState(decksMenuItems)
   return (
-    <Menu items={decksMenuItems}/>
+    <Menu items={menuItems} updateMenuItems={setMenuItems}/>
   )
 }

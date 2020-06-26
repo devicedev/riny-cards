@@ -17,7 +17,9 @@ export const DecksContainer = () => {
       const { data } = await decksService.getDecks()
       setDecks(data.slice(0, 15))
     } catch ({ response }) {
-      toast.error(response.data)
+      if (response && response.data) {
+        toast.error(response.data)
+      }
     } finally {
       setIsLoading(false)
     }
