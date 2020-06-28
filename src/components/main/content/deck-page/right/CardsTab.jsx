@@ -6,23 +6,23 @@ import { LoadingIconWrapper, Menu, RightTab } from '../../../../reusable/'
 import { CardsContainer, LessonsContainer } from './'
 import { DeckContext } from '../DeckContext'
 
-export const CardsTab = () => {
-  const [activeTab, setActiveTab] = useState(<LessonsContainer/>)
+export const CardsTab = ({ onLessonClicked }) => {
+  const [activeTab, setActiveTab] = useState(<LessonsContainer onLessonClicked={onLessonClicked}/>)
   const handleOnChange = (component) => setActiveTab(component)
   const content = <>
-    <CardsMenu onChange={handleOnChange}/>
+    <CardsMenu onChange={handleOnChange} onLessonClicked={onLessonClicked}/>
     {activeTab}
   </>
   return RightTab(content)
 }
 
-const CardsMenu = ({ onChange }) => {
+const CardsMenu = ({ onChange, onLessonClicked }) => {
   const { deck: { deck }, loading: { loading } } = useContext(DeckContext)
   const cardsName = `Cards${loading ? '' : ` (${deck.cards.length})`}`
   const initialCardMenuItems = [
     {
       name: 'Lessons',
-      change: () => onChange(<LessonsContainer/>),
+      change: () => onChange(<LessonsContainer onLessonClicked={onLessonClicked}/>),
       active: true
     },
     {

@@ -1,11 +1,10 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
 
 import { Container } from './'
 import { DeckContext } from '../DeckContext'
 
-export const LessonsContainer = () => {
+export const LessonsContainer = ({ onLessonClicked }) => {
   const { deck: { deck } } = useContext(DeckContext)
   const empty = Object.keys(deck).length === 0
   const iterateLessons = () => {
@@ -13,17 +12,23 @@ export const LessonsContainer = () => {
     for (let i = 0; i < deck.cards.length; i += 5) {
       lessons.push(deck.cards.slice(i, i + 5))
     }
-    console.log(lessons)
     return lessons
   }
   return (
     <Container>
-      {!empty && iterateLessons().map((lesson, index) => <LessonContainer key={index} lesson={lesson} index={index}/>)}
+      {!empty && iterateLessons().map((lesson, index) =>
+        <LessonContainer
+          key={index}
+          lesson={lesson}
+          index={index}
+          onLessonClicked={onLessonClicked}
+        />
+      )}
     </Container>
   )
 }
-const LessonContainer = ({ lesson, index }) => {
-  return <LessonWrapper>
+const LessonContainer = ({ lesson, index, onLessonClicked }) => {
+  return <LessonWrapper onClick={() => onLessonClicked(lesson)}>
     {index + 1}
   </LessonWrapper>
 }
@@ -40,10 +45,10 @@ const LessonWrapper = styled.div`
   font-size: 2.5rem;
   color: ${({ theme }) => theme.colors.textColor};
   box-shadow: 
-    0 1.73494px 5.20482px rgba(0,0,0,.1),
-    0 6.07229px 0 -1px #FFF,
-    0 6.07229px 5.20482px rgba(0,0,0,.1),
-    0 10.40964px 0 -1px #FFF,
-    0 10.40964px 5.20482px rgba(0,0,0,.1)
+    0 1px 5px rgba(0,0,0,.1),
+    0 6px 0 -1px #FFF,
+    0 6px 5px rgba(0,0,0,.1),
+    0 10px 0 -1px #FFF,
+    0 10px 5px rgba(0,0,0,.1)
 
 `

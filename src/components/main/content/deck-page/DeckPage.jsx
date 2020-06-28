@@ -9,7 +9,6 @@ import decksService from '../../../../services/decksService'
 
 export const DeckPageWrapper = ({ match }) => {
   const [lesson, setLesson] = useState({})
-  const [state, setState] = useState('tabs')
   const { deck: { setDeck }, loading: { setLoading } } = useContext(DeckContext)
 
   const fetchData = async () => {
@@ -27,23 +26,14 @@ export const DeckPageWrapper = ({ match }) => {
   useEffect(() => {
     fetchData()
   }, [])
-  let content
-  switch (state) {
-    case 'tabs':
-      content = <>
-        <DeckTab/>
-        <CardsTab/>
-      </>
-      break
-    case 'lesson':
-      content = <>
+  const handleLessonClicked = (lesson) => setLesson(lesson)
+  const content = Object.keys(lesson).length !== 0 ?
+    <>
 
-      </>
-      break
-    default:
-      content = <></>
-      break
-  }
+    </> : <>
+      <DeckTab/>
+      <CardsTab onLessonClicked={handleLessonClicked}/>
+    </>
   return Main(content)
 }
 export const DeckPage = (props) => {

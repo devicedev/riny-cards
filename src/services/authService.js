@@ -12,9 +12,9 @@ async function login(email, password) {
     data: { token }
   } = await http.post(apiEndpoint, { email, password });
   loginJwt(token);
-  http.setJwt(token)
 }
 function loginJwt(token) {
+  http.setJwt(token)
   localStorage.setItem(REACT_APP_JWT_TOKEN_KEY, token);
 }
 function getJwt() {

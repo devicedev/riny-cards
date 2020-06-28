@@ -37,9 +37,9 @@ const ImgWrapper = styled.img`
   max-height: 100%;
   box-shadow:
    0 0 25px 0 rgba(0, 0, 0, 0.04)
-  ,0 1.73494px 5.20482px rgba(0,0,0,.1)
-  , 0 6.07229px 0 -1px #fff, 0 6.07229px 5.20482px rgba(0,0,0,.1)
-  , 0 10.40964px 0 -1px #fff, 0 10.40964px 5.20482px rgba(0,0,0,.1)
+  ,0 1px 5px rgba(0,0,0,.1)
+  , 0 6px 0 -1px #fff, 0 6px 5px rgba(0,0,0,.1)
+  , 0 10px 0 -1px #fff, 0 10px 5px rgba(0,0,0,.1)
 `
 const ContentWrapper = styled.div`
   display: flex;

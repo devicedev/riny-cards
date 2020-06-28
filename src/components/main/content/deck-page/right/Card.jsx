@@ -6,18 +6,21 @@ export const Card = ({ card }) => {
   const degree = flipped ? '180deg' : '0'
   const style = { transform: `rotateY(${degree})` }
   const handleOnClick = () => setFlipped(!flipped)
+
+  const fontCardStyle = calcCardStyle(card.front.length)
+  const backCardStyle = calcCardStyle(card.back.length)
   return <Wrapper>
     <CardWrapper
       onClick={handleOnClick}
       style={style}>
-      <Front>
+      <Front style={fontCardStyle}>
         <Text>
           {card.front}
         </Text>
       </Front>
-      <Back>
+      <Back style={backCardStyle}>
         <Text>
-        {card.back}
+          {card.back}
         </Text>
       </Back>
     </CardWrapper>
@@ -28,9 +31,7 @@ const Wrapper = styled.div`
   padding: 10rem 0;
   height: 23rem;
   margin: 0 2rem 3rem 0;
-  font-size: 2.5rem;
   font-weight: 500;
-  line-height: 3.5rem;
   position: relative;
   color: ${({ theme }) => theme.colors.textColor};
 `
@@ -64,3 +65,18 @@ const Text = styled.div`
 const Back = styled(Parent)`
   transform: rotateY(180deg);
 `
+const calcCardStyle = (length) => {
+  let amount = 0
+  if (length >= 50) {
+    while (length > 0 && amount < 6) {
+      length -= 50
+      amount++
+    }
+  }
+  const fontSize = 2.5 - amount * .4
+  const lineHeight = 4 - amount * .4
+  return {
+    fontSize: `${fontSize}rem`,
+    lineHeight: `${lineHeight}rem`
+  }
+}
