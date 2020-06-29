@@ -3,10 +3,10 @@ import { ThemeProvider } from 'styled-components'
 import { ToastContainer } from 'react-toastify'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
-import { ProfilePage, DeckPage, LogInPage, SignUpPage, NotFound, LogOut, ProtectedRoute } from './components'
+import { ProtectedRoute } from './components'
+import { ProfilePage, DeckPage, LogInPage, SignUpPage, NotFoundPage, LogOutPage } from './pages'
 
-import GlobalStyle from './theme/globalStyles'
-import Theme from './theme/theme'
+import {GlobalStyle,Theme} from './theme'
 
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -19,7 +19,7 @@ const App = () => {
         <Switch>
           <ProtectedRoute path={'/'} fail={'/login'} exact component={ProfilePage}/>
           <ProtectedRoute path={'/decks/:id'} fail={'/login'} component={DeckPage}/>
-          <ProtectedRoute path={'/logout'} fail={'/login'} component={LogOut}/>
+          <ProtectedRoute path={'/logout'} fail={'/login'} component={LogOutPage}/>
           <ProtectedRoute
             path={'/login'}
             fail={'/'}
@@ -32,7 +32,7 @@ const App = () => {
             condition={'loggedOut'}
             component={SignUpPage}
           />
-          <Route path={'/not-found'} component={NotFound}/>
+          <Route path={'/not-found'} component={NotFoundPage}/>
           <Redirect to={'/not-found'}/>
         </Switch>
       </Router>

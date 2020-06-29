@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   html {
     font-size: 62.5%;
     line-height: 1.5rem;
@@ -25,5 +25,3 @@ const GlobalStyle = createGlobalStyle`
     filter: brightness(110%);
   }
 `
-
-export default GlobalStyle

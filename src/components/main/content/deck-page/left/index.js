@@ -1,1 +1,0 @@
-export { DeckTab } from './DeckTab'
