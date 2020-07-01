@@ -3,8 +3,9 @@ import styled from 'styled-components'
 
 import { Container } from './'
 import { DeckContext } from '../../utils/DeckContext'
+import { Link } from 'react-router-dom'
 
-export const LessonsContainer = ({ onLessonClicked }) => {
+export const LessonsContainer = () => {
   const { deck: { deck } } = useContext(DeckContext)
   const empty = Object.keys(deck).length === 0
   const iterateLessons = () => {
@@ -19,28 +20,28 @@ export const LessonsContainer = ({ onLessonClicked }) => {
       {!empty && iterateLessons().map((lesson, index) =>
         <LessonContainer
           key={index}
-          lesson={lesson}
           index={index}
-          onLessonClicked={onLessonClicked}
+          deckId={deck._id}
         />
       )}
     </Container>
   )
 }
-const LessonContainer = ({ lesson, index, onLessonClicked }) => {
-  return <LessonWrapper onClick={() => onLessonClicked(lesson)}>
+const LessonContainer = ({ index, deckId }) => {
+  return <LessonWrapper to={`/decks/${deckId}/${index}`}>
     {index + 1}
   </LessonWrapper>
 }
-const LessonWrapper = styled.div`
+const LessonWrapper = styled(Link)`
   display: inline-flex;
+  text-decoration: none;
   justify-content: center;
   align-items: center;
   height: 16rem;
   cursor: pointer;
   flex-basis: 20%;
   font-weight: bold;
-  border-radius: 1.5rem;
+  border-radius: 15px;
   margin: 0 3rem 2rem 0;
   font-size: 2.5rem;
   color: ${({ theme }) => theme.colors.textColor};

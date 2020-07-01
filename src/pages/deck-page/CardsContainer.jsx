@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 
-import { DeckContext } from '../../utils/DeckContext'
+import { DeckContext, calcCardStyle } from '../../utils'
 import { Container } from './'
 
 export const CardsContainer = () => {
@@ -17,14 +17,14 @@ const Card = ({ card }) => {
   const degree = flipped ? '180deg' : '0'
   const style = { transform: `rotateY(${degree})` }
   const handleOnClick = () => setFlipped(!flipped)
-
-  const fontCardStyle = calcCardStyle(card.front.length)
-  const backCardStyle = calcCardStyle(card.back.length)
+  const scale = 50
+  const frontCardStyle = calcCardStyle(card.front.length, scale)
+  const backCardStyle = calcCardStyle(card.back.length, scale)
   return <CardWrapper>
     <AnimatedCardWrapper
       onClick={handleOnClick}
       style={style}>
-      <Front style={fontCardStyle}>
+      <Front style={frontCardStyle}>
         <Text>
           {card.front}
         </Text>
@@ -76,18 +76,3 @@ const Text = styled.div`
 const Back = styled(Parent)`
   transform: rotateY(180deg);
 `
-const calcCardStyle = (length) => {
-  let amount = 0
-  if (length >= 50) {
-    while (length > 0 && amount < 6) {
-      length -= 50
-      amount++
-    }
-  }
-  const fontSize = 2.5 - amount * .4
-  const lineHeight = 4 - amount * .4
-  return {
-    fontSize: `${fontSize}rem`,
-    lineHeight: `${lineHeight}rem`
-  }
-}

@@ -1,13 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faReact} from '@fortawesome/free-brands-svg-icons'
+import { ReactComponent as Logo } from '../res/logo.svg'
 
 export const SiteTitle = () => {
   return (
     <LinkWrapper to={'/'}>
-      <NavLeftLogo icon={faReact} />
+      <BeneLogo/>
       <SiteTitleWrapper>rinycards</SiteTitleWrapper>
     </LinkWrapper>
   )
@@ -17,9 +16,8 @@ const LinkWrapper = styled(Link)`
   display: flex;
   align-items: center;
 `
-const NavLeftLogo = styled(FontAwesomeIcon)`
-  color: #fff;
-  font-size: 4rem;
+const BeneLogo = styled(Logo)`
+  height: 4rem;
 `
 const SiteTitleWrapper = styled.h1`
   color: #fff;
