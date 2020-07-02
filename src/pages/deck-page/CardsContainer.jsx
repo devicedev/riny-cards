@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
+import { useSpring, animated } from 'react-spring'
 
 import { DeckContext, calcCardStyle } from '../../utils'
 import { Container } from './'
@@ -14,65 +15,55 @@ export const CardsContainer = () => {
 
 const Card = ({ card }) => {
   const [flipped, setFlipped] = useState(false)
-  const degree = flipped ? '180deg' : '0'
-  const style = { transform: `rotateY(${degree})` }
-  const handleOnClick = () => setFlipped(!flipped)
+  const handleOnClick = () => setFlipped(state => !state)
+  const { transform, opacity } = useSpring({
+    opacity: flipped ? 1 : 0,
+    transform: `perspective(600px) rotateY(${flipped ? -180 : 0}deg)`,
+    config: { mass: 5, tension: 500, friction: 80 }
+  })
   const scale = 50
-  const frontCardStyle = calcCardStyle(card.front.length, scale)
-  const backCardStyle = calcCardStyle(card.back.length, scale)
-  return <CardWrapper>
-    <AnimatedCardWrapper
-      onClick={handleOnClick}
-      style={style}>
-      <Front style={frontCardStyle}>
-        <Text>
-          {card.front}
-        </Text>
-      </Front>
-      <Back style={backCardStyle}>
-        <Text>
-          {card.back}
-        </Text>
-      </Back>
-    </AnimatedCardWrapper>
+  const frontCardStyle = {
+    opacity: opacity.interpolate(o => 1 - o * 3),
+    transform,
+    ...calcCardStyle(card.front.length, scale)
+  }
+  const backCardStyle = {
+    opacity,
+    transform: transform.interpolate(t => `${t} rotateY(-180deg)`),
+    ...calcCardStyle(card.back.length, scale)
+  }
+  return <CardWrapper
+    onClick={handleOnClick}
+  >
+    <CardSide style={frontCardStyle}>
+      {card.front}
+    </CardSide>
+    <CardSide style={backCardStyle}>
+      {card.back}
+    </CardSide>
   </CardWrapper>
 }
 const CardWrapper = styled.div`
   flex-basis: 30%;
-  padding: 10rem 0;
+  display:flex;
+  justify-content: center;
+  align-items: center;
   height: 23rem;
   margin: 0 2rem 3rem 0;
   font-weight: 500;
   position: relative;
   color: ${({ theme }) => theme.colors.textColor};
 `
-const AnimatedCardWrapper = styled.div`
-  transform-style: preserve-3d;
-  transition: .4s all ease;
-  width: 100%;
-  height: 100%;
-  border-radius: 25px;
-  box-shadow: 0 3px 10px 0 rgba(0,0,0,.18);
-  top: 0;
-  left: 0;
-  position: absolute;
-`
-const Parent = styled.div`
+const CardSide = styled(animated.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  backface-visibility: hidden;
+  border-radius: 25px;
+  box-shadow: 0 3px 10px 0 rgba(0,0,0,.18);
   padding: 2rem;
   width: 100%;
   height: 100%;
   position: absolute;
-`
-const Front = styled(Parent)`
-`
-const Text = styled.div`
+  will-change: transform, opacity;
   word-wrap: break-word;
-  width: 100%;
-`
-const Back = styled(Parent)`
-  transform: rotateY(180deg);
 `

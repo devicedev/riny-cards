@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -24,6 +24,8 @@ export const LessonPage = () => {
   const [index, setIndex] = useState(0)
   const currentCard = lesson[index]
 
+  const [shouldFocus, setShouldFocus] = useState(false)
+
   const fetchLesson = async () => {
     try {
       const { data: lesson } = await lessonService.get(id, lessonIndex)
@@ -35,24 +37,20 @@ export const LessonPage = () => {
       setIsLoading(false)
     }
   }
+
   useEffect(() => {
     fetchLesson()
   }, [])
 
   const handleOnNext = (answer) => {
-    setIndex(index + 1)
+    setIndex(state => state + 1)
   }
-  const rinyCards = isLoading ? [] : lesson.map((card) => ({ style }) =>
-    <RinyCard
-      card={card}
-      style={style}
-      onNext={handleOnNext}
-    />
-  )
   const transitions = useTransition(index, p => p, {
-    from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
+    from: { opacity: 0, transform: `translate3d(${index === 0 ? 0 : 100}%,0,0)` },
     enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
-    leave: { opacity: 0, transform: 'translate3d(-100%,0,0)' }
+    leave: { opacity: 0, transform: 'translate3d(-100%,0,0)' },
+    onStart: (_, phase) => phase === 'enter' && setShouldFocus(index === 0),
+    onRest: (_, phase) => phase === 'leave' && setShouldFocus(true)
   })
 
   const content = <Wrapper>
@@ -62,8 +60,14 @@ export const LessonPage = () => {
         <ProgressBarContainer onClose={handleClose}/>
         <CardsSlider>
           {transitions.map(({ item, props, key }) => {
-            const RinyCard = rinyCards[item]
-            return <RinyCard key={key} style={props}/>
+            const card = lesson[item]
+            return <RinyCard
+              key={key}
+              style={props}
+              card={card}
+              onNext={handleOnNext}
+              shouldFocus={shouldFocus}
+            />
           })}
         </CardsSlider>
         {!isClosedModal && <CloseModal/>}</>
@@ -81,6 +85,7 @@ const Wrapper = styled.div`
   justify-content: center;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
 `
+
 const ProgressBarContainer = ({ onClose }) => {
   return <ProgressBarWrapper>
     <ProgressBarCloseIcon onClick={onClose} icon={faTimes}/>
@@ -105,19 +110,17 @@ const ProgressBar = styled.div`
   background-color: ${({ theme }) => theme.colors.progressBarColor};
   border-radius: 10px;
 `
-const CardsSlider = styled.div`
-  flex-basis: 90%;
-  display: flex;
-  position: relative;
-  width: 100%;
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
-`
-const RinyCard = ({ card, onNext, style }) => {
+
+const RinyCard = ({ card, onNext, style, shouldFocus }) => {
   const [answer, setAnswer] = useState('')
-  const cardStyle = calcCardStyle(card.front.length, 20)
+  const inputRef = useRef()
+  const cardStyle = calcCardStyle(card.front.length, 100)
   const handleKeyDown = (e) => e.key === 'Enter' ? onNext(answer) : null
+  useEffect(() => {
+    if (shouldFocus)
+      inputRef.current.focus()
+
+  }, [shouldFocus])
   return <RinyCardWrapper style={style}>
     <Card style={cardStyle}>
       {card.front}
@@ -131,6 +134,7 @@ const RinyCard = ({ card, onNext, style }) => {
           value={answer}
           onChange={(e) => setAnswer(e.currentTarget.value)}
           onKeyDown={handleKeyDown}
+          ref={inputRef}
           placeholder={'Enter the answer...'}
         />
         <NextButton icon={faArrowCircleRight} onClick={() => onNext(answer)}/>
@@ -139,6 +143,13 @@ const RinyCard = ({ card, onNext, style }) => {
     </TextFieldContainer>
   </RinyCardWrapper>
 }
+const CardsSlider = styled.div`
+  flex-basis: 90%;
+  display: flex;
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+`
 const RinyCardWrapper = styled(animated.div)`
   position: absolute;
   display: flex;
@@ -146,7 +157,6 @@ const RinyCardWrapper = styled(animated.div)`
   width: 100%;
   will-change: transform, opacity;
   padding: 5rem 10rem 12rem 10rem;
-  opacity: 0;
 `
 const Card = styled.div`
   background-color: #FFF;
@@ -157,6 +167,8 @@ const Card = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 500;
+  padding: 2rem;
+  text-align: center;
   color: ${({ theme }) => theme.colors.textColor}
 `
 const TextFieldContainer = styled.div`
