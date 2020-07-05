@@ -16,8 +16,10 @@ import {
   FormControl,
   Input,
   ErrorWrapper,
-  Button
 } from '../../components/Auth'
+import {
+  FullButton
+} from '../../components'
 
 const initialValues = {
   email: '',
@@ -78,9 +80,9 @@ export const LogInPage = ({ history }) => {
           <ForgotLinkWrapper to={'/forgot'}>
             Forgot Password?
           </ForgotLinkWrapper>
-          <Button type={'submit'} disabled={!isValid || isSubmitting}>
+          <FullButton type={'submit'} disabled={!isValid || isSubmitting}>
             Log In
-          </Button>
+          </FullButton>
         </FormWrapper>
       )}
     </Formik>

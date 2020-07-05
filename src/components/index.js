@@ -11,6 +11,8 @@ export { Auth } from './Auth'
 
 export { Menu } from './Menu'
 
+export { FullButton, EmptyButton } from './Button'
+
 export { LeftTab } from './LeftTab'
 export { RightTab } from './RightTab'
 

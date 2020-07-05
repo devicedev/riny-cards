@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
-import { useRouteMatch } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
+import { useRouteMatch, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons'
@@ -10,13 +10,17 @@ import { animated, useTransition } from 'react-spring'
 import lessonService from '../../services/lessonService'
 import { calcCardStyle } from '../../utils'
 
-import { LoadingIcon, Root } from '../../components'
+import { EmptyButton, FullButton, LoadingIcon, Root } from '../../components'
 
 export const LessonPage = () => {
   const { params: { id, lesson: lessonIndex } } = useRouteMatch()
+  const history = useHistory()
   const [isClosedModal, setIsClosedModal] = useState(true)
-  const handleClose = () => {
-    setIsClosedModal(true)
+  const handleCloseModal = () => {
+    setIsClosedModal(state => !state)
+  }
+  const handleQuitCloseModal = () => {
+    history.goBack()
   }
   const [isLoading, setIsLoading] = useState(true)
 
@@ -57,7 +61,7 @@ export const LessonPage = () => {
     {isLoading ?
       <LoadingIcon style={{ fontSize: '10rem' }} icon={faSpinner} pulse/>
       : <>
-        <ProgressBarContainer onClose={handleClose}/>
+        <ProgressBarContainer onClose={handleCloseModal}/>
         <CardsSlider>
           {transitions.map(({ item, props, key }) => {
             const card = lesson[item]
@@ -70,7 +74,7 @@ export const LessonPage = () => {
             />
           })}
         </CardsSlider>
-        {!isClosedModal && <CloseModal/>}</>
+        {!isClosedModal && <CloseModal onClose={handleCloseModal} onQuit={handleQuitCloseModal}/>}</>
     }
   </Wrapper>
   return Root(content)
@@ -214,6 +218,59 @@ const IdkButton = styled.div`
   font-size: 1.3rem;
   letter-spacing: .05rem;
 `
-const CloseModal = styled.div`
-  
+
+const CloseModal = ({ onClose, onQuit }) => {
+  return <CloseModalOverlay>
+    <CloseModalWrapper>
+      <CloseModalIconWrapper onClick={onClose}>
+        <CloseModalIcon icon={faTimes}/>
+      </CloseModalIconWrapper>
+      <CloseModalQuestion>
+        Are you sure you want to quit?
+      </CloseModalQuestion>
+      <ButtonsContainer>
+        <FullButton marginRight={'0.5rem'} onClick={onQuit}>Quit</FullButton>
+        <EmptyButton marginLeft={'0.5rem'} onClick={onClose}>Cancel</EmptyButton>
+      </ButtonsContainer>
+    </CloseModalWrapper>
+  </CloseModalOverlay>
+}
+const CloseModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.3);
+  z-index: 100;
+`
+const CloseModalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  padding: 1.5rem 2rem;
+  width: 36rem;
+  background-color: #FFF;
+  border-radius: 15px;
+  transform: translateX(-50%) translateY(-50%);
+`
+const CloseModalQuestion = styled.div`
+  color: ${({ theme }) => theme.colors.menuTextColor};
+  letter-spacing: .1rem;
+  font-size: 1.5rem;
+`
+const ButtonsContainer = styled.div`
+  display: flex;
+  font-size: 1.3rem;
+`
+const CloseModalIconWrapper = styled.div`
+  width: 100%;
+  text-align: right;
+`
+const CloseModalIcon = styled(FontAwesomeIcon)`
+  font-size: 1.8rem;
+  color: ${({ theme }) => theme.colors.menuTextColor};
 `

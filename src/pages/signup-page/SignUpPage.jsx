@@ -15,9 +15,11 @@ import {
   FormWrapper,
   FormControl,
   Input,
-  ErrorWrapper,
-  Button
+  ErrorWrapper
 } from '../../components/Auth'
+import {
+  FullButton
+} from '../../components'
 
 const initialValues = {
   name: '',
@@ -65,7 +67,6 @@ export const SignUpPage = ({ history }) => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
-      validateOnMount
     >
       {({ isValid, isSubmitting }) => (<FormWrapper>
           <FormControl>
@@ -92,7 +93,7 @@ export const SignUpPage = ({ history }) => {
             />
             <ErrorMessage name={'password'} component={ErrorWrapper}/>
           </FormControl>
-          <Button type={'submit'} disabled={!isValid || isSubmitting}>Sign Up</Button>
+          <FullButton type={'submit'} disabled={!isValid || isSubmitting}>Sign Up</FullButton>
         </FormWrapper>
       )}
     </Formik>
