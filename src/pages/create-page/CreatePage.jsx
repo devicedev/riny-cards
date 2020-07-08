@@ -44,9 +44,9 @@ export const CreatePage = () => {
       validationSchema={validationSchema}
       validateOnMount
     >
-      {({ isValid, isSubmitting }) =>
+      {({ isSubmitting }) =>
         <Form autoComplete={'off'}>
-          <Header isValid={isValid} isSubmitting={isSubmitting}/>
+          <Header isSubmitting={isSubmitting}/>
           <Body/>
         </Form>
       }
@@ -62,7 +62,7 @@ const Wrapper = styled.div`
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
   padding: 3.5rem 3rem;
 `
-const Header = ({ isValid, isSubmitting }) => {
+const Header = ({ isSubmitting }) => {
   return <HeaderWrapper>
     <SettingsContainer>
       <IconContainer>
@@ -117,7 +117,7 @@ const IconContainer = styled.div`
   font-size: 2.5rem;
   cursor: pointer;
   &:hover {
-      filter: brightness(95%);
+    filter: brightness(95%);
   }
 `
 const MainContainer = styled.div`
@@ -162,7 +162,7 @@ const Body = () => {
         <th/>
         <th>Front</th>
         <th>Back</th>
-        <th></th>
+        <th/>
       </tr>
       </thead>
       <tbody>
@@ -284,7 +284,8 @@ const CardInput = styled(Field)`
   padding-right: 3rem;
 `
 const ErrorIcon = ({ children }) => {
-  return <ErrorIconWrapper icon={faExclamationCircle} onClick={() => toast.error(children, { autoClose: 2000 })}/>
+  const displayErrorToast = () => toast.error(children, { autoClose: 2000 })
+  return <ErrorIconWrapper icon={faExclamationCircle} onClick={displayErrorToast}/>
 }
 const ErrorIconWrapper = styled(FontAwesomeIcon)`
   font-size: 2rem;
