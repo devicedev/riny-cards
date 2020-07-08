@@ -37,6 +37,7 @@ export const CreatePage = () => {
     const { setSumbitting } = props
 
   }
+
   const content = <Wrapper>
     <Formik
       initialValues={initialValues}
@@ -62,6 +63,7 @@ const Wrapper = styled.div`
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
   padding: 3.5rem 3rem;
 `
+
 const Header = ({ isSubmitting }) => {
   return <HeaderWrapper>
     <SettingsContainer>
@@ -74,27 +76,30 @@ const Header = ({ isSubmitting }) => {
     </SettingsContainer>
     <MainContainer>
       <CoverInput>
-        <FontAwesomeIcon icon={faMountain} style={{ marginBottom: '1rem' }}/>
+        <CoverInputIcon icon={faMountain}/>
         Choose cover image
       </CoverInput>
       <TextInputContainer>
-        <FormInput
-          type={'text'}
-          name={'deckTitle'}
-          placeholder={'Enter title'}
-          margin={{ marginBottom: '.5rem' }}
-          fontSize={'2.2rem'}
-        />
-        <FormInput
-          type={'text'}
-          name={'deckDescription'}
-          placeholder={'Enter description (optional)'}
-          margin={{ marginTop: '.5rem' }}
-        />
+        <DeckTitleFormInputWrapper>
+          <FormInput
+            type={'text'}
+            name={'deckTitle'}
+            placeholder={'Enter title'}
+          />
+        </DeckTitleFormInputWrapper>
+        <DeckDescriptionFormInputWrapper>
+          <FormInput
+            type={'text'}
+            name={'deckDescription'}
+            placeholder={'Enter description (optional)'}
+          />
+        </DeckDescriptionFormInputWrapper>
       </TextInputContainer>
     </MainContainer>
     <CreateContainer>
-      <FullButton marginTop={'0'} type={'submit'} disabled={isSubmitting}>Create</FullButton>
+      <FullButtonWrapper>
+        <FullButton type={'submit'} disabled={isSubmitting}>Create</FullButton>
+      </FullButtonWrapper>
     </CreateContainer>
   </HeaderWrapper>
 }
@@ -142,6 +147,9 @@ const CoverInput = styled.div`
   text-align: center;
   font-weight: bold;
 `
+const CoverInputIcon = styled(FontAwesomeIcon)`
+  margin-bottom: 1rem;
+`
 const TextInputContainer = styled.div`
   flex: 1;
   display: flex;
@@ -149,9 +157,19 @@ const TextInputContainer = styled.div`
   justify-content: center;
   font-size: 1.5rem;
 `
+const DeckTitleFormInputWrapper = styled.div`
+  font-size: 2.2rem;
+  margin-bottom: .5rem;
+`
+const DeckDescriptionFormInputWrapper = styled.div`
+  margin-top: .5rem;
+`
 const CreateContainer = styled.div`
   flex: 1;
   font-size: 1.5rem;
+`
+const FullButtonWrapper = styled.div`
+  margin-top: -2rem;
 `
 
 const Body = () => {
@@ -262,7 +280,6 @@ const BodyRow = ({ index, length, push, remove }) => {
       <CardInput
         type="text"
         name={`cards[${index}].back`}
-        style={{ paddingRight: '3rem' }}
         onKeyDown={length === index + 1 ? handleKeyDown : undefined}
       />
       <ErrorMessage name={`cards[${index}].back`} component={ErrorIcon}/>
@@ -281,7 +298,7 @@ const CardInput = styled(Field)`
   height: 100%;
   color: ${({ theme }) => theme.colors.textColor};
   padding-left: 1rem;
-  padding-right: 3rem;
+  padding-right: 1rem;
 `
 const ErrorIcon = ({ children }) => {
   const displayErrorToast = () => toast.error(children, { autoClose: 2000 })
@@ -319,7 +336,7 @@ const AddIcon = ({ onAdd }) => {
 const AddIconWrapper = styled(FontAwesomeIcon)`
   font-size: 2.5rem;
   color: ${({ theme }) => theme.colors.primaryColor};
-  background-color: ${({ theme }) => theme.colors.backGroundColor};
+  background-color: #FFF;
   position: absolute;
   bottom: -19%;
   left: 50%;

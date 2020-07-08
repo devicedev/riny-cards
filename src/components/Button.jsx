@@ -13,6 +13,7 @@ const Wrapper = styled.button`
   margin-left: ${({ marginLeft }) => marginLeft};
   margin-right: ${({ marginRight }) => marginRight};
   margin-top: ${({ marginTop }) => marginTop};
+  margin-bottom: ${({ marginBottom }) => marginBottom};
   font-size: ${({ fontSize }) => fontSize};
   background-color: ${({ backgroundColor }) => backgroundColor};
   font-weight: bold;
