@@ -1,5 +1,5 @@
 import React from 'react'
-import { Formik, ErrorMessage } from 'formik'
+import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 
@@ -12,13 +12,11 @@ import {
   TitleWrapper,
   SubTitle,
   LinkWrapper,
-  FormWrapper,
-  FormControl,
-  Input,
-  ErrorWrapper
+  FormWrapper
 } from '../../components/Auth'
 import {
-  FullButton
+  FullButton,
+  FormInput
 } from '../../components'
 
 const initialValues = {
@@ -45,7 +43,7 @@ const validationSchema = Yup.object({
     .required('Password field is required')
 })
 export const SignUpPage = ({ history }) => {
-  const onSubmit = ({ name, email, password }, { setSubmitting }) => {
+  const handleSubmit = ({ name, email, password }, { setSubmitting }) => {
     const apiCall = async () => {
       try {
         const { headers } = await userService.register({ name, email, password })
@@ -65,34 +63,28 @@ export const SignUpPage = ({ history }) => {
     <SubTitle> Already have an account? <LinkWrapper to={'/login'}> Log In</LinkWrapper> </SubTitle>
     <Formik
       initialValues={initialValues}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       validationSchema={validationSchema}
     >
       {({ isValid, isSubmitting }) => (<FormWrapper>
-          <FormControl>
-            <Input
-              type={'text'}
-              name={'name'}
-              placeholder={'Enter name...'}
-            />
-            <ErrorMessage name={'name'} component={ErrorWrapper}/>
-          </FormControl>
-          <FormControl>
-            <Input
-              type={'email'}
-              name={'email'}
-              placeholder={'Enter email...'}
-            />
-            <ErrorMessage name={'email'} component={ErrorWrapper}/>
-          </FormControl>
-          <FormControl>
-            <Input
-              type={'password'}
-              name={'password'}
-              placeholder={'Enter password...'}
-            />
-            <ErrorMessage name={'password'} component={ErrorWrapper}/>
-          </FormControl>
+          <FormInput
+            type={'text'}
+            name={'name'}
+            placeholder={'Enter name...'}
+            margin={{ marginBottom: '2rem' }}
+          />
+          <FormInput
+            type={'email'}
+            name={'email'}
+            placeholder={'Enter email...'}
+            margin={{ marginBottom: '2rem' }}
+          />
+          <FormInput
+            type={'password'}
+            name={'password'}
+            placeholder={'Enter password...'}
+            margin={{ marginBottom: '2rem' }}
+          />
           <FullButton type={'submit'} disabled={!isValid || isSubmitting}>Sign Up</FullButton>
         </FormWrapper>
       )}

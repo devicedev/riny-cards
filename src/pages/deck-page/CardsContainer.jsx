@@ -45,7 +45,7 @@ const Card = ({ card }) => {
 }
 const CardWrapper = styled.div`
   flex-basis: 30%;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 23rem;

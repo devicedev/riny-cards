@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom'
 
 import authService from '../services/authService'
 
-export const ProtectedRoute = ({ fail, condition = 'loggedIn', component: Component, render, ...rest }) => {
+export const ProtectedRoute = ({ fail = '/login', condition = 'loggedIn', component: Component, render, ...rest }) => {
   return (
     <Route
       {...rest}

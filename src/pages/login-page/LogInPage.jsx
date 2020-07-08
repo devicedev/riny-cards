@@ -1,6 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
-import { Formik, ErrorMessage } from 'formik'
+import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 
@@ -12,13 +11,11 @@ import {
   TitleWrapper,
   SubTitle,
   LinkWrapper,
-  FormWrapper,
-  FormControl,
-  Input,
-  ErrorWrapper,
+  FormWrapper
 } from '../../components/Auth'
 import {
-  FullButton
+  FullButton,
+  FormInput
 } from '../../components'
 
 const initialValues = {
@@ -33,7 +30,7 @@ const validationSchema = Yup.object({
 })
 
 export const LogInPage = ({ history }) => {
-  const onSubmit = ({ email, password }, { setSubmitting }) => {
+  const handleSubmit = ({ email, password }, { setSubmitting }) => {
     const apiCall = async () => {
       try {
         await authService.login(email, password)
@@ -56,30 +53,26 @@ export const LogInPage = ({ history }) => {
     </SubTitle>
     <Formik
       initialValues={initialValues}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       validationSchema={validationSchema}
     >
       {({ isValid, isSubmitting }) => (
         <FormWrapper>
-          <FormControl>
-            <Input
-              type={'email'}
-              name={'email'}
-              placeholder={'Enter email...'}
-            />
-            <ErrorMessage name={'email'} component={ErrorWrapper}/>
-          </FormControl>
-          <FormControl>
-            <Input
-              type={'password'}
-              name={'password'}
-              placeholder={'Enter password...'}
-            />
-            <ErrorMessage name={'password'} component={ErrorWrapper}/>
-          </FormControl>
-          <ForgotLinkWrapper to={'/forgot'}>
+          <FormInput
+            type={'email'}
+            name={'email'}
+            placeholder={'Enter email...'}
+            margin={{ marginBottom: '2rem' }}
+          />
+          <FormInput
+            type={'password'}
+            name={'password'}
+            placeholder={'Enter password...'}
+            margin={{ marginBottom: '2rem' }}
+          />
+          <LinkWrapper to={'/forgot'} style={{ marginTop: '1rem' }}>
             Forgot Password?
-          </ForgotLinkWrapper>
+          </LinkWrapper>
           <FullButton type={'submit'} disabled={!isValid || isSubmitting}>
             Log In
           </FullButton>
@@ -89,6 +82,3 @@ export const LogInPage = ({ history }) => {
   </ContentWrapper>
   return Auth(authContent)
 }
-export const ForgotLinkWrapper = styled(LinkWrapper)`
-  margin-top: 1rem;
-`

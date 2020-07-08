@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
 import { ProtectedRoute } from './components'
-import { ProfilePage, DeckPage, LogInPage, SignUpPage, NotFoundPage, LogOutPage, LessonPage } from './pages'
+import { ProfilePage, DeckPage, LogInPage, SignUpPage, NotFoundPage, LogOutPage, LessonPage, CreatePage } from './pages'
 
 import { GlobalStyle, Theme } from './theme'
 
@@ -17,10 +17,11 @@ const App = () => {
       <ToastContainer position={'bottom-right'}/>
       <Router>
         <Switch>
-          <ProtectedRoute path={'/'} fail={'/login'} exact component={ProfilePage}/>
-          <ProtectedRoute path={'/decks/:id'} fail={'/login'} exact component={DeckPage}/>
-          <ProtectedRoute path={'/decks/:id/:lesson'} fail={'/login'} exact component={LessonPage}/>
-          <ProtectedRoute path={'/logout'} fail={'/login'} exact component={LogOutPage}/>
+          <ProtectedRoute path={'/'} exact component={ProfilePage}/>
+          <ProtectedRoute path={'/decks/:id'} exact component={DeckPage}/>
+          <ProtectedRoute path={'/decks/:id/:lesson'} exact component={LessonPage}/>
+          <ProtectedRoute path={'/create'} exact component={CreatePage}/>
+          <ProtectedRoute path={'/logout'} exact component={LogOutPage}/>
           <ProtectedRoute
             path={'/login'}
             fail={'/'}

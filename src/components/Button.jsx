@@ -1,18 +1,9 @@
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
-const Button = ({ content, width, fontSize, backgroundColor, fontWeight, color, border, disabled, marginLeft, marginRight, onClick }) => {
+const Button = ({ content, ...rest }) => {
   return <Wrapper
-    onClick={onClick}
-    marginLeft={marginLeft}
-    marginRight={marginRight}
-    width={width}
-    disabled={disabled}
-    fontSize={fontSize}
-    backgroundColor={backgroundColor}
-    fontWeight={fontWeight}
-    color={color}
-    border={border}
+    {...rest}
   >
     {content}
   </Wrapper>
@@ -21,14 +12,15 @@ const Wrapper = styled.button`
   width: ${({ width }) => width};
   margin-left: ${({ marginLeft }) => marginLeft};
   margin-right: ${({ marginRight }) => marginRight};
+  margin-top: ${({ marginTop }) => marginTop};
   font-size: ${({ fontSize }) => fontSize};
   background-color: ${({ backgroundColor }) => backgroundColor};
-  font-weight: ${({ fontWeight }) => fontWeight};
+  font-weight: bold;
+  font-family: inherit;
   color: ${({ color }) => color};
   border: ${({ border }) => border};
   text-transform: uppercase;
   border-radius: 10px;
-  margin-top: 2rem;
   padding: 1rem 0;
   cursor: pointer;
   outline: none;
@@ -40,37 +32,29 @@ const Wrapper = styled.button`
   }
 `
 Button.defaultProps = {
-  width: '100%'
+  width: '100%',
+  marginTop: '2rem'
 }
 
-export const FullButton = ({ children, content, disabled, marginRight, marginLeft, onClick, fontSize = 'inherit' }) => {
+export const FullButton = ({ children, content, fontSize = 'inherit', ...rest }) => {
   const theme = useContext(ThemeContext)
   return <Button
-    onClick={onClick}
-    fontWeight={'bold'}
-    fontSize={fontSize}
-    color={'#fff'}
+    color={'#FFF'}
     border={'none'}
-    disabled={disabled}
     content={content || children}
-    marginRight={marginRight}
-    marginLeft={marginLeft}
     backgroundColor={theme.colors.primaryColor}
+    fontSize={fontSize}
+    {...rest}
   />
 }
 
-export const EmptyButton = ({ children, content, disabled, marginRight, marginLeft, onClick, fontSize }) => {
+export const EmptyButton = ({ children, content, ...rest }) => {
   const theme = useContext(ThemeContext)
   return <Button
-    onClick={onClick}
-    fontWeight={'bold'}
     color={theme.colors.primaryColor}
     border={`2px solid ${theme.colors.primaryColor}`}
-    disabled={disabled}
     content={content || children}
-    marginRight={marginRight}
-    marginLeft={marginLeft}
     backgroundColor={'#FFF'}
-    fontSize={fontSize}
+    {...rest}
   />
 }
