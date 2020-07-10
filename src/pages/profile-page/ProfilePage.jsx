@@ -4,9 +4,9 @@ import { Root } from '../../components'
 import { ProfileTab, DecksTab } from './'
 
 export const ProfilePage = () => {
-  const tabs = <>
+  const content = <>
     <ProfileTab/>
     <DecksTab/>
   </>
-  return Root(tabs)
+  return Root(content)
 }

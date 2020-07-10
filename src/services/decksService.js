@@ -10,7 +10,12 @@ function getDeck(id) {
   return httpService.get(`${apiEndpoint}/${id}`)
 }
 
+function createDeck(deck) {
+  return httpService.post(`${apiEndpoint}`, deck)
+}
+
 export default {
   getDecks,
-  getDeck
+  getDeck,
+  createDeck,
 }

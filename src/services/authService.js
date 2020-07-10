@@ -7,10 +7,10 @@ const apiEndpoint = `auth`;
 
 http.setJwt(getJwt());
 
-async function login(email, password) {
+async function login(credentials) {
   const {
     data: { token }
-  } = await http.post(apiEndpoint, { email, password });
+  } = await http.post(apiEndpoint, credentials);
   loginJwt(token);
 }
 function loginJwt(token) {

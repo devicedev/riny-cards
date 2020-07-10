@@ -30,10 +30,10 @@ const validationSchema = Yup.object({
 })
 
 export const LogInPage = ({ history }) => {
-  const handleSubmit = ({ email, password }, { setSubmitting }) => {
+  const handleSubmit = (credentials, { setSubmitting }) => {
     const apiCall = async () => {
       try {
-        await authService.login(email, password)
+        await authService.login(credentials)
         history.replace('/')
         toast.success('You have successfully logged in')
       } catch ({ response }) {

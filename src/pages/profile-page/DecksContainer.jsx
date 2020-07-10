@@ -7,6 +7,7 @@ import decksService from '../../services/decksService'
 
 import { RinyDeck } from './'
 import { LoadingIcon } from '../../components'
+import unfinishedDecksService from '../../services/unfinishedDecksService'
 
 export const DecksContainer = () => {
   const [decks, setDecks] = useState([])
@@ -15,7 +16,8 @@ export const DecksContainer = () => {
   const fetchData = async () => {
     try {
       const { data } = await decksService.getDecks()
-      setDecks(data.slice(0, 15))
+      const unfinishedDecks = unfinishedDecksService.getUnfinishedDecks()
+      setDecks([...unfinishedDecks, ...data])
     } catch ({ response }) {
       if (response && response.data) {
         toast.error(response.data)
@@ -33,7 +35,7 @@ export const DecksContainer = () => {
       {isLoading ? (
         <LoadingIcon icon={faSpinner} pulse/>
       ) : (
-        decks.map((deck) => <RinyDeck key={deck._id} deck={deck}/>)
+        decks.map((deck) => <RinyDeck key={deck._id || deck.id} deck={deck}/>)
       )}
     </Wrapper>
   )

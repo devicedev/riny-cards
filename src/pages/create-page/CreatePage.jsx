@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useHistory, useParams } from 'react-router-dom'
+import { v4 } from 'uuid'
+import { isEqual } from 'lodash'
 import {
   faLayerGroup,
   faCog,
@@ -14,15 +17,22 @@ import * as Yup from 'yup'
 
 import { FullButton, Root, FormInput } from '../../components'
 import { toast } from 'react-toastify'
+import decksService from '../../services/decksService'
+import unfinishedDecksService from '../../services/unfinishedDecksService'
 
-const initialValues = {
-  deckTitle: '',
-  deckDescription: '',
-  cards: [{ front: '', back: '' }]
+const defaultInitialValues = {
+  title: '',
+  description: '',
+  cards: [
+    {
+      front: '',
+      back: ''
+    }
+  ]
 }
 const validationSchema = Yup.object({
-  deckTitle: Yup.string().min('1').max('255').required('The deck title is required'),
-  deckDescription: Yup.string().min('1').max('500'),
+  title: Yup.string().min('1').max('255').required('The deck title is required'),
+  description: Yup.string().max('500'),
   cards: Yup.array().of(
     Yup.object().shape({
       front: Yup.string().min('1').max('255').required('The front side cannot be empty'),
@@ -32,12 +42,27 @@ const validationSchema = Yup.object({
 })
 
 export const CreatePage = () => {
-  const handleSubmit = (values, props) => {
-    const { deckTitle, deckDescription, cards } = values
-    const { setSumbitting } = props
-
+  const { id } = useParams()
+  const unfinishedDeckId = id || v4()
+  const history = useHistory()
+  const handleSubmit = (deck, { setSubmitting }) => {
+    const apiCall = async () => {
+      try {
+        unfinishedDecksService.removeUnfinishedDeck(unfinishedDeckId)
+        await decksService.createDeck(deck)
+        toast.success('You have successfully created a new deck')
+        history.push(`/`)
+      } catch ({ response }) {
+        if (response && response.data) {
+          toast.error(response.data)
+        }
+      }
+    }
+    apiCall()
+    setSubmitting(false)
   }
-
+  const unfinishedDeck = id && unfinishedDecksService.getUnfinishedDeck(id)
+  const initialValues = id ? unfinishedDecksService.mapToInitialValues(unfinishedDeck) : defaultInitialValues
   const content = <Wrapper>
     <Formik
       initialValues={initialValues}
@@ -45,12 +70,7 @@ export const CreatePage = () => {
       validationSchema={validationSchema}
       validateOnMount
     >
-      {({ isSubmitting }) =>
-        <Form autoComplete={'off'}>
-          <Header isSubmitting={isSubmitting}/>
-          <Body/>
-        </Form>
-      }
+      {(props) => <FormComponent unfinishedDeckId={unfinishedDeckId} {...props} />}
     </Formik>
   </Wrapper>
   return Root(content)
@@ -63,6 +83,20 @@ const Wrapper = styled.div`
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
   padding: 3.5rem 3rem;
 `
+const FormComponent = ({ isSubmitting, values: unfinishedDeck, unfinishedDeckId }) => {
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (isEqual(unfinishedDeck, defaultInitialValues))
+        return
+      unfinishedDecksService.saveUnfinishedDeck(unfinishedDeckId, { ...unfinishedDeck })
+    }, 1000)
+    return () => clearTimeout(timeout)
+  }, [unfinishedDeck])
+  return <Form autoComplete={'off'}>
+    <Header isSubmitting={isSubmitting}/>
+    <Body/>
+  </Form>
+}
 
 const Header = ({ isSubmitting }) => {
   return <HeaderWrapper>
@@ -83,14 +117,14 @@ const Header = ({ isSubmitting }) => {
         <DeckTitleFormInputWrapper>
           <FormInput
             type={'text'}
-            name={'deckTitle'}
+            name={'title'}
             placeholder={'Enter title'}
           />
         </DeckTitleFormInputWrapper>
         <DeckDescriptionFormInputWrapper>
           <FormInput
             type={'text'}
-            name={'deckDescription'}
+            name={'description'}
             placeholder={'Enter description (optional)'}
           />
         </DeckDescriptionFormInputWrapper>

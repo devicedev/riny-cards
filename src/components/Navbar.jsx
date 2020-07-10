@@ -58,11 +58,11 @@ const NavbarRight = ({ user }) => {
         url: '/logout'
       },
       {
+        title: user.name.toUpperCase(),
         icon: faUser,
         url: '/'
       }
     ]
-    navItems.slice(-1)[0].title = user.name.toUpperCase()
   } else {
     navItems = [
       {
@@ -92,7 +92,7 @@ const NavRightWrapper = styled.div`
 
 const NavItem = ({ item: { icon, title, url } }) => {
   return (
-    <NavLinkWrapper to={url}>
+    <NavLinkWrapper exact to={url}>
       {icon && <NavItemIcon icon={icon}/>}
       <NavItemTitle>{title}</NavItemTitle>
     </NavLinkWrapper>

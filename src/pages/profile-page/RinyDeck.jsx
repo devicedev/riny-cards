@@ -5,18 +5,19 @@ import { faLayerGroup } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 
 import defaultCard from '../../res/default-card.png'
+import defaultCardNotFinished from '../../res/default-card-not-finished.jpg'
 
-export const RinyDeck = ({ deck: { _id, name, description, cards } }) => {
+export const RinyDeck = ({ deck: { _id, id, title, description, cards } }) => {
   const to = {
-    pathname: `/decks/${_id}`,
+    pathname: _id ? `/decks/${_id}` : `/continue/${id}`,
     state: { cards }
   }
   return (
     <Wrapper to={to}>
-      <ImgWrapper src={defaultCard} alt="Cover image"/>
+      <ImgWrapper src={_id ? defaultCard : defaultCardNotFinished} alt="Cover image"/>
       <ContentWrapper>
-        <DeckName>{name}</DeckName>
-        <DeckDescription>{description}</DeckDescription>
+        <DeckTitle>{title}</DeckTitle>
+        <DeckDescription>{description || 'No description'}</DeckDescription>
         <NumberOfCardsWrapper>
           <FontAwesomeIcon icon={faLayerGroup}/>
           <NumberOfCardsSpan> {cards.length}</NumberOfCardsSpan>
@@ -48,7 +49,7 @@ const ContentWrapper = styled.div`
   align-content: flex-start;
   justify-content: flex-start;
 `
-const DeckName = styled.h1`
+const DeckTitle = styled.h1`
   font-weight: 500;
   letter-spacing: 0.05rem;
   color: ${({ theme }) => theme.colors.textColor};
