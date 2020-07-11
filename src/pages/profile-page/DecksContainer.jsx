@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 
 import decksService from '../../services/decksService'
+import unfinishedDecksService from '../../services/unfinishedDecksService'
 
 import { RinyDeck } from './'
 import { LoadingIcon } from '../../components'
-import unfinishedDecksService from '../../services/unfinishedDecksService'
 
 export const DecksContainer = () => {
   const [decks, setDecks] = useState([])
@@ -15,9 +15,17 @@ export const DecksContainer = () => {
 
   const fetchData = async () => {
     try {
-      const { data } = await decksService.getDecks()
+      let { data: apiDecks } = await decksService.getDecks()
       const unfinishedDecks = unfinishedDecksService.getUnfinishedDecks()
-      setDecks([...unfinishedDecks, ...data])
+
+      const mergeDecks = () => {
+        unfinishedDecks.forEach((unfinishedDeck) => {
+          apiDecks = apiDecks.filter((deck) => deck._id !== unfinishedDeck.id)
+        })
+      }
+      mergeDecks()
+
+      setDecks([...unfinishedDecks, ...apiDecks])
     } catch ({ response }) {
       if (response && response.data) {
         toast.error(response.data)

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import decksService from '../../services/decksService'
 
 import { Root } from '../../components'
-import { DeckTab, CardsTab } from './'
+import { DeckInfoTab, CardsTab } from './'
 import { DeckContext, DeckProvider } from '../../utils/DeckContext'
 
 export const DeckPageWrapper = () => {
@@ -26,7 +26,7 @@ export const DeckPageWrapper = () => {
     fetchData()
   }, [])
   const content = <>
-    <DeckTab/>
+    <DeckInfoTab/>
     <CardsTab/>
   </>
   return Root(content)

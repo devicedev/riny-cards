@@ -12,13 +12,13 @@ import { LeftTab } from '../../components'
 import { DeckContext } from '../../utils'
 
 
-export const DeckTab = () => {
+export const DeckInfoTab = () => {
   const { deck: { deck } } = useContext(DeckContext)
   const history = useHistory()
   const createdAt = deck.createdAt && dateFormat(deck.createdAt, 'dd/mm/yyyy')
   const updatedAt = deck.updatedAt && dateFormat(deck.updatedAt, 'dd/mm/yyyy')
   const handleEdit = () => {
-    history.push(`/edit/${deck._id}`)
+    history.push(`/update/${deck._id}`)
   }
   const content = <Wrapper>
     <DeckImage src={defaultCardBig} alt={'Deck cover image'}/>
@@ -26,7 +26,7 @@ export const DeckTab = () => {
       {createdAt} - {updatedAt}
     </Timestamp>
     <DeckTitle>{deck.title}</DeckTitle>
-    <DeckDescription>{deck.description}</DeckDescription>
+    <DeckDescription>{deck.description || 'No description'}</DeckDescription>
     <ProfileContainer>
       <AuthorIcon src={profile}/>
       <AuthorName to={'/user'}>

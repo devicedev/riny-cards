@@ -14,8 +14,13 @@ function createDeck(deck) {
   return httpService.post(`${apiEndpoint}`, deck)
 }
 
+function updateDeck(id, deck) {
+  return httpService.put(`${apiEndpoint}/${id}`, deck)
+}
+
 export default {
   getDecks,
   getDeck,
   createDeck,
+  updateDeck
 }
