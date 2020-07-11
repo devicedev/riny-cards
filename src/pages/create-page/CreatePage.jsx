@@ -31,12 +31,12 @@ const defaultInitialValues = {
   ]
 }
 const validationSchema = Yup.object({
-  title: Yup.string().min('1').max('255').required('The deck title is required'),
-  description: Yup.string().max('500'),
+  title: Yup.string().min('1').max('250').required('The deck title is required'),
+  description: Yup.string().max('250'),
   cards: Yup.array().of(
     Yup.object().shape({
-      front: Yup.string().min('1').max('255').required('The front side cannot be empty'),
-      back: Yup.string().min('1').max('255').required('The back side cannot be empty')
+      front: Yup.string().min('1').max('250').required('The front side cannot be empty'),
+      back: Yup.string().min('1').max('250').required('The back side cannot be empty')
     })
   ).required()
 })
@@ -84,12 +84,13 @@ const Wrapper = styled.div`
   padding: 3.5rem 3rem;
 `
 const FormComponent = ({ isSubmitting, values: unfinishedDeck, unfinishedDeckId }) => {
+  const timeoutValue = 100
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (isEqual(unfinishedDeck, defaultInitialValues))
         return
       unfinishedDecksService.saveUnfinishedDeck(unfinishedDeckId, { ...unfinishedDeck })
-    }, 1000)
+    }, timeoutValue)
     return () => clearTimeout(timeout)
   }, [unfinishedDeck])
   return <Form autoComplete={'off'}>

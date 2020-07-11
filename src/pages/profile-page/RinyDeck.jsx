@@ -8,6 +8,12 @@ import defaultCard from '../../res/default-card.png'
 import defaultCardNotFinished from '../../res/default-card-not-finished.jpg'
 
 export const RinyDeck = ({ deck: { _id, id, title, description, cards } }) => {
+  const formatString = (string, max) => {
+    return string.length > max ? `${string.slice(0, max).trim()}...` : string
+  }
+  const formattedTitle = formatString(title, 100)
+  const formattedDescription = formatString(description, 150)
+
   const to = {
     pathname: _id ? `/decks/${_id}` : `/continue/${id}`,
     state: { cards }
@@ -16,8 +22,8 @@ export const RinyDeck = ({ deck: { _id, id, title, description, cards } }) => {
     <Wrapper to={to}>
       <ImgWrapper src={_id ? defaultCard : defaultCardNotFinished} alt="Cover image"/>
       <ContentWrapper>
-        <DeckTitle>{title}</DeckTitle>
-        <DeckDescription>{description || 'No description'}</DeckDescription>
+        <DeckTitle>{formattedTitle}</DeckTitle>
+        <DeckDescription>{formattedDescription || 'No description'}</DeckDescription>
         <NumberOfCardsWrapper>
           <FontAwesomeIcon icon={faLayerGroup}/>
           <NumberOfCardsSpan> {cards.length}</NumberOfCardsSpan>
@@ -57,7 +63,7 @@ const DeckTitle = styled.h1`
 `
 const DeckDescription = styled.h2`
   font-weight: 400;
-  color: #898989;
+  color: ${({ theme }) => theme.colors.deckDescription};
   margin: 0 0 1.2rem 0;
 `
 const NumberOfCardsWrapper = styled.div`

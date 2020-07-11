@@ -29,6 +29,11 @@ function saveUnfinishedDeck(id, deck) {
 function formatUnfinishedDeck(deck, id) {
   if (!deck.title) {
     deck.title = `Unnamed deck ${new Date().toJSON().slice(0, 10).replace(/-/g, '/')}`
+  } else if (deck.title.length > 255) {
+    deck.title = deck.title.slice(0, 255)
+  }
+  if (deck.description && deck.description > 255) {
+    deck.description = deck.description.slice(0, 255)
   }
   deck.id = id
   deck.createdAt = new Date()
@@ -53,7 +58,8 @@ function removeUnfinishedDeck(id) {
   storeUnfinishedDecks(unfinishedDecks)
 }
 
-function mapToInitialValues({ title, description, cards }) {
+function mapToInitialValues(unfinishedDeck) {
+  const { title, description, cards } = unfinishedDeck
   return {
     title,
     description,

@@ -37,7 +37,7 @@ const validationSchema = Yup.object({
     .required('Email field is required'),
   password: Yup.string()
     .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,50}$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d_@./#&+-]{5,50}$/,
       'Must contain between 5 and 50 characters, 1 uppercase, 1 lowercase and 1 number'
     )
     .required('Password field is required')

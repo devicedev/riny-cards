@@ -65,5 +65,5 @@ const CardSide = styled(animated.div)`
   height: 100%;
   position: absolute;
   will-change: transform, opacity;
-  word-break: break-all;
+  word-break: break-word;
 `

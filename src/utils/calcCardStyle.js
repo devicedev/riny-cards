@@ -1,7 +1,7 @@
 export const calcCardStyle = (length, scale, maxSize = 2.5, maxHeight = 4) => {
   let amount = 0
   if (length >= scale) {
-    while (length > 0 && amount < 6) {
+    while (length > 0 && amount < 4) {
       length -= scale
       amount++
     }

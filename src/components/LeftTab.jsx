@@ -8,6 +8,6 @@ export const LeftTab = (content) => {
 }
 const Wrapper = styled.div`
   flex-basis: 25%;
-  padding-right: 7rem;
+  padding-right: 5rem;
   height: auto;
 `
