@@ -3,26 +3,10 @@ import { toast } from 'react-toastify'
 import { useHistory, useParams } from 'react-router-dom'
 
 import decksService from '../../services/decksService'
-import unfinishedDecksService from '../../services/unfinishedDecksService'
 
 import { Root } from '../../components'
 import { CreateContinueUpdate } from '../ccu-page/CreateContinueUpdate'
-
-export const updateSubmit = (id, history) => (deck, { setSubmitting }) => {
-  const apiCall = async () => {
-    try {
-      unfinishedDecksService.removeUnfinishedDeck(id)
-      await decksService.updateDeck(id, deck)
-      history.push(`/decks/${id}`)
-    } catch ({ response }) {
-      if (response && response.data) {
-        toast.error(response.data)
-      }
-    }
-  }
-  apiCall()
-  setSubmitting(false)
-}
+import { onDelete, submitUpdate } from '../'
 
 export const UpdatePage = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -46,13 +30,15 @@ export const UpdatePage = () => {
     fetchDeck()
   }, [])
 
-  const handleSubmit = updateSubmit(id, history)
+  const handleSubmit = submitUpdate(id, history)
+  const handleDelete = onDelete(id, history, 'update')
 
   const content = <CreateContinueUpdate
     onSubmit={handleSubmit}
     initialValues={updateDeck}
     unfinishedDeckId={id}
     loading={isLoading}
+    onDelete={handleDelete}
     path={'update'}
   />
   return Root(content)

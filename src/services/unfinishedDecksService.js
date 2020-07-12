@@ -40,7 +40,6 @@ function formatUnfinishedDeck(deck, id) {
   deck.cards = deck.cards.filter((card, index) => card.front || card.back || index === 0)
 }
 
-
 function getUnfinishedDeck(id) {
   const unfinishedDecks = retrieveUnfinishedDecks()
   return unfinishedDecks.find(unfinishedDeck => unfinishedDeck.id === id) || null
@@ -57,10 +56,14 @@ function removeUnfinishedDeck(id) {
   unfinishedDecks.splice(index, 1)
   storeUnfinishedDecks(unfinishedDecks)
 }
+function removeUnfinishedDecks() {
+  storeUnfinishedDecks([])
+}
 
 export default {
   saveUnfinishedDeck,
   getUnfinishedDeck,
   getUnfinishedDecks,
   removeUnfinishedDeck,
+  removeUnfinishedDecks
 }

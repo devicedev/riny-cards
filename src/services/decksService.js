@@ -18,9 +18,14 @@ function updateDeck(id, deck) {
   return httpService.put(`${apiEndpoint}/${id}`, deck)
 }
 
+function deleteDeck(id) {
+  return httpService.delete(`${apiEndpoint}/${id}`)
+}
+
 export default {
   getDecks,
   getDeck,
   createDeck,
-  updateDeck
+  updateDeck,
+  deleteDeck
 }

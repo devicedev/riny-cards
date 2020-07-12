@@ -4,7 +4,6 @@ import { isEqual } from 'lodash'
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faCog,
   faExclamationCircle,
   faLayerGroup,
   faMountain,
@@ -19,7 +18,7 @@ import { FormInput, FullButton, LoadingIcon } from '../../components'
 
 import unfinishedDecksService from '../../services/unfinishedDecksService'
 
-export const CreateContinueUpdate = ({ onSubmit, initialValues, unfinishedDeckId, path, loading = false }) =>
+export const CreateContinueUpdate = ({ onSubmit, initialValues, unfinishedDeckId, onDelete, path, loading = false }) =>
   <Wrapper>
     {loading ?
       <LoadingIcon icon={faSpinner} pulse/> :
@@ -36,13 +35,14 @@ export const CreateContinueUpdate = ({ onSubmit, initialValues, unfinishedDeckId
             isSubmitting={isSubmitting}
             unfinishedDeckId={unfinishedDeckId}
             path={path}
+            onDelete={onDelete}
           />
         }
       </Formik>
     }
   </Wrapper>
 
-const FormComponent = ({ isSubmitting, values, unfinishedDeckId, path, initialValues }) => {
+const FormComponent = ({ isSubmitting, values, unfinishedDeckId, onDelete, path, initialValues }) => {
   const unfinishedDeck = { ...values, path }
   const timeoutValue = 100
   useEffect(() => {
@@ -54,9 +54,128 @@ const FormComponent = ({ isSubmitting, values, unfinishedDeckId, path, initialVa
     return () => clearTimeout(timeout)
   }, [values])
   return <Form autoComplete={'off'}>
-    <Header isSubmitting={isSubmitting} path={path}/>
+    <Header isSubmitting={isSubmitting} path={path} onDelete={onDelete}/>
     <Body/>
   </Form>
+}
+
+const Header = ({ isSubmitting, path, onDelete }) => {
+  return <HeaderWrapper>
+    <SettingsContainer>
+      <IconContainer>
+        <FontAwesomeIcon icon={faLayerGroup}/>
+      </IconContainer>
+      <IconContainer>
+        <FontAwesomeIcon onClick={onDelete} icon={faTrashAlt}/>
+      </IconContainer>
+    </SettingsContainer>
+    <MainContainer>
+      <CoverInput>
+        <CoverInputIcon icon={faMountain}/>
+        Choose cover image
+      </CoverInput>
+      <TextInputContainer>
+        <DeckTitleFormInputWrapper>
+          <FormInput
+            type={'text'}
+            name={'title'}
+            placeholder={'Enter title'}
+          />
+        </DeckTitleFormInputWrapper>
+        <DeckDescriptionFormInputWrapper>
+          <FormInput
+            type={'text'}
+            name={'description'}
+            placeholder={'Enter description (optional)'}
+          />
+        </DeckDescriptionFormInputWrapper>
+      </TextInputContainer>
+    </MainContainer>
+    <SubmitContainer>
+      <FullButtonWrapper>
+        <FullButton type={'submit'} disabled={isSubmitting}>{path === 'update' ? 'Update' : 'Create'}</FullButton>
+      </FullButtonWrapper>
+    </SubmitContainer>
+  </HeaderWrapper>
+}
+
+const Body = () => {
+  return <BodyWrapper>
+    <Table>
+      <thead>
+      <tr>
+        <th/>
+        <th>Front</th>
+        <th>Back</th>
+        <th/>
+      </tr>
+      </thead>
+      <tbody>
+      <FieldArray name={'cards'}>
+        {({ form: { values: { cards } }, push, remove }) => {
+          return cards.map((element, index) =>
+            <BodyRow
+              key={index}
+              index={index}
+              length={cards.length}
+              remove={remove}
+              push={push}
+            />)
+        }}
+      </FieldArray>
+      </tbody>
+    </Table>
+  </BodyWrapper>
+}
+const BodyRow = ({ index, length, push, remove }) => {
+  const deleteAble = length > 1
+  const handleRemove = () => deleteAble && remove(index)
+  const handleKeyDown = (e) => {
+    if (e.keyCode === 9) {
+      pushNewItem()
+    }
+  }
+  const pushNewItem = () => {
+    push({ front: '', back: '' })
+  }
+  return <tr>
+    <td>
+      {index + 1}
+      {index + 1 === length && <AddIcon onAdd={pushNewItem}/>}
+    </td>
+    <td>
+      <CardInput type={'text'} name={`cards[${index}].front`}/>
+      <ErrorMessage name={`cards[${index}].front`} component={ErrorIcon}/>
+    </td>
+    <td>
+      <CardInput
+        type="text"
+        name={`cards[${index}].back`}
+        onKeyDown={length === index + 1 ? handleKeyDown : undefined}
+      />
+      <ErrorMessage name={`cards[${index}].back`} component={ErrorIcon}/>
+    </td>
+    <td>
+      <DeleteIcon index={index} deleteAble={deleteAble} onRemove={handleRemove}/>
+    </td>
+  </tr>
+}
+const ErrorIcon = ({ children }) => {
+  const displayErrorToast = () => toast.error(children, { autoClose: 2000 })
+  return <ErrorIconWrapper icon={faExclamationCircle} onClick={displayErrorToast}/>
+}
+const DeleteIcon = ({ deleteAble, onRemove }) => {
+  return <DeleteIconWrapper
+    icon={faTrashAlt}
+    deleteable={deleteAble ? 1 : 0}
+    onClick={onRemove}
+  />
+}
+const AddIcon = ({ onAdd }) => {
+  return <AddIconWrapper
+    icon={faPlusCircle}
+    onClick={onAdd}
+  />
 }
 
 const validationSchema = Yup.object({
@@ -89,45 +208,6 @@ const Wrapper = styled.div`
   padding: 3.5rem 3rem;
 `
 
-const Header = ({ isSubmitting, path }) => {
-  return <HeaderWrapper>
-    <SettingsContainer>
-      <IconContainer>
-        <FontAwesomeIcon icon={faLayerGroup}/>
-      </IconContainer>
-      <IconContainer>
-        <FontAwesomeIcon icon={faCog}/>
-      </IconContainer>
-    </SettingsContainer>
-    <MainContainer>
-      <CoverInput>
-        <CoverInputIcon icon={faMountain}/>
-        Choose cover image
-      </CoverInput>
-      <TextInputContainer>
-        <DeckTitleFormInputWrapper>
-          <FormInput
-            type={'text'}
-            name={'title'}
-            placeholder={'Enter title'}
-          />
-        </DeckTitleFormInputWrapper>
-        <DeckDescriptionFormInputWrapper>
-          <FormInput
-            type={'text'}
-            name={'description'}
-            placeholder={'Enter description (optional)'}
-          />
-        </DeckDescriptionFormInputWrapper>
-      </TextInputContainer>
-    </MainContainer>
-    <SubmitContainer>
-      <FullButtonWrapper>
-        <FullButton type={'submit'} disabled={isSubmitting}>{path === 'update' ? 'Update' : 'Create'}</FullButton>
-      </FullButtonWrapper>
-    </SubmitContainer>
-  </HeaderWrapper>
-}
 const HeaderWrapper = styled.div`
   width: 100%;
   height: 20vh;
@@ -197,34 +277,6 @@ const FullButtonWrapper = styled.div`
   margin-top: -2rem;
 `
 
-const Body = () => {
-  return <BodyWrapper>
-    <Table>
-      <thead>
-      <tr>
-        <th/>
-        <th>Front</th>
-        <th>Back</th>
-        <th/>
-      </tr>
-      </thead>
-      <tbody>
-      <FieldArray name={'cards'}>
-        {({ form: { values: { cards } }, push, remove }) => {
-          return cards.map((element, index) =>
-            <BodyRow
-              key={index}
-              index={index}
-              length={cards.length}
-              remove={remove}
-              push={push}
-            />)
-        }}
-      </FieldArray>
-      </tbody>
-    </Table>
-  </BodyWrapper>
-}
 const BodyWrapper = styled.div`
   height: auto;
   width: 100%;
@@ -283,39 +335,6 @@ const Table = styled.table`
   }
 `
 
-const BodyRow = ({ index, length, push, remove }) => {
-  const deleteAble = length > 1
-  const handleRemove = () => deleteAble && remove(index)
-  const handleKeyDown = (e) => {
-    if (e.keyCode === 9) {
-      pushNewItem()
-    }
-  }
-  const pushNewItem = () => {
-    push({ front: '', back: '' })
-  }
-  return <tr>
-    <td>
-      {index + 1}
-      {index + 1 === length && <AddIcon onAdd={pushNewItem}/>}
-    </td>
-    <td>
-      <CardInput type="text" name={`cards[${index}].front`}/>
-      <ErrorMessage name={`cards[${index}].front`} component={ErrorIcon}/>
-    </td>
-    <td>
-      <CardInput
-        type="text"
-        name={`cards[${index}].back`}
-        onKeyDown={length === index + 1 ? handleKeyDown : undefined}
-      />
-      <ErrorMessage name={`cards[${index}].back`} component={ErrorIcon}/>
-    </td>
-    <td>
-      <DeleteIcon index={index} deleteAble={deleteAble} onRemove={handleRemove}/>
-    </td>
-  </tr>
-}
 const CardInput = styled(Field)`
   border: none;
   outline-color: ${({ theme }) => theme.colors.primaryColor};
@@ -327,10 +346,6 @@ const CardInput = styled(Field)`
   padding-left: 1rem;
   padding-right: 1rem;
 `
-const ErrorIcon = ({ children }) => {
-  const displayErrorToast = () => toast.error(children, { autoClose: 2000 })
-  return <ErrorIconWrapper icon={faExclamationCircle} onClick={displayErrorToast}/>
-}
 const ErrorIconWrapper = styled(FontAwesomeIcon)`
   font-size: 2rem;
   color: red;
@@ -339,13 +354,6 @@ const ErrorIconWrapper = styled(FontAwesomeIcon)`
   transform: translateY(-50%);
   right: .5rem;
 `
-const DeleteIcon = ({ deleteAble, onRemove }) => {
-  return <DeleteIconWrapper
-    icon={faTrashAlt}
-    deleteable={deleteAble ? 1 : 0}
-    onClick={onRemove}
-  />
-}
 const DeleteIconWrapper = styled(FontAwesomeIcon)`
   font-size: 2rem;
   color: ${({ theme }) => theme.colors.menuTextColor};
@@ -354,12 +362,6 @@ const DeleteIconWrapper = styled(FontAwesomeIcon)`
     color: ${({ theme }) => theme.colors.primaryColor};
   }`}
 `
-const AddIcon = ({ onAdd }) => {
-  return <AddIconWrapper
-    icon={faPlusCircle}
-    onClick={onAdd}
-  />
-}
 const AddIconWrapper = styled(FontAwesomeIcon)`
   font-size: 2.5rem;
   color: ${({ theme }) => theme.colors.primaryColor};

@@ -25,7 +25,7 @@ const App = () => {
   return (
     <ThemeProvider theme={Theme}>
       <GlobalStyle/>
-      <ToastContainer position={'bottom-right'}/>
+      <ToastContainer position={'bottom-right'} pauseOnFocusLoss={false}/>
       <Router>
         <Switch>
           <ProtectedRoute path={'/decks/:id'} exact component={DeckPage}/>
