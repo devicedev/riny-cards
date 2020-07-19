@@ -22,6 +22,7 @@
     "react-scripts": "3.4.1",
     "react-spring": "^8.0.27",
     "react-toastify": "^6.0.5",
+    "shade-blend-color": "^1.0.0",
     "styled-components": "^5.1.1",
     "uuid": "^8.2.0",
     "yup": "^0.29.1"

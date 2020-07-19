@@ -2,8 +2,12 @@ import httpService from './httpService'
 
 const apiEndpoint = 'lessons'
 
-function get(deckId,index) {
+function get(deckId, index) {
   return httpService.get(`${apiEndpoint}/${deckId}/${index}`)
 }
 
-export default { get }
+function send(deckId, questions) {
+  return httpService.post(`${apiEndpoint}/${deckId}`)
+}
+
+export default { get,send }

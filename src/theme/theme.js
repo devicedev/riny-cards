@@ -6,6 +6,7 @@ export const Theme = {
     borderColor: '#e8e8e8',
     menuTextColor: '#c4c4c4',
     progressBarColor: '#eef1f4',
+    progressBarFillColor: '#ffd600',
     deckDescription: '#898989'
   }
 }

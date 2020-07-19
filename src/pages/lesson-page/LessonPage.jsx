@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useRouteMatch, useHistory } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
+import { useHistory, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faArrowCircleRight, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
-import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons'
-import { animated, useTransition } from 'react-spring'
+import { animated, useSpring, useTransition } from 'react-spring'
 
 import lessonService from '../../services/lessonService'
 import { calcCardStyle } from '../../utils'
 
 import { EmptyButton, FullButton, LoadingIcon, Root } from '../../components'
+
+let timeout
 
 export const LessonPage = () => {
   const { params: { id, lesson: lessonIndex } } = useRouteMatch()
@@ -20,15 +21,18 @@ export const LessonPage = () => {
     setIsClosedModal(state => !state)
   }
   const handleQuitCloseModal = () => {
-    history.goBack()
+    history.push(`/decks/${id}`)
   }
   const [isLoading, setIsLoading] = useState(true)
 
   const [lesson, setLesson] = useState([])
+  const [questions, setQuestions] = useState([])
   const [index, setIndex] = useState(0)
-  const currentCard = lesson[index]
-
   const [shouldFocus, setShouldFocus] = useState(false)
+
+  const [fail, setFail] = useState(false)
+
+  const [progress, setProgress] = useState(0)
 
   const fetchLesson = async () => {
     try {
@@ -44,10 +48,63 @@ export const LessonPage = () => {
 
   useEffect(() => {
     fetchLesson()
+    return () => clearTimeout(timeout)
   }, [])
-
-  const handleOnNext = (answer) => {
-    setIndex(state => state + 1)
+  const handleOnNext = (answer, right = false) => {
+    const { _id, back, type } = lesson[index]
+    const waitTime = 1500
+    const correct = back === answer || right
+    const question = {
+      card: _id,
+      type,
+      correct
+    }
+    clearTimeout(timeout)
+    if (correct) {
+      setFail(false)
+      setQuestions(questions => [...questions, question])
+      if (index < lesson.length - 1) {
+        const result = questions.find(incorrectQuestion =>
+          !incorrectQuestion.correct &&
+          incorrectQuestion.card === question.card &&
+          incorrectQuestion.type === question.type
+        )
+        let progressUpdate
+        if (result) {
+          progressUpdate = 12
+        } else {
+          progressUpdate = 10
+        }
+        setProgress(progress => progress + progressUpdate)
+        setIndex(state => state + 1)
+      } else {
+        setProgress(100)
+        const sendQuestions = async () => {
+          try {
+            const { data } = await lessonService.send(id, questions)
+            console.log(data)
+          } catch ({ response }) {
+            if (response && response.data)
+              toast.error(response.data)
+          }
+        }
+        const waitTime = 500
+        timeout = setTimeout(() => {
+          sendQuestions()
+          history.push(`/decks/${id}`)
+        }, waitTime)
+      }
+    } else {
+      setFail(true)
+      timeout = setTimeout(() => {
+        setFail(false)
+        lesson.push(lesson[index])
+        setLesson(lesson => lesson)
+        setProgress(progress => progress - 2)
+        setQuestions(questions => [...questions, question])
+        setIndex(state => state + 1)
+      }, waitTime)
+    }
   }
   const transitions = useTransition(index, p => p, {
     from: { opacity: 0, transform: `translate3d(${index === 0 ? 0 : 100}%,0,0)` },
@@ -61,7 +118,7 @@ export const LessonPage = () => {
     {isLoading ?
       <LoadingIcon style={{ fontSize: '10rem' }} icon={faSpinner} pulse/>
       : <>
-        <ProgressBarContainer onClose={handleCloseModal}/>
+        <ProgressBarContainer onClose={handleCloseModal} progress={progress}/>
         <CardsSlider>
           {transitions.map(({ item, props, key }) => {
             const card = lesson[item]
@@ -71,6 +128,7 @@ export const LessonPage = () => {
               card={card}
               onNext={handleOnNext}
               shouldFocus={shouldFocus}
+              fail={fail}
             />
           })}
         </CardsSlider>
@@ -90,10 +148,13 @@ const Wrapper = styled.div`
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
 `
 
-const ProgressBarContainer = ({ onClose }) => {
+const ProgressBarContainer = ({ onClose, progress }) => {
+  const fillProps = useSpring({ width: `${progress}%` })
   return <ProgressBarWrapper>
     <ProgressBarCloseIcon onClick={onClose} icon={faTimes}/>
-    <ProgressBar/>
+    <ProgressBar>
+      <Progress style={fillProps}/>
+    </ProgressBar>
   </ProgressBarWrapper>
 }
 const ProgressBarWrapper = styled.div`
@@ -104,8 +165,8 @@ const ProgressBarWrapper = styled.div`
   justify-content: center;
 `
 const ProgressBarCloseIcon = styled(FontAwesomeIcon)`
-   font-size: 2rem;
-   color: ${({ theme }) => theme.colors.menuTextColor};
+  font-size: 2rem;
+  color: ${({ theme }) => theme.colors.menuTextColor};
 `
 const ProgressBar = styled.div`
   flex: 1;
@@ -114,36 +175,55 @@ const ProgressBar = styled.div`
   background-color: ${({ theme }) => theme.colors.progressBarColor};
   border-radius: 10px;
 `
+const Progress = styled(animated.div)`
+  height: 100%;
+  background-color: ${({ theme }) => theme.colors.progressBarFillColor};
+  border-radius: 10px;
+`
 
-const RinyCard = ({ card, onNext, style, shouldFocus }) => {
+const RinyCard = ({ card, onNext, style, shouldFocus, fail }) => {
   const [answer, setAnswer] = useState('')
   const inputRef = useRef()
+  const value = fail ? card.back : answer
   const cardStyle = calcCardStyle(card.front.length, 100)
-  const handleKeyDown = (e) => e.key === 'Enter' ? onNext(answer) : null
+  const handleChange = (e) => !fail && setAnswer(e.currentTarget.value)
+  const handleKeyDown = ({ key }) => {
+    if (key === 'Enter') {
+      return onNext(answer)
+    } else if (fail && (key === 'r' || key === 'R')) {
+      return onNext(card.back, true)
+    }
+  }
+  const handleLabelClick = () => onNext(card.back, true)
+  const handleNexClick = () => onNext(answer)
   useEffect(() => {
-    if (shouldFocus)
+    if (shouldFocus && !fail)
       inputRef.current.focus()
-
   }, [shouldFocus])
+
   return <RinyCardWrapper style={style}>
     <Card style={cardStyle}>
       {card.front}
     </Card>
     <TextFieldContainer>
-      <CardInputWrapper>
+      <CardInputWrapper disabled={fail}>
         <CardInput
           type={'text'}
           name={'answer'}
           autoComplete={'off'}
-          value={answer}
-          onChange={(e) => setAnswer(e.currentTarget.value)}
+          value={value}
+          readOnly={fail}
           onKeyDown={handleKeyDown}
+          onChange={handleChange}
           ref={inputRef}
           placeholder={'Enter the answer...'}
         />
-        <NextButton icon={faArrowCircleRight} onClick={() => onNext(answer)}/>
+        {!fail && <NextButton icon={faArrowCircleRight} onClick={handleNexClick}/>}
       </CardInputWrapper>
-      <IdkButton onClick={() => onNext('')}>I don't know</IdkButton>
+      <IdkButtonWrapper fail={fail}>
+        {fail && <ContinueLabel onClick={handleLabelClick}>Press R to mark as right</ContinueLabel>}
+        <IdkButton onClick={() => onNext('')}>I don't know</IdkButton>
+      </IdkButtonWrapper>
     </TextFieldContainer>
   </RinyCardWrapper>
 }
@@ -186,7 +266,7 @@ const TextFieldContainer = styled.div`
 `
 const CardInputWrapper = styled.div`
   width: 100%;
-  border-bottom: 2px ${({ theme }) => theme.colors.primaryColor} solid;
+  border-bottom: 2px ${({ disabled, theme }) => disabled ? 'red' : theme.colors.primaryColor} solid;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -209,6 +289,17 @@ const NextButton = styled(FontAwesomeIcon)`
   font-size: 3rem;
   color: ${({ theme }) => theme.colors.primaryColor};
   cursor: pointer;
+`
+const IdkButtonWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: ${({ fail }) => fail ? 'space-between' : 'flex-end'};
+  align-items: center;
+`
+const ContinueLabel = styled.div`
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.menuTextColor}
 `
 const IdkButton = styled.div`
   color: ${({ theme }) => theme.colors.primaryColor};

@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
+import pSBC from 'shade-blend-color'
 
 export const NavbarSearch = () => {
   const theme = useContext(ThemeContext)
@@ -44,7 +45,7 @@ const Wrapper = styled.div`
   margin-left: 2rem;
   margin-right: 5rem;
   padding: 1rem 0;
-  background-color: ${({ isFocused }) => (isFocused ? '#FFF' : '#6fdcff')};
+  background-color: ${({ isFocused, theme }) => (isFocused ? '#FFF' : pSBC(0.3, theme.colors.primaryColor))};
   border-radius: 10px;
   display: flex;
   transition: all 0.5s;
