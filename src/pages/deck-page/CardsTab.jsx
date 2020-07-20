@@ -54,6 +54,7 @@ export const Container = ({ children }) => {
 }
 export const Wrapper = styled.div`
   display: inline-flex;
+  position: relative;
   padding: 4rem 7rem;
   height: auto;
   flex-wrap: wrap;

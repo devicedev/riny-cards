@@ -1,9 +1,11 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDumbbell } from '@fortawesome/free-solid-svg-icons'
 
 import { Container } from './'
 import { DeckContext } from '../../utils/DeckContext'
-import { Link } from 'react-router-dom'
 
 export const LessonsContainer = () => {
   const { deck: { deck } } = useContext(DeckContext)
@@ -24,6 +26,9 @@ export const LessonsContainer = () => {
           deckId={deck._id}
         />
       )}
+      <TrainingButton to={`/decks/${deck._id}/training`}>
+        <TrainingButtonIcon icon={faDumbbell}/>
+      </TrainingButton>
     </Container>
   )
 }
@@ -51,4 +56,22 @@ const LessonWrapper = styled(Link)`
     0 6px 5px rgba(0,0,0,.1),
     0 10px 0 -1px #FFF,
     0 10px 5px rgba(0,0,0,.1)
+`
+const TrainingButtonIcon = styled(FontAwesomeIcon)`
+  justify-content: center;
+  align-items: center;
+  color: #FFF;
+  font-size: 2rem;
+`
+const TrainingButton = styled(Link)`
+  display: flex;
+  position: absolute;
+  background-color: ${({ theme }) => theme.colors.primaryColor};
+  right: -3rem;
+  top: -3.5rem;
+  border-radius: 50%;
+  padding: 2rem 1.8rem;
+  cursor: pointer;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 `

@@ -31,6 +31,7 @@ export const LessonPage = () => {
   const [shouldFocus, setShouldFocus] = useState(false)
 
   const [fail, setFail] = useState(false)
+  const [value, setValue] = useState('')
 
   const [progress, setProgress] = useState(0)
 
@@ -41,6 +42,7 @@ export const LessonPage = () => {
     } catch ({ response }) {
       if (response && response.data)
         toast.error(response.data)
+      history.replace(`/decks/${id}`)
     } finally {
       setIsLoading(false)
     }
@@ -50,6 +52,28 @@ export const LessonPage = () => {
     fetchLesson()
     return () => clearTimeout(timeout)
   }, [])
+
+  const calcProgress = (updateCb, newQuestions, question) => {
+    let progressUpdateCb
+    if (newQuestions && question) {
+      const result = newQuestions.find(incorrectQuestion =>
+        !incorrectQuestion.correct &&
+        incorrectQuestion.card === question.card &&
+        incorrectQuestion.type === question.type
+      )
+      let progressUpdate
+      if (result) {
+        progressUpdate = 12
+      } else {
+        progressUpdate = 10
+      }
+      progressUpdateCb = progress => progress + progressUpdate
+    } else {
+      progressUpdateCb = updateCb
+    }
+    setProgress(progressUpdateCb)
+  }
+
   const handleOnNext = (answer, right = false) => {
     const { _id, back, type } = lesson[index]
     const waitTime = 1500
@@ -59,30 +83,24 @@ export const LessonPage = () => {
       type,
       correct
     }
+    if (right)
+      setValue(back)
+    const newQuestions = [...questions, question]
     clearTimeout(timeout)
     if (correct) {
       setFail(false)
-      setQuestions(questions => [...questions, question])
+      setQuestions(newQuestions)
       if (index < lesson.length - 1) {
-        const result = questions.find(incorrectQuestion =>
-          !incorrectQuestion.correct &&
-          incorrectQuestion.card === question.card &&
-          incorrectQuestion.type === question.type
-        )
-        let progressUpdate
-        if (result) {
-          progressUpdate = 12
-        } else {
-          progressUpdate = 10
-        }
-        setProgress(progress => progress + progressUpdate)
+        calcProgress(null, newQuestions, question)
         setIndex(state => state + 1)
+        timeout = setTimeout(() => {
+          setValue('')
+        }, 100)
       } else {
-        setProgress(100)
+        calcProgress(100)
         const sendQuestions = async () => {
           try {
-            const { data } = await lessonService.send(id, questions)
-            console.log(data)
+            await lessonService.send(id, newQuestions)
           } catch ({ response }) {
             if (response && response.data)
               toast.error(response.data)
@@ -100,8 +118,8 @@ export const LessonPage = () => {
         setFail(false)
         lesson.push(lesson[index])
         setLesson(lesson => lesson)
-        setProgress(progress => progress - 2)
-        setQuestions(questions => [...questions, question])
+        calcProgress(progress => progress - 2)
+        setQuestions(newQuestions)
         setIndex(state => state + 1)
       }, waitTime)
     }
@@ -129,6 +147,7 @@ export const LessonPage = () => {
               onNext={handleOnNext}
               shouldFocus={shouldFocus}
               fail={fail}
+              valueProp={value}
             />
           })}
         </CardsSlider>
@@ -181,17 +200,19 @@ const Progress = styled(animated.div)`
   border-radius: 10px;
 `
 
-const RinyCard = ({ card, onNext, style, shouldFocus, fail }) => {
+const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
   const [answer, setAnswer] = useState('')
   const inputRef = useRef()
-  const value = fail ? card.back : answer
+  const value = valueProp || fail ? card.back : answer
   const cardStyle = calcCardStyle(card.front.length, 100)
   const handleChange = (e) => !fail && setAnswer(e.currentTarget.value)
   const handleKeyDown = ({ key }) => {
-    if (key === 'Enter') {
+    if (fail) {
+      if (key === 'r' || key === 'R') {
+        return onNext(card.back, true)
+      }
+    } else if (key === 'Enter') {
       return onNext(answer)
-    } else if (fail && (key === 'r' || key === 'R')) {
-      return onNext(card.back, true)
     }
   }
   const handleLabelClick = () => onNext(card.back, true)
@@ -212,7 +233,7 @@ const RinyCard = ({ card, onNext, style, shouldFocus, fail }) => {
           name={'answer'}
           autoComplete={'off'}
           value={value}
-          readOnly={fail}
+          readOnly={fail || valueProp}
           onKeyDown={handleKeyDown}
           onChange={handleChange}
           ref={inputRef}
