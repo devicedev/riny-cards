@@ -6,8 +6,9 @@ import { Link } from 'react-router-dom'
 
 import defaultCard from '../../res/default-card.png'
 import defaultCardNotFinished from '../../res/default-card-not-finished.jpg'
+import { ProgressBar } from '../../components'
 
-export const RinyDeck = ({ deck: { _id, id, title, description, cards } }) => {
+export const RinyDeck = ({ deck: { _id, id, title, description, cards, progress } }) => {
   const formatString = (string, max) => {
     return string.length > max ? `${string.slice(0, max).trim()}...` : string
   }
@@ -28,6 +29,7 @@ export const RinyDeck = ({ deck: { _id, id, title, description, cards } }) => {
           <FontAwesomeIcon icon={faLayerGroup}/>
           <NumberOfCardsSpan> {cards.length}</NumberOfCardsSpan>
         </NumberOfCardsWrapper>
+        {progress && <ProgressBar progress={progress} height={'1rem'}/>}
       </ContentWrapper>
     </Wrapper>
   )
@@ -49,9 +51,11 @@ const ImgWrapper = styled.img`
   , 0 10px 0 -1px #fff, 0 10px 5px rgba(0,0,0,.1)
 `
 const ContentWrapper = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   margin-left: 3rem;
+  margin-top: 1rem;
   align-content: flex-start;
   justify-content: flex-start;
 `
@@ -59,17 +63,18 @@ const DeckTitle = styled.h1`
   font-weight: 500;
   letter-spacing: 0.05rem;
   color: ${({ theme }) => theme.colors.textColor};
-  margin: 0 0 1.2rem 0;
+  margin: 0 0 1rem 0;
 `
 const DeckDescription = styled.h2`
   font-weight: 400;
   color: ${({ theme }) => theme.colors.deckDescription};
-  margin: 0 0 1.2rem 0;
+  margin: 0 0 1rem 0;
 `
 const NumberOfCardsWrapper = styled.div`
   display: flex;
   align-items: center;
   font-size: 1.5rem;
+  margin-bottom: 2rem;
   color: ${({ theme }) => theme.colors.menuTextColor};
 `
 const NumberOfCardsSpan = styled.span`

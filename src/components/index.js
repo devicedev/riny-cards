@@ -13,6 +13,7 @@ export { Menu } from './Menu'
 
 export { FullButton, EmptyButton } from './Button'
 export { FormInput } from './Input'
+export { ProgressBar } from './ProgressBar'
 
 export { LeftTab } from './LeftTab'
 export { RightTab } from './RightTab'

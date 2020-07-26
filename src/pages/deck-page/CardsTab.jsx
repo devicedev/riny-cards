@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
-import { Menu, RightTab, LoadingIcon } from '../../components'
+import { LoadingIcon, Menu, RightTab } from '../../components'
 import { CardsContainer, LessonsContainer } from './'
 import { DeckContext } from '../../utils/DeckContext'
 
@@ -18,7 +18,7 @@ export const CardsTab = () => {
 
 const CardsMenu = ({ onChange }) => {
   const { deck: { deck }, loading: { loading } } = useContext(DeckContext)
-  const cardsName = `Cards${loading ? '' : ` (${deck.cards.length})`}`
+  const cardsName = `Cards${loading ? '' : ` (${deck.cards ? deck.cards.length : ''})`}`
   const initialCardMenuItems = [
     {
       name: 'Lessons',

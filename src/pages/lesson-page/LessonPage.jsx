@@ -4,12 +4,12 @@ import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowCircleRight, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
-import { animated, useSpring, useTransition } from 'react-spring'
+import { animated, useTransition } from 'react-spring'
 
 import lessonService from '../../services/lessonService'
 import { calcCardStyle } from '../../utils'
 
-import { EmptyButton, FullButton, LoadingIcon, Root } from '../../components'
+import { EmptyButton, FullButton, LoadingIcon, ProgressBar, Root } from '../../components'
 
 let timeout
 
@@ -106,10 +106,10 @@ export const LessonPage = () => {
               toast.error(response.data)
           }
         }
-        const waitTime = 500
+        const waitTime = 1000
+        sendQuestions()
         timeout = setTimeout(() => {
-          sendQuestions()
-          history.push(`/decks/${id}`)
+          history.replace(`/decks/${id}`)
         }, waitTime)
       }
     } else {
@@ -136,7 +136,12 @@ export const LessonPage = () => {
     {isLoading ?
       <LoadingIcon style={{ fontSize: '10rem' }} icon={faSpinner} pulse/>
       : <>
-        <ProgressBarContainer onClose={handleCloseModal} progress={progress}/>
+        <ProgressBarContainer>
+          <ProgressBarCloseIcon onClick={handleCloseModal} icon={faTimes}/>
+          <ProgressBarWrapper>
+            <ProgressBar progress={progress} height={'1rem'}/>
+          </ProgressBarWrapper>
+        </ProgressBarContainer>
         <CardsSlider>
           {transitions.map(({ item, props, key }) => {
             const card = lesson[item]
@@ -166,17 +171,7 @@ const Wrapper = styled.div`
   justify-content: center;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
 `
-
-const ProgressBarContainer = ({ onClose, progress }) => {
-  const fillProps = useSpring({ width: `${progress}%` })
-  return <ProgressBarWrapper>
-    <ProgressBarCloseIcon onClick={onClose} icon={faTimes}/>
-    <ProgressBar>
-      <Progress style={fillProps}/>
-    </ProgressBar>
-  </ProgressBarWrapper>
-}
-const ProgressBarWrapper = styled.div`
+const ProgressBarContainer = styled.div`
   display: flex;
   flex-basis: 10%;
   padding: 2rem 5rem;
@@ -187,17 +182,9 @@ const ProgressBarCloseIcon = styled(FontAwesomeIcon)`
   font-size: 2rem;
   color: ${({ theme }) => theme.colors.menuTextColor};
 `
-const ProgressBar = styled.div`
+const ProgressBarWrapper = styled.div`
   flex: 1;
-  height: .8rem;
   margin-left: 3rem;
-  background-color: ${({ theme }) => theme.colors.progressBarColor};
-  border-radius: 10px;
-`
-const Progress = styled(animated.div)`
-  height: 100%;
-  background-color: ${({ theme }) => theme.colors.progressBarFillColor};
-  border-radius: 10px;
 `
 
 const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
@@ -207,6 +194,8 @@ const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
   const cardStyle = calcCardStyle(card.front.length, 100)
   const handleChange = (e) => !fail && setAnswer(e.currentTarget.value)
   const handleKeyDown = ({ key }) => {
+    if(key === 'Enter' && !answer)
+      return
     if (fail) {
       if (key === 'r' || key === 'R') {
         return onNext(card.back, true)
