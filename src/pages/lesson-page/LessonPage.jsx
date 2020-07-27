@@ -63,9 +63,9 @@ export const LessonPage = () => {
       )
       let progressUpdate
       if (result) {
-        progressUpdate = 12
+        progressUpdate = (1.5 / lesson.length) * 100
       } else {
-        progressUpdate = 10
+        progressUpdate = (1 / lesson.length) * 100
       }
       progressUpdateCb = progress => progress + progressUpdate
     } else {
@@ -118,7 +118,7 @@ export const LessonPage = () => {
         setFail(false)
         lesson.push(lesson[index])
         setLesson(lesson => lesson)
-        calcProgress(progress => progress - 2)
+        calcProgress(progress => progress - (.2 / lesson.length) * 100)
         setQuestions(newQuestions)
         setIndex(state => state + 1)
       }, waitTime)
@@ -194,7 +194,7 @@ const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
   const cardStyle = calcCardStyle(card.front.length, 100)
   const handleChange = (e) => !fail && setAnswer(e.currentTarget.value)
   const handleKeyDown = ({ key }) => {
-    if(key === 'Enter' && !answer)
+    if (key === 'Enter' && !answer)
       return
     if (fail) {
       if (key === 'r' || key === 'R') {

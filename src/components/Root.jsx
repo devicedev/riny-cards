@@ -21,5 +21,5 @@ const Content = ({ children }) => {
 }
 const Wrapper = styled.div`
   display: flex;
-  padding: 10rem 15rem 5rem 15rem;
+  padding: 10vh 15rem 5rem 15rem;
 `

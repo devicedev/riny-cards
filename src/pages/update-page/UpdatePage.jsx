@@ -40,6 +40,7 @@ export const UpdatePage = () => {
     loading={isLoading}
     onDelete={handleDelete}
     path={'update'}
+    updatePath={'update'}
   />
   return Root(content)
 }

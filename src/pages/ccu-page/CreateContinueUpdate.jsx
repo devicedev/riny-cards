@@ -18,7 +18,7 @@ import { FormInput, FullButton, LoadingIcon } from '../../components'
 
 import unfinishedDecksService from '../../services/unfinishedDecksService'
 
-export const CreateContinueUpdate = ({ onSubmit, initialValues, unfinishedDeckId, onDelete, path, loading = false }) =>
+export const CreateContinueUpdate = ({ onSubmit, initialValues, unfinishedDeckId, onDelete, path, updatePath, loading = false }) =>
   <Wrapper>
     {loading ?
       <LoadingIcon icon={faSpinner} pulse/> :
@@ -36,19 +36,22 @@ export const CreateContinueUpdate = ({ onSubmit, initialValues, unfinishedDeckId
             unfinishedDeckId={unfinishedDeckId}
             path={path}
             onDelete={onDelete}
+            updatePath={updatePath}
           />
         }
       </Formik>
     }
   </Wrapper>
 
-const FormComponent = ({ isSubmitting, values, unfinishedDeckId, onDelete, path, initialValues }) => {
+const FormComponent = ({ isSubmitting, values, unfinishedDeckId, onDelete, path, updatePath, initialValues }) => {
   const unfinishedDeck = { ...values, path }
   const timeoutValue = 100
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (isEqual(unfinishedDeck, initialValues))
+      if (updatePath && isEqual(values, initialValues)) {
+        unfinishedDecksService.removeUnfinishedDeck(unfinishedDeckId)
         return
+      }
       unfinishedDecksService.saveUnfinishedDeck(unfinishedDeckId, unfinishedDeck)
     }, timeoutValue)
     return () => clearTimeout(timeout)
@@ -59,7 +62,7 @@ const FormComponent = ({ isSubmitting, values, unfinishedDeckId, onDelete, path,
   </Form>
 }
 
-const Header = ({ isSubmitting, path, onDelete }) => {
+const Header = React.memo(({ isSubmitting, path, onDelete }) => {
   return <HeaderWrapper>
     <SettingsContainer>
       <IconContainer>
@@ -97,7 +100,7 @@ const Header = ({ isSubmitting, path, onDelete }) => {
       </FullButtonWrapper>
     </SubmitContainer>
   </HeaderWrapper>
-}
+})
 
 const Body = () => {
   return <BodyWrapper>
@@ -127,7 +130,7 @@ const Body = () => {
     </Table>
   </BodyWrapper>
 }
-const BodyRow = ({ index, length, push, remove }) => {
+const BodyRow = React.memo(({ index, length, push, remove }) => {
   const deleteAble = length > 1
   const handleRemove = () => deleteAble && remove(index)
   const handleKeyDown = (e) => {
@@ -159,7 +162,7 @@ const BodyRow = ({ index, length, push, remove }) => {
       <DeleteIcon index={index} deleteAble={deleteAble} onRemove={handleRemove}/>
     </td>
   </tr>
-}
+})
 const ErrorIcon = ({ children }) => {
   const displayErrorToast = () => toast.error(children, { autoClose: 2000 })
   return <ErrorIconWrapper icon={faExclamationCircle} onClick={displayErrorToast}/>

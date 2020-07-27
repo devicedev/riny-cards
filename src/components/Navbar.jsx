@@ -108,7 +108,7 @@ const NavLinkWrapper = styled(NavLink)`
   cursor: pointer;
   text-decoration: none;
   &:hover {
-      opacity: .8;
+    opacity: .8;
   }
   &.active {
     border-bottom: 2px #fff solid;

@@ -2,7 +2,7 @@ import unfinishedDecksService from '../../services/unfinishedDecksService'
 import decksService from '../../services/decksService'
 import { toast } from 'react-toastify'
 
-export const submitCreate = (unfinishedDeckId, history) => (deck, { setSubmitting }) => {
+export const submitCreate = (unfinishedDeckId, history) => (deck) => {
   const apiCall = async () => {
     try {
       unfinishedDecksService.removeUnfinishedDeck(unfinishedDeckId)
@@ -16,10 +16,9 @@ export const submitCreate = (unfinishedDeckId, history) => (deck, { setSubmittin
     }
   }
   apiCall()
-  setSubmitting(false)
 }
 
-export const submitUpdate = (id, history) => (deck, { setSubmitting }) => {
+export const submitUpdate = (id, history) => (deck) => {
   const apiCall = async () => {
     try {
       unfinishedDecksService.removeUnfinishedDeck(id)
@@ -32,7 +31,6 @@ export const submitUpdate = (id, history) => (deck, { setSubmitting }) => {
     }
   }
   apiCall()
-  setSubmitting(false)
 }
 
 export const onDelete = (id, history, path) => async () => {
