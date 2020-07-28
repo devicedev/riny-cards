@@ -16,20 +16,17 @@ let timeout
 export const LessonPage = () => {
   const { params: { id, lesson: lessonIndex } } = useRouteMatch()
   const history = useHistory()
+
   const [isClosedModal, setIsClosedModal] = useState(true)
-  const handleCloseModal = () => {
-    setIsClosedModal(state => !state)
-  }
-  const handleQuitCloseModal = () => {
-    history.push(`/decks/${id}`)
-  }
+  const handleCloseModal = () => setIsClosedModal(state => !state)
+  const handleQuitCloseModal = () => history.push(`/decks/${id}`)
+
   const [isLoading, setIsLoading] = useState(true)
 
   const [lesson, setLesson] = useState([])
   const [questions, setQuestions] = useState([])
   const [index, setIndex] = useState(0)
   const [shouldFocus, setShouldFocus] = useState(false)
-
   const [fail, setFail] = useState(false)
   const [value, setValue] = useState('')
 
@@ -85,11 +82,16 @@ export const LessonPage = () => {
     }
     if (right)
       setValue(back)
+    else
+      setValue('')
+
     const newQuestions = [...questions, question]
     clearTimeout(timeout)
+
     if (correct) {
       setFail(false)
       setQuestions(newQuestions)
+
       if (index < lesson.length - 1) {
         calcProgress(null, newQuestions, question)
         setIndex(state => state + 1)
@@ -98,6 +100,7 @@ export const LessonPage = () => {
         }, 100)
       } else {
         calcProgress(100)
+        setValue(back)
         const sendQuestions = async () => {
           try {
             await lessonService.send(id, newQuestions)
@@ -106,11 +109,9 @@ export const LessonPage = () => {
               toast.error(response.data)
           }
         }
-        const waitTime = 1000
-        sendQuestions()
-        timeout = setTimeout(() => {
-          history.replace(`/decks/${id}`)
-        }, waitTime)
+        sendQuestions().then(() => {
+          history.push(`/decks/${id}`)
+        })
       }
     } else {
       setFail(true)
@@ -124,6 +125,7 @@ export const LessonPage = () => {
       }, waitTime)
     }
   }
+
   const transitions = useTransition(index, p => p, {
     from: { opacity: 0, transform: `translate3d(${index === 0 ? 0 : 100}%,0,0)` },
     enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
@@ -189,9 +191,13 @@ const ProgressBarWrapper = styled.div`
 
 const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
   const [answer, setAnswer] = useState('')
+  const [loaded, setLoaded] = useState(false)
+
   const inputRef = useRef()
+
   const value = valueProp || fail ? card.back : answer
   const cardStyle = calcCardStyle(card.front.length, 100)
+
   const handleChange = (e) => !fail && setAnswer(e.currentTarget.value)
   const handleKeyDown = ({ key }) => {
     if (key === 'Enter' && !answer)
@@ -206,9 +212,15 @@ const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
   }
   const handleLabelClick = () => onNext(card.back, true)
   const handleNexClick = () => onNext(answer)
+  const handleIdkClick = () => onNext('')
+
   useEffect(() => {
-    if (shouldFocus && !fail)
-      inputRef.current.focus()
+    if (shouldFocus) {
+      if (!fail) {
+        inputRef.current.focus()
+      }
+      setLoaded(true)
+    }
   }, [shouldFocus])
 
   return <RinyCardWrapper style={style}>
@@ -222,17 +234,17 @@ const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
           name={'answer'}
           autoComplete={'off'}
           value={value}
-          readOnly={fail || valueProp}
-          onKeyDown={handleKeyDown}
-          onChange={handleChange}
+          readOnly={!loaded || fail || valueProp}
+          onKeyDown={loaded ? handleKeyDown : null}
+          onChange={loaded ? handleChange : null}
           ref={inputRef}
           placeholder={'Enter the answer...'}
         />
-        {!fail && <NextButton icon={faArrowCircleRight} onClick={handleNexClick}/>}
+        {!fail && <NextButton icon={faArrowCircleRight} onClick={loaded ? handleNexClick : null}/>}
       </CardInputWrapper>
       <IdkButtonWrapper fail={fail}>
-        {fail && <ContinueLabel onClick={handleLabelClick}>Press R to mark as right</ContinueLabel>}
-        <IdkButton onClick={() => onNext('')}>I don't know</IdkButton>
+        {fail && <ContinueLabel onClick={loaded ? handleLabelClick : null}>Press R to mark as right</ContinueLabel>}
+        <IdkButton onClick={loaded ? handleIdkClick : null}>I don't know</IdkButton>
       </IdkButtonWrapper>
     </TextFieldContainer>
   </RinyCardWrapper>

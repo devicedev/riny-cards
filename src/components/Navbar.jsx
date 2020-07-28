@@ -43,11 +43,6 @@ const NavbarRight = ({ user }) => {
   if (user) {
     navItems = [
       {
-        title: 'HOME',
-        icon: faHome,
-        url: '/home'
-      },
-      {
         title: 'CREATE',
         icon: faPlus,
         url: '/create'
