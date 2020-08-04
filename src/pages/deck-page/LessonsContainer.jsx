@@ -25,12 +25,11 @@ export const LessonsContainer = () => {
           deckId={deck._id}
         />
       )}
-      {!empty && deck.parts.filter(part => !part.locked).length === deck.parts.length &&
+      {!empty && !deck.parts.some(part => part.progress !== 100) &&
       <TrainingButton to={`/decks/${deck._id}/training`}>
         <TrainingButtonIcon icon={faDumbbell}/>
       </TrainingButton>
       }
-
     </Container>
   )
 }
@@ -50,7 +49,8 @@ const LessonContainer = ({ index, deckId, progress, locked }) => {
             {progress !== 0 &&
             <ProgressBarWrapper>
               <ProgressBar progress={progress} height={'1.5rem'}/>
-            </ProgressBarWrapper>}
+            </ProgressBarWrapper>
+            }
           </>
         }
       </LessonWrapperLinkContainer>
@@ -91,9 +91,9 @@ const LessonWrapperLinkContainer = styled.div`
   overflow: hidden;
   box-shadow: 
     0 1px 5px rgba(0,0,0,.1),
-    0 6px 0 -1px ${({completed}) => completed ? "#ffd600": "#FFF"},
+    0 6px 0 -1px ${({ completed }) => completed ? '#ffd600' : '#FFF'},
     0 6px 5px rgba(0,0,0,.1),
-    0 10px 0 -1px ${({completed}) => completed ? "#ffd600": "#FFF"},
+    0 10px 0 -1px ${({ completed }) => completed ? '#ffd600' : '#FFF'},
     0 10px 5px rgba(0,0,0,.1)
 `
 const TrainingButtonIcon = styled(FontAwesomeIcon)`

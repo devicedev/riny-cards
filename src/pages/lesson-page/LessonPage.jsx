@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowCircleRight, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
-import { animated, useTransition } from 'react-spring'
+import { animated, useSpring, useTransition } from 'react-spring'
 
 import lessonService from '../../services/lessonService'
 import { calcCardStyle } from '../../utils'
@@ -103,7 +103,8 @@ export const LessonPage = () => {
         setValue(back)
         const sendQuestions = async () => {
           try {
-            await lessonService.send(id, newQuestions)
+            const fbQuestions = newQuestions.filter((question) => question.type !== 'STANDARD' && question.type !== 'CHOICE')
+            await lessonService.send(id, fbQuestions)
           } catch ({ response }) {
             if (response && response.data)
               toast.error(response.data)
@@ -127,7 +128,7 @@ export const LessonPage = () => {
   }
 
   const transitions = useTransition(index, p => p, {
-    from: { opacity: 0, transform: `translate3d(${index === 0 ? 0 : 100}%,0,0)` },
+    from: { opacity: 0, transform: `translate3d(${index === 0 ? 0 : 99.99}%,0,0)` },
     enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
     leave: { opacity: 0, transform: 'translate3d(-100%,0,0)' },
     onStart: (_, phase) => phase === 'enter' && setShouldFocus(index === 0),
@@ -147,15 +148,39 @@ export const LessonPage = () => {
         <CardsSlider>
           {transitions.map(({ item, props, key }) => {
             const card = lesson[item]
-            return <RinyCard
-              key={key}
-              style={props}
-              card={card}
-              onNext={handleOnNext}
-              shouldFocus={shouldFocus}
-              fail={fail}
-              valueProp={value}
-            />
+            let component
+            switch (card.type) {
+              case 'STANDARD':
+                component = <RinyCardSTD
+                  key={key}
+                  style={props}
+                  card={card}
+                  onNext={handleOnNext}
+                  shouldFocus={shouldFocus}
+                />
+                break
+              case 'CHOICE':
+                component = <RinyCardCh
+                  key={key}
+                  style={props}
+                  card={card}
+                  onNext={handleOnNext}
+                  shouldFocus={shouldFocus}
+                />
+                break
+              default:
+                component = <RinyCardFB
+                  key={key}
+                  style={props}
+                  card={card}
+                  onNext={handleOnNext}
+                  shouldFocus={shouldFocus}
+                  fail={fail}
+                  valueProp={value}
+                />
+                break
+            }
+            return component
           })}
         </CardsSlider>
         {!isClosedModal && <CloseModal onClose={handleCloseModal} onQuit={handleQuitCloseModal}/>}</>
@@ -188,8 +213,283 @@ const ProgressBarWrapper = styled.div`
   flex: 1;
   margin-left: 3rem;
 `
+const CardsSlider = styled.div`
+  flex-basis: 90%;
+  display: flex;
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+`
 
-const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
+const RinyCardSTD = ({ style, card, onNext, shouldFocus }) => {
+  const [firstFlipped, setFirstFlipped] = useState(false)
+  const [flipped, setFlipped] = useState(false)
+
+  const divRef = useRef()
+
+  const { transform, opacity } = useSpring({
+    opacity: flipped ? 1 : 0,
+    transform: `perspective(900px) rotateY(${flipped ? -180 : 0}deg)`,
+    config: { mass: 5, tension: 600, friction: 80 }
+  })
+  const scale = 100
+  const frontCardStyle = {
+    opacity: opacity.interpolate(o => 1 - o * 3),
+    transform,
+    ...calcCardStyle(card.front.length, scale)
+  }
+  const backCardStyle = {
+    opacity,
+    transform: transform.interpolate(t => `${t} rotateY(-180deg)`),
+    ...calcCardStyle(card.back.length, scale)
+  }
+
+  const handleCardClick = () => {
+    setFirstFlipped(true)
+    setFlipped(flipped => !flipped)
+  }
+  const handleButtonClick = () => onNext('', true)
+  const handleOnKeyDown = ({ keyCode }) => {
+    if (keyCode === 32) {
+      handleCardClick()
+    } else if (keyCode === 13 && firstFlipped) {
+      handleButtonClick()
+    }
+  }
+
+  useEffect(() => {
+    divRef.current.focus()
+  }, [])
+
+  return <RinyCardSTDWrapper style={style} tabIndex={0} ref={divRef} onKeyDown={shouldFocus ? handleOnKeyDown : null}>
+    <NewCardLabel>New Card</NewCardLabel>
+    <CardSTD onClick={handleCardClick}>
+      <CardSide style={frontCardStyle}>
+        {card.front}
+      </CardSide>
+      <CardSide style={backCardStyle}>
+        {card.back}
+      </CardSide>
+    </CardSTD>
+    {firstFlipped ?
+      <>
+        <FullButton onClick={handleButtonClick} width={'25%'} fontSize={'1.5rem'}>Continue</FullButton>
+        <SpaceLabel>Press <SpecialSpan>ENTER</SpecialSpan> to continue</SpaceLabel>
+      </>
+      :
+      <SpaceLabel>Click card or press <SpecialSpan>SPACE</SpecialSpan> to flip</SpaceLabel>
+    }
+  </RinyCardSTDWrapper>
+}
+const RinyCardSTDWrapper = styled(animated.div)`
+  position: absolute;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  will-change: transform, opacity;
+  outline: none;
+`
+const NewCardLabel = styled.span`
+  color: ${({ theme }) => theme.colors.progressBarFillColor};
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+`
+const CardSTD = styled.div`
+  width: 25%;
+  height: 65%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: 500;
+  position: relative;
+  color: ${({ theme }) => theme.colors.textColor};
+`
+const CardSide = styled(animated.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  box-shadow: 0 3px 10px 0 rgba(0,0,0,.18);
+  padding: 2rem;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  will-change: transform, opacity;
+  word-break: break-word;
+`
+const SpecialSpan = styled.span`
+  border-radius: 5px;
+  border: 2px solid ${({ theme }) => theme.colors.menuTextColor};
+  padding: .4rem;
+`
+const SpaceLabel = styled.span`
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.menuTextColor}
+`
+
+const RinyCardCh = ({ style, card, onNext, shouldFocus }) => {
+  const [choices, setChoices] = useState(card.choices.map((choice) => ({
+    choice,
+    clicked: false,
+    correct: choice === card.back
+  })))
+
+  const cardStyle = calcCardStyle(card.front.length, 100)
+
+  const divRef = useRef()
+
+  const handleOnClick = (index) => {
+    const updatedChoices = [...choices]
+    updatedChoices[index].clicked = true
+    setChoices(updatedChoices)
+    updatedChoices[index].correct && onNext(updatedChoices[index].choice)
+  }
+  const handleOnKeyDown = ({ keyCode }) => [49, 50, 51].find(okKeyCode => okKeyCode === keyCode) && handleOnClick(keyCode - 49)
+
+  useEffect(() => {
+    divRef.current.focus()
+  }, [])
+
+  return <RinyCardChWrapper style={style} tabIndex={0} ref={divRef} onKeyDown={shouldFocus ? handleOnKeyDown : null}>
+    <CardCh style={cardStyle}>
+      {card.front}
+    </CardCh>
+    <RinyCardChoiceContainer>
+      {choices.map(({ choice, clicked, correct }, index) =>
+        <RinyCardChoice
+          key={index}
+          index={index}
+          choice={choice}
+          clicked={clicked}
+          correct={correct}
+          length={card.choices.length}
+          onClick={handleOnClick}
+        />
+      )}
+    </RinyCardChoiceContainer>
+  </RinyCardChWrapper>
+}
+const RinyCardChWrapper = styled(animated.div)`
+  position: absolute;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  will-change: transform, opacity;
+  padding: 5rem 10rem 12rem 10rem;
+  outline: none;
+`
+const CardCh = styled.div`
+  background-color: #FFF;
+  border-radius: 30px;
+  flex-basis: 30%;
+  height: 100%;
+  box-shadow: 0 3px 10px 0 rgba(0,0,0,.18);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  padding: 2rem;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.textColor}
+`
+const RinyCardChoiceContainer = styled.div`
+  flex-basis: 70%;
+  height: 100%;
+  margin-left: 4rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 2rem;
+  padding: 1rem;
+`
+
+const RinyCardChoice = ({ index, length, choice, clicked, correct, onClick }) => {
+  const choiceStyle = calcCardStyle(choice.length,50)
+  const handleOnClick = () => onClick(index)
+  return <RinyCardChoiceWrapper
+    style={choiceStyle}
+    clicked={clicked}
+    correct={correct}
+    key={index}
+    last={index === length - 1}
+    onClick={handleOnClick}
+  >
+    <RinyCardChoiceSpanWrapper>
+      <RinyCardChoiceSpan>
+        {index + 1}
+      </RinyCardChoiceSpan>
+    </RinyCardChoiceSpanWrapper>
+    <RinyCardChoiceText className={'riny-card-choice'}>
+      {choice}
+    </RinyCardChoiceText>
+  </RinyCardChoiceWrapper>
+
+}
+const RinyCardChoiceWrapper = styled.div`
+  flex-basis: 33% ;
+  display: flex;
+  width: 100%;
+  margin-bottom: ${({ last }) => last ? '0' : '2rem'};
+  ${({ clicked, correct }) => {
+  if (!clicked) {
+    return css`
+        &:hover {
+          & > .riny-card-choice {
+            border: solid 3px ${({ theme }) => theme.colors.primaryColor};
+          }
+        }
+      `
+  } else if (clicked && !correct) {
+    return css`
+            opacity: .5;
+            & > .riny-card-choice {
+              border: solid 3px ${({ theme }) => theme.colors.menuTextColor};
+              color: ${({ theme }) => theme.colors.menuTextColor}
+            }
+      `
+  } else if (clicked && correct) {
+    return css`
+         & > .riny-card-choice {
+            border: solid 3px ${({ theme }) => theme.colors.primaryColor};
+         }
+      `
+  }
+}};
+`
+const RinyCardChoiceSpanWrapper = styled.div`
+  flex-basis: 5%;
+`
+const RinyCardChoiceSpan = styled.span`
+  border-radius: 5px;
+  border: 2px solid ${({ theme }) => theme.colors.borderColor};
+  padding: .35rem .7rem;
+  font-size: 1.5rem;
+  color: ${({ theme }) => theme.colors.menuTextColor}
+`
+const RinyCardChoiceText = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2rem;
+  border-radius: 15px;
+  color: ${({ theme }) => theme.colors.primaryColor};
+  font-weight: bold;
+  border: solid 3px ${({ theme }) => theme.colors.primaryColorLight};
+  padding: 1rem;
+`
+
+const RinyCardFB = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
   const [answer, setAnswer] = useState('')
   const [loaded, setLoaded] = useState(false)
 
@@ -223,10 +523,10 @@ const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
     }
   }, [shouldFocus])
 
-  return <RinyCardWrapper style={style}>
-    <Card style={cardStyle}>
+  return <RinyCardFBWrapper style={style}>
+    <CardFB style={cardStyle}>
       {card.front}
-    </Card>
+    </CardFB>
     <TextFieldContainer>
       <CardInputWrapper disabled={fail}>
         <CardInput
@@ -235,7 +535,7 @@ const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
           autoComplete={'off'}
           value={value}
           readOnly={!loaded || fail || valueProp}
-          onKeyDown={loaded ? handleKeyDown : null}
+          onKeyDown={loaded && shouldFocus ? handleKeyDown : null}
           onChange={loaded ? handleChange : null}
           ref={inputRef}
           placeholder={'Enter the answer...'}
@@ -243,31 +543,31 @@ const RinyCard = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
         {!fail && <NextButton icon={faArrowCircleRight} onClick={loaded ? handleNexClick : null}/>}
       </CardInputWrapper>
       <IdkButtonWrapper fail={fail}>
-        {fail && <ContinueLabel onClick={loaded ? handleLabelClick : null}>Press R to mark as right</ContinueLabel>}
+        {fail &&
+        <ContinueLabel onClick={loaded ? handleLabelClick : null}>
+          Press <SpecialSpanFB>R</SpecialSpanFB> to mark as right
+        </ContinueLabel>
+        }
         <IdkButton onClick={loaded ? handleIdkClick : null}>I don't know</IdkButton>
       </IdkButtonWrapper>
     </TextFieldContainer>
-  </RinyCardWrapper>
+  </RinyCardFBWrapper>
 }
-const CardsSlider = styled.div`
-  flex-basis: 90%;
-  display: flex;
-  position: relative;
-  width: 100%;
-  overflow-x: hidden;
-`
-const RinyCardWrapper = styled(animated.div)`
+const RinyCardFBWrapper = styled(animated.div)`
   position: absolute;
   display: flex;
   height: 100%;
   width: 100%;
+  justify-content: center;
+  align-items: center;
   will-change: transform, opacity;
   padding: 5rem 10rem 12rem 10rem;
 `
-const Card = styled.div`
+const CardFB = styled.div`
   background-color: #FFF;
   border-radius: 30px;
   flex-basis: 30%;
+  height: 100%;
   box-shadow: 0 2px 20px 0 rgba(0,0,0,.1);
   display: flex;
   justify-content: center;
@@ -322,6 +622,11 @@ const ContinueLabel = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.menuTextColor}
+`
+const SpecialSpanFB = styled.span`
+  border-radius: 5px;
+  border: 2px solid ${({ theme }) => theme.colors.menuTextColor};
+  padding: .4rem .8rem;
 `
 const IdkButton = styled.div`
   color: ${({ theme }) => theme.colors.primaryColor};

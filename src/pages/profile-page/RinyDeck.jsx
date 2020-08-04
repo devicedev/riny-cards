@@ -29,7 +29,7 @@ export const RinyDeck = ({ deck: { _id, id, title, description, cards, progress 
           <FontAwesomeIcon icon={faLayerGroup}/>
           <NumberOfCardsSpan> {cards.length}</NumberOfCardsSpan>
         </NumberOfCardsWrapper>
-        {progress && <ProgressBar progress={progress} height={'1rem'}/>}
+        {progress && progress !== 0 && <ProgressBar progress={progress} height={'1rem'}/>}
       </ContentWrapper>
     </Wrapper>
   )
