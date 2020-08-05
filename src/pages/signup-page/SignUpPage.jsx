@@ -19,29 +19,6 @@ import {
   FormInput
 } from '../../components'
 
-const initialValues = {
-  name: '',
-  email: '',
-  password: ''
-}
-const validationSchema = Yup.object({
-  name: Yup
-    .string()
-    .min(1, 'The name field must have at least 1 character')
-    .max(50, 'The name can not be longer than 50 characters')
-    .required('Name field is required'),
-  email: Yup.string()
-    .email('Invalid email format')
-    .min(5, 'The email field must have at least 5 characters')
-    .max(50, 'The email can not be longer than 255 characters')
-    .required('Email field is required'),
-  password: Yup.string()
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d_@./#&+-]{5,50}$/,
-      'Must contain between 5 and 50 characters, 1 uppercase, 1 lowercase and 1 number'
-    )
-    .required('Password field is required')
-})
 export const SignUpPage = ({ history }) => {
   const handleSubmit = ({ name, email, password }, { setSubmitting }) => {
     const apiCall = async () => {
@@ -92,3 +69,27 @@ export const SignUpPage = ({ history }) => {
   </ContentWrapper>
   return Auth(authContent)
 }
+
+const initialValues = {
+  name: '',
+  email: '',
+  password: ''
+}
+const validationSchema = Yup.object({
+  name: Yup
+    .string()
+    .min(1, 'The name field must have at least 1 character')
+    .max(50, 'The name can not be longer than 50 characters')
+    .required('Name field is required'),
+  email: Yup.string()
+    .email('Invalid email format')
+    .min(5, 'The email field must have at least 5 characters')
+    .max(50, 'The email can not be longer than 255 characters')
+    .required('Email field is required'),
+  password: Yup.string()
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d_@./#&+-]{5,50}$/,
+      'Must contain between 5 and 50 characters, 1 uppercase, 1 lowercase and 1 number'
+    )
+    .required('Password field is required')
+})

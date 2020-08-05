@@ -18,17 +18,6 @@ import {
   FormInput
 } from '../../components'
 
-const initialValues = {
-  email: '',
-  password: ''
-}
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .email('Invalid email format')
-    .required('Email field is required'),
-  password: Yup.string().required('Password field is required')
-})
-
 export const LogInPage = ({ history }) => {
   const handleSubmit = (credentials, { setSubmitting }) => {
     const apiCall = async () => {
@@ -82,3 +71,15 @@ export const LogInPage = ({ history }) => {
   </ContentWrapper>
   return Auth(authContent)
 }
+
+const initialValues = {
+  email: '',
+  password: ''
+}
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email('Invalid email format')
+    .required('Email field is required'),
+  password: Yup.string().required('Password field is required')
+})
+

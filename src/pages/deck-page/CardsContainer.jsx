@@ -43,6 +43,7 @@ const Card = ({ card }) => {
     </CardSide>
   </CardWrapper>
 }
+
 const CardWrapper = styled.div`
   flex-basis: 30%;
   display: flex;

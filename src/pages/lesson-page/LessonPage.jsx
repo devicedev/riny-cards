@@ -160,7 +160,7 @@ export const LessonPage = () => {
                 />
                 break
               case 'CHOICE':
-                component = <RinyCardCh
+                component = <RinyCardCH
                   key={key}
                   style={props}
                   card={card}
@@ -188,38 +188,6 @@ export const LessonPage = () => {
   </Wrapper>
   return Root(content)
 }
-const Wrapper = styled.div`
-  height: 70vh;   
-  border-radius: 15px;
-  background-color: #FFF;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
-`
-const ProgressBarContainer = styled.div`
-  display: flex;
-  flex-basis: 10%;
-  padding: 2rem 5rem;
-  align-items: center;
-  justify-content: center;
-`
-const ProgressBarCloseIcon = styled(FontAwesomeIcon)`
-  font-size: 2rem;
-  color: ${({ theme }) => theme.colors.menuTextColor};
-`
-const ProgressBarWrapper = styled.div`
-  flex: 1;
-  margin-left: 3rem;
-`
-const CardsSlider = styled.div`
-  flex-basis: 90%;
-  display: flex;
-  position: relative;
-  width: 100%;
-  overflow-x: hidden;
-`
 
 const RinyCardSTD = ({ style, card, onNext, shouldFocus }) => {
   const [firstFlipped, setFirstFlipped] = useState(false)
@@ -261,7 +229,8 @@ const RinyCardSTD = ({ style, card, onNext, shouldFocus }) => {
     divRef.current.focus()
   }, [])
 
-  return <RinyCardSTDWrapper style={style} tabIndex={0} ref={divRef} onKeyDown={shouldFocus ? handleOnKeyDown : null}>
+  return <RinyCardWrapper type={card.type} style={style} tabIndex={0} ref={divRef}
+                          onKeyDown={shouldFocus ? handleOnKeyDown : null}>
     <NewCardLabel>New Card</NewCardLabel>
     <CardSTD onClick={handleCardClick}>
       <CardSide style={frontCardStyle}>
@@ -279,19 +248,189 @@ const RinyCardSTD = ({ style, card, onNext, shouldFocus }) => {
       :
       <SpaceLabel>Click card or press <SpecialSpan>SPACE</SpecialSpan> to flip</SpaceLabel>
     }
-  </RinyCardSTDWrapper>
+  </RinyCardWrapper>
 }
-const RinyCardSTDWrapper = styled(animated.div)`
+const RinyCardCH = ({ style, card, onNext, shouldFocus }) => {
+  const [choices, setChoices] = useState(card.choices.map((choice) => ({
+    choice,
+    clicked: false,
+    correct: choice === card.back
+  })))
+
+  const cardStyle = calcCardStyle(card.front.length, 100)
+
+  const divRef = useRef()
+
+  const handleOnClick = (index) => {
+    const updatedChoices = [...choices]
+    if (updatedChoices[index]) {
+      updatedChoices[index].clicked = true
+      setChoices(updatedChoices)
+      updatedChoices[index].correct && onNext(updatedChoices[index].choice)
+    }
+  }
+  const handleOnKeyDown = ({ keyCode }) => [49, 50, 51].find(okKeyCode => okKeyCode === keyCode) && handleOnClick(keyCode - 49)
+
+  useEffect(() => {
+    divRef.current.focus()
+  }, [])
+
+  return <RinyCardWrapper style={style} tabIndex={0} ref={divRef} onKeyDown={shouldFocus ? handleOnKeyDown : null}>
+    <CardCH style={cardStyle}>
+      {card.front}
+    </CardCH>
+    <RinyCardChoiceContainer>
+      {choices.map(({ choice, clicked, correct }, index) =>
+        <RinyCardChoiceWrapper
+          style={calcCardStyle(choice.length, 50)}
+          clicked={clicked}
+          correct={correct}
+          key={index}
+          last={index === card.choices.length - 1}
+          onClick={() => handleOnClick(index)}
+        >
+          <RinyCardChoiceSpanWrapper>
+            <RinyCardChoiceSpan>
+              {index + 1}
+            </RinyCardChoiceSpan>
+          </RinyCardChoiceSpanWrapper>
+          <RinyCardChoiceText className={'riny-card-choice'}>
+            {choice}
+          </RinyCardChoiceText>
+        </RinyCardChoiceWrapper>
+      )}
+    </RinyCardChoiceContainer>
+  </RinyCardWrapper>
+}
+const RinyCardFB = ({ style, card, onNext, shouldFocus, fail, valueProp }) => {
+  const [answer, setAnswer] = useState('')
+  const [loaded, setLoaded] = useState(false)
+
+  const inputRef = useRef()
+
+  const value = valueProp || fail ? card.back : answer
+  const cardStyle = calcCardStyle(card.front.length, 100)
+
+  const handleChange = (e) => !fail && setAnswer(e.currentTarget.value)
+  const handleKeyDown = ({ key }) => {
+    if (key === 'Enter' && !answer)
+      return
+    if (fail) {
+      if (key === 'r' || key === 'R') {
+        return onNext(card.back, true)
+      }
+    } else if (key === 'Enter') {
+      return onNext(answer)
+    }
+  }
+  const handleLabelClick = () => onNext(card.back, true)
+  const handleNexClick = () => onNext(answer)
+  const handleIdkClick = () => onNext('')
+
+  useEffect(() => {
+    if (shouldFocus) {
+      if (!fail) {
+        inputRef.current.focus()
+      }
+      setLoaded(true)
+    }
+  }, [shouldFocus])
+
+  return <RinyCardWrapper style={style}>
+    <CardFB style={cardStyle}>
+      {card.front}
+    </CardFB>
+    <TextFieldContainer>
+      <CardInputWrapper disabled={fail}>
+        <CardInput
+          type={'text'}
+          name={'answer'}
+          autoComplete={'off'}
+          value={value}
+          readOnly={!loaded || fail || valueProp}
+          onKeyDown={loaded && shouldFocus ? handleKeyDown : null}
+          onChange={loaded ? handleChange : null}
+          ref={inputRef}
+          placeholder={'Enter the answer...'}
+        />
+        {!fail && <NextButton icon={faArrowCircleRight} onClick={loaded ? handleNexClick : null}/>}
+      </CardInputWrapper>
+      <IdkButtonWrapper fail={fail}>
+        {fail &&
+        <ContinueLabel onClick={loaded ? handleLabelClick : null}>
+          Press <SpecialSpanFB>R</SpecialSpanFB> to mark as right
+        </ContinueLabel>
+        }
+        <IdkButton onClick={loaded ? handleIdkClick : null}>I don't know</IdkButton>
+      </IdkButtonWrapper>
+    </TextFieldContainer>
+  </RinyCardWrapper>
+}
+const CloseModal = ({ onClose, onQuit }) => {
+  return <CloseModalOverlay>
+    <CloseModalWrapper>
+      <CloseModalIconWrapper onClick={onClose}>
+        <CloseModalIcon icon={faTimes}/>
+      </CloseModalIconWrapper>
+      <CloseModalQuestion>
+        Are you sure you want to quit?
+      </CloseModalQuestion>
+      <ButtonsContainer>
+        <FullButton marginRight={'0.5rem'} onClick={onQuit}>Quit</FullButton>
+        <EmptyButton marginLeft={'0.5rem'} onClick={onClose}>Cancel</EmptyButton>
+      </ButtonsContainer>
+    </CloseModalWrapper>
+  </CloseModalOverlay>
+}
+
+const Wrapper = styled.div`
+  height: 70vh;   
+  border-radius: 15px;
+  background-color: #FFF;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
+`
+const ProgressBarContainer = styled.div`
+  display: flex;
+  flex-basis: 10%;
+  padding: 2rem 5rem;
+  align-items: center;
+  justify-content: center;
+`
+const ProgressBarCloseIcon = styled(FontAwesomeIcon)`
+  font-size: 2rem;
+  color: ${({ theme }) => theme.colors.menuTextColor};
+`
+const ProgressBarWrapper = styled.div`
+  flex: 1;
+  margin-left: 3rem;
+`
+const CardsSlider = styled.div`
+  flex-basis: 90%;
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+`
+const RinyCardWrapper = styled(animated.div)`
   position: absolute;
   display: flex;
   height: 100%;
   width: 100%;
-  justify-content: flex-start;
   align-items: center;
-  flex-direction: column;
   will-change: transform, opacity;
   outline: none;
+  ${({ type }) => type !== 'STANDARD' ? css`
+      justify-content: center;
+      padding: 5rem 10rem 12rem 10rem;
+  ` : css`
+      justify-content: flex-start;
+      flex-direction: column;
+  `};
 `
+
 const NewCardLabel = styled.span`
   color: ${({ theme }) => theme.colors.progressBarFillColor};
   text-transform: uppercase;
@@ -335,60 +474,7 @@ const SpaceLabel = styled.span`
   color: ${({ theme }) => theme.colors.menuTextColor}
 `
 
-const RinyCardCh = ({ style, card, onNext, shouldFocus }) => {
-  const [choices, setChoices] = useState(card.choices.map((choice) => ({
-    choice,
-    clicked: false,
-    correct: choice === card.back
-  })))
-
-  const cardStyle = calcCardStyle(card.front.length, 100)
-
-  const divRef = useRef()
-
-  const handleOnClick = (index) => {
-    const updatedChoices = [...choices]
-    updatedChoices[index].clicked = true
-    setChoices(updatedChoices)
-    updatedChoices[index].correct && onNext(updatedChoices[index].choice)
-  }
-  const handleOnKeyDown = ({ keyCode }) => [49, 50, 51].find(okKeyCode => okKeyCode === keyCode) && handleOnClick(keyCode - 49)
-
-  useEffect(() => {
-    divRef.current.focus()
-  }, [])
-
-  return <RinyCardChWrapper style={style} tabIndex={0} ref={divRef} onKeyDown={shouldFocus ? handleOnKeyDown : null}>
-    <CardCh style={cardStyle}>
-      {card.front}
-    </CardCh>
-    <RinyCardChoiceContainer>
-      {choices.map(({ choice, clicked, correct }, index) =>
-        <RinyCardChoice
-          key={index}
-          index={index}
-          choice={choice}
-          clicked={clicked}
-          correct={correct}
-          length={card.choices.length}
-          onClick={handleOnClick}
-        />
-      )}
-    </RinyCardChoiceContainer>
-  </RinyCardChWrapper>
-}
-const RinyCardChWrapper = styled(animated.div)`
-  position: absolute;
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  will-change: transform, opacity;
-  padding: 5rem 10rem 12rem 10rem;
-  outline: none;
-`
-const CardCh = styled.div`
+const CardCH = styled.div`
   background-color: #FFF;
   border-radius: 30px;
   flex-basis: 30%;
@@ -412,29 +498,6 @@ const RinyCardChoiceContainer = styled.div`
   font-size: 2rem;
   padding: 1rem;
 `
-
-const RinyCardChoice = ({ index, length, choice, clicked, correct, onClick }) => {
-  const choiceStyle = calcCardStyle(choice.length,50)
-  const handleOnClick = () => onClick(index)
-  return <RinyCardChoiceWrapper
-    style={choiceStyle}
-    clicked={clicked}
-    correct={correct}
-    key={index}
-    last={index === length - 1}
-    onClick={handleOnClick}
-  >
-    <RinyCardChoiceSpanWrapper>
-      <RinyCardChoiceSpan>
-        {index + 1}
-      </RinyCardChoiceSpan>
-    </RinyCardChoiceSpanWrapper>
-    <RinyCardChoiceText className={'riny-card-choice'}>
-      {choice}
-    </RinyCardChoiceText>
-  </RinyCardChoiceWrapper>
-
-}
 const RinyCardChoiceWrapper = styled.div`
   flex-basis: 33% ;
   display: flex;
@@ -484,85 +547,11 @@ const RinyCardChoiceText = styled.div`
   margin-left: 2rem;
   border-radius: 15px;
   color: ${({ theme }) => theme.colors.primaryColor};
-  font-weight: bold;
+  font-weight: 500;
   border: solid 3px ${({ theme }) => theme.colors.primaryColorLight};
   padding: 1rem;
 `
 
-const RinyCardFB = ({ card, onNext, style, shouldFocus, fail, valueProp }) => {
-  const [answer, setAnswer] = useState('')
-  const [loaded, setLoaded] = useState(false)
-
-  const inputRef = useRef()
-
-  const value = valueProp || fail ? card.back : answer
-  const cardStyle = calcCardStyle(card.front.length, 100)
-
-  const handleChange = (e) => !fail && setAnswer(e.currentTarget.value)
-  const handleKeyDown = ({ key }) => {
-    if (key === 'Enter' && !answer)
-      return
-    if (fail) {
-      if (key === 'r' || key === 'R') {
-        return onNext(card.back, true)
-      }
-    } else if (key === 'Enter') {
-      return onNext(answer)
-    }
-  }
-  const handleLabelClick = () => onNext(card.back, true)
-  const handleNexClick = () => onNext(answer)
-  const handleIdkClick = () => onNext('')
-
-  useEffect(() => {
-    if (shouldFocus) {
-      if (!fail) {
-        inputRef.current.focus()
-      }
-      setLoaded(true)
-    }
-  }, [shouldFocus])
-
-  return <RinyCardFBWrapper style={style}>
-    <CardFB style={cardStyle}>
-      {card.front}
-    </CardFB>
-    <TextFieldContainer>
-      <CardInputWrapper disabled={fail}>
-        <CardInput
-          type={'text'}
-          name={'answer'}
-          autoComplete={'off'}
-          value={value}
-          readOnly={!loaded || fail || valueProp}
-          onKeyDown={loaded && shouldFocus ? handleKeyDown : null}
-          onChange={loaded ? handleChange : null}
-          ref={inputRef}
-          placeholder={'Enter the answer...'}
-        />
-        {!fail && <NextButton icon={faArrowCircleRight} onClick={loaded ? handleNexClick : null}/>}
-      </CardInputWrapper>
-      <IdkButtonWrapper fail={fail}>
-        {fail &&
-        <ContinueLabel onClick={loaded ? handleLabelClick : null}>
-          Press <SpecialSpanFB>R</SpecialSpanFB> to mark as right
-        </ContinueLabel>
-        }
-        <IdkButton onClick={loaded ? handleIdkClick : null}>I don't know</IdkButton>
-      </IdkButtonWrapper>
-    </TextFieldContainer>
-  </RinyCardFBWrapper>
-}
-const RinyCardFBWrapper = styled(animated.div)`
-  position: absolute;
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  will-change: transform, opacity;
-  padding: 5rem 10rem 12rem 10rem;
-`
 const CardFB = styled.div`
   background-color: #FFF;
   border-radius: 30px;
@@ -637,22 +626,6 @@ const IdkButton = styled.div`
   letter-spacing: .05rem;
 `
 
-const CloseModal = ({ onClose, onQuit }) => {
-  return <CloseModalOverlay>
-    <CloseModalWrapper>
-      <CloseModalIconWrapper onClick={onClose}>
-        <CloseModalIcon icon={faTimes}/>
-      </CloseModalIconWrapper>
-      <CloseModalQuestion>
-        Are you sure you want to quit?
-      </CloseModalQuestion>
-      <ButtonsContainer>
-        <FullButton marginRight={'0.5rem'} onClick={onQuit}>Quit</FullButton>
-        <EmptyButton marginLeft={'0.5rem'} onClick={onClose}>Cancel</EmptyButton>
-      </ButtonsContainer>
-    </CloseModalWrapper>
-  </CloseModalOverlay>
-}
 const CloseModalOverlay = styled.div`
   position: fixed;
   top: 0;

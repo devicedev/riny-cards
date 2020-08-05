@@ -16,28 +16,13 @@ export const Navbar = () => {
     <NavbarRight user={user}/>
   </Wrapper>
 }
-const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.colors.primaryColor};
-  height: 8vh;
-  width: 100vw;
-  position: fixed;
-  padding: 0 15rem;
-  display: flex;
-  z-index: 100;
-`
+
 const NavbarLeft = ({ user }) => {
   return <NavLeftWrapper>
     <SiteTitle/>
     {user && <NavbarSearch/>}
   </NavLeftWrapper>
 }
-const NavLeftWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`
-
 const NavbarRight = ({ user }) => {
   let navItems
   if (user) {
@@ -78,13 +63,6 @@ const NavbarRight = ({ user }) => {
     ))}
   </NavRightWrapper>
 }
-const NavRightWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-`
-
 const NavItem = ({ item: { icon, title, url } }) => {
   return (
     <NavLinkWrapper exact to={url}>
@@ -93,6 +71,31 @@ const NavItem = ({ item: { icon, title, url } }) => {
     </NavLinkWrapper>
   )
 }
+
+const Wrapper = styled.div`
+  background-color: ${({ theme }) => theme.colors.primaryColor};
+  height: 8vh;
+  width: 100vw;
+  position: fixed;
+  padding: 0 15rem;
+  display: flex;
+  z-index: 100;
+`
+
+const NavLeftWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+`
+
+const NavRightWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`
+
 const NavLinkWrapper = styled(NavLink)`
   display: flex;
   padding: 2rem 0;

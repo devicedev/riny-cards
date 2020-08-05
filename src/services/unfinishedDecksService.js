@@ -56,6 +56,7 @@ function removeUnfinishedDeck(id) {
   unfinishedDecks.splice(index, 1)
   storeUnfinishedDecks(unfinishedDecks)
 }
+
 function removeUnfinishedDecks() {
   storeUnfinishedDecks([])
 }

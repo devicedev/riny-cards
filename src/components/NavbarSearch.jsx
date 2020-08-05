@@ -40,6 +40,7 @@ export const NavbarSearch = () => {
     </Wrapper>
   )
 }
+
 const Wrapper = styled.div`
   flex: auto;
   margin-left: 2rem;

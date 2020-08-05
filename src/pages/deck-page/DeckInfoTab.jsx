@@ -40,6 +40,7 @@ export const DeckInfoTab = () => {
   </Wrapper>
   return LeftTab(content)
 }
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;

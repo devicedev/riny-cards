@@ -1,6 +1,28 @@
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
+export const FullButton = ({ children, content, fontSize = 'inherit', ...rest }) => {
+  const theme = useContext(ThemeContext)
+  return <Button
+    color={'#FFF'}
+    border={'none'}
+    content={content || children}
+    backgroundColor={theme.colors.primaryColor}
+    fontSize={fontSize}
+    {...rest}
+  />
+}
+
+export const EmptyButton = ({ children, content, ...rest }) => {
+  const theme = useContext(ThemeContext)
+  return <Button
+    color={theme.colors.primaryColor}
+    border={`2px solid ${theme.colors.primaryColor}`}
+    content={content || children}
+    backgroundColor={'#FFF'}
+    {...rest}
+  />
+}
 const Button = ({ content, ...rest }) => {
   return <Wrapper
     {...rest}
@@ -8,6 +30,7 @@ const Button = ({ content, ...rest }) => {
     {content}
   </Wrapper>
 }
+
 const Wrapper = styled.button`
   width: ${({ width }) => width};
   margin-left: ${({ marginLeft }) => marginLeft};
@@ -37,25 +60,3 @@ Button.defaultProps = {
   marginTop: '2rem'
 }
 
-export const FullButton = ({ children, content, fontSize = 'inherit', ...rest }) => {
-  const theme = useContext(ThemeContext)
-  return <Button
-    color={'#FFF'}
-    border={'none'}
-    content={content || children}
-    backgroundColor={theme.colors.primaryColor}
-    fontSize={fontSize}
-    {...rest}
-  />
-}
-
-export const EmptyButton = ({ children, content, ...rest }) => {
-  const theme = useContext(ThemeContext)
-  return <Button
-    color={theme.colors.primaryColor}
-    border={`2px solid ${theme.colors.primaryColor}`}
-    content={content || children}
-    backgroundColor={'#FFF'}
-    {...rest}
-  />
-}

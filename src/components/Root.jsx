@@ -19,6 +19,7 @@ export const Root = (content) => {
 const Content = ({ children }) => {
   return <Wrapper>{children}</Wrapper>
 }
+
 const Wrapper = styled.div`
   display: flex;
   padding: 10vh 15rem 5rem 15rem;

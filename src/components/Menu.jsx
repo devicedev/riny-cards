@@ -2,6 +2,7 @@ import React  from 'react'
 import styled, { css } from 'styled-components'
 
 export const Menu = ({ items, updateMenuItems }) => {
+
   const handleItemClicked = (name) => {
     const oldItems = items.map(item => {
       return { ...item, active: false }
@@ -19,14 +20,13 @@ export const Menu = ({ items, updateMenuItems }) => {
     </Wrapper>
   )
 }
+export const MenuItem = ({ item: { name, active }, onClick }) => <MenuItemWrapper active={active} onClick={() => onClick(name)}>{name}</MenuItemWrapper>
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   border-bottom: .1px solid ${({ theme }) => theme.colors.borderColor};
 `
-
-export const MenuItem = ({ item: { name, active }, onClick }) =>
-  <MenuItemWrapper active={active} onClick={() => onClick(name)}>{name}</MenuItemWrapper>
 
 const MenuItemWrapper = styled.div`
   font-size: 1.5rem;

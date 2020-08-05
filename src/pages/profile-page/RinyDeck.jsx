@@ -34,6 +34,7 @@ export const RinyDeck = ({ deck: { _id, id, title, description, cards, progress 
     </Wrapper>
   )
 }
+
 const Wrapper = styled(Link)`
   height: 17rem;
   display: flex;

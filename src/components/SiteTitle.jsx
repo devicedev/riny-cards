@@ -11,6 +11,7 @@ export const SiteTitle = () => {
     </LinkWrapper>
   )
 }
+
 const LinkWrapper = styled(Link)`
   text-decoration: none;
   display: flex;
@@ -24,7 +25,7 @@ const BeneLogo = styled(Logo)`
   .cls-5,
   .cls-7,
   .cls-8,
-  .cls-9{fill:${({theme}) => theme.colors.primaryColor};}
+  .cls-9{fill:${({ theme }) => theme.colors.primaryColor};}
   .cls-1,
   .cls-3,
   .cls-4,
@@ -40,7 +41,7 @@ const BeneLogo = styled(Logo)`
   .cls-8,
   .cls-9{stroke-miterlimit:10;}
   .cls-1{stroke-width:15px;}
-  .cls-2{fill:${({theme}) => theme.colors.primaryColor};stroke-width:90px;}
+  .cls-2{fill:${({ theme }) => theme.colors.primaryColor};stroke-width:90px;}
   .cls-2,
   .cls-5,
   .cls-6,

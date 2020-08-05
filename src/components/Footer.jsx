@@ -12,6 +12,15 @@ export const Footer = () => {
     </Wrapper>
   )
 }
+
+const FooterItem = ({ item: { title, url } }) => {
+  return (
+    <NavLinkWrapper to={url}>
+      <FooterItemTitle>{title}</FooterItemTitle>
+    </NavLinkWrapper>
+  )
+}
+
 const Wrapper = styled.div`
   display: flex;
   height: 8vh;
@@ -44,15 +53,7 @@ const footerItems = [
     url: '/twitter',
   },
 ]
-export default Footer;
 
-const FooterItem = ({ item: { title, url } }) => {
-  return (
-      <NavLinkWrapper to={url}>
-        <FooterItemTitle>{title}</FooterItemTitle>
-      </NavLinkWrapper>
-  )
-}
 const NavLinkWrapper = styled(NavLink)`
   display: flex;
   padding: 2rem 0;

@@ -12,6 +12,7 @@ export const DecksTab = () => {
   </>
   return RightTab(content)
 }
+
 const DecksMenu = ({ onChange }) => {
   const decksMenuItems = [
     {

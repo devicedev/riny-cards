@@ -17,13 +17,28 @@ export const LessonsContainer = () => {
   return (
     <Container>
       {!empty && deck.parts.map((part, index) =>
-        <LessonContainer
-          key={index}
-          index={index}
-          progress={part.progress}
-          locked={part.locked}
-          deckId={deck._id}
-        />
+        part.locked ?
+          <LockedLessonWrapper>
+            <Image src={lockedLesson}/>
+          </LockedLessonWrapper>
+          :
+          <LessonWrapperLink to={`/decks/${deck._id}/${index}`}>
+            <LessonWrapperLinkContainer completed={part.progress === 100}>
+              {part.progress === 100 ?
+                <Image src={completedLesson}/> :
+                <>
+                  <LessonIndex center={part.progress === 0}>
+                    {index + 1}
+                  </LessonIndex>
+                  {part.progress !== 0 &&
+                  <ProgressBarWrapper>
+                    <ProgressBar progress={part.progress} height={'1.5rem'}/>
+                  </ProgressBarWrapper>
+                  }
+                </>
+              }
+            </LessonWrapperLinkContainer>
+          </LessonWrapperLink>
       )}
       {!empty && !deck.parts.some(part => part.progress !== 100) &&
       <TrainingButton to={`/decks/${deck._id}/training`}>
@@ -33,29 +48,7 @@ export const LessonsContainer = () => {
     </Container>
   )
 }
-const LessonContainer = ({ index, deckId, progress, locked }) => {
-  const completed = progress === 100
-  return locked ? <LockedLessonWrapper>
-      <Image src={lockedLesson}/>
-    </LockedLessonWrapper> :
-    <LessonWrapperLink to={`/decks/${deckId}/${index}`}>
-      <LessonWrapperLinkContainer completed={completed}>
-        {completed ?
-          <Image src={completedLesson}/> :
-          <>
-            <LessonIndex center={progress === 0}>
-              {index + 1}
-            </LessonIndex>
-            {progress !== 0 &&
-            <ProgressBarWrapper>
-              <ProgressBar progress={progress} height={'1.5rem'}/>
-            </ProgressBarWrapper>
-            }
-          </>
-        }
-      </LessonWrapperLinkContainer>
-    </LessonWrapperLink>
-}
+
 const LockedLessonWrapper = styled.div`
   height: 16rem;
   flex-basis: 20%;

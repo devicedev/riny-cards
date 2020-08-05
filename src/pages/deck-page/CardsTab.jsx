@@ -15,31 +15,6 @@ export const CardsTab = () => {
   </>
   return RightTab(content)
 }
-
-const CardsMenu = ({ onChange }) => {
-  const { deck: { deck }, loading: { loading } } = useContext(DeckContext)
-  const cardsName = `Cards${loading ? '' : ` (${deck.cards ? deck.cards.length : ''})`}`
-  const initialCardMenuItems = [
-    {
-      name: 'Lessons',
-      change: () => onChange(<LessonsContainer/>),
-      active: true
-    },
-    {
-      name: cardsName,
-      change: () => onChange(<CardsContainer/>),
-      active: false
-    }
-  ]
-  const [menuItems, setMenuItems] = useState(initialCardMenuItems)
-  useEffect(() => {
-    setMenuItems(initialCardMenuItems)
-  }, [loading])
-  return (
-    <Menu items={menuItems} updateMenuItems={setMenuItems}/>
-  )
-}
-
 export const Container = ({ children }) => {
   const { loading: { loading } } = useContext(DeckContext)
   return <>
@@ -67,3 +42,28 @@ export const ContainerWrapper = styled(Wrapper)`
 export const LoadingIconWrapperCards = styled(Wrapper)`
   justify-content: center;
 `
+
+const CardsMenu = ({ onChange }) => {
+  const { deck: { deck }, loading: { loading } } = useContext(DeckContext)
+  const cardsName = `Cards${loading ? '' : ` (${deck.cards ? deck.cards.length : ''})`}`
+  const initialCardMenuItems = [
+    {
+      name: 'Lessons',
+      change: () => onChange(<LessonsContainer/>),
+      active: true
+    },
+    {
+      name: cardsName,
+      change: () => onChange(<CardsContainer/>),
+      active: false
+    }
+  ]
+  const [menuItems, setMenuItems] = useState(initialCardMenuItems)
+  useEffect(() => {
+    setMenuItems(initialCardMenuItems)
+  }, [loading])
+  return (
+    <Menu items={menuItems} updateMenuItems={setMenuItems}/>
+  )
+}
+

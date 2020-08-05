@@ -8,6 +8,7 @@ export const RightTab = (content) => {
     </Wrapper>
   )
 }
+
 const Wrapper = styled.div`
   flex-basis: 75%;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);

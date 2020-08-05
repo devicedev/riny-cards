@@ -14,6 +14,7 @@ export const FormInput = (props) => {
     <ErrorMessage name={name} component={ErrorWrapper}/>
   </FormControl>
 }
+
 const FormControl = styled.div`
   margin-bottom: ${props => props.marginBottom};
   margin-top: ${props => props.marginTop};

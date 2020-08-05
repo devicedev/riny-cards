@@ -10,6 +10,7 @@ export const ProgressBar = ({ progress, height }) => {
     </ProgressBarWrapper>
   )
 }
+
 const ProgressBarWrapper = styled.div`
   height: ${({height}) => height};
   background-color: ${({ theme }) => theme.colors.progressBarColor};
