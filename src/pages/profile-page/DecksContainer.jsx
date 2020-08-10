@@ -43,7 +43,8 @@ export const DecksContainer = () => {
 
   useEffect(() => {
     if (search) {
-      setSearchedDecks(decks.filter((deck) => deck.title.toLowerCase().includes(search.toLowerCase())))
+      const lowerSearch = search.toLowerCase()
+      setSearchedDecks(decks.filter((deck) => deck.title.toLowerCase().includes(lowerSearch) || deck.description.toLowerCase().includes(lowerSearch)))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
@@ -59,9 +60,9 @@ export const DecksContainer = () => {
         <LoadingIcon icon={faSpinner} pulse/>
       ) : (
         decksMap.length === 0 ?
-        <NoDecksSpan>There are no decks available</NoDecksSpan>
-        :
-        decksMap.map((deck) => <RinyDeck key={deck._id || deck.id} deck={deck}/>)
+          <NoDecksSpan>There are no decks available</NoDecksSpan>
+          :
+          decksMap.map((deck) => <RinyDeck key={deck._id || deck.id} deck={deck}/>)
       )}
     </Wrapper>
   )
@@ -76,5 +77,5 @@ const Wrapper = styled.div`
 const NoDecksSpan = styled.span`
   font-size: 2rem;
   font-weight: 500;
-  color: ${({theme}) => theme.colors.textColor}
+  color: ${({ theme }) => theme.colors.textColor}
 `

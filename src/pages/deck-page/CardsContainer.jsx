@@ -1,19 +1,37 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useSpring, animated } from 'react-spring'
+import { animated, useSpring } from 'react-spring'
 
-import { DeckContext, calcCardStyle } from '../../utils'
+import { calcCardStyle, DeckContext } from '../../utils'
 import { Container } from './'
+import { SearchContext } from '../../utils/SearchContext'
 
 export const CardsContainer = () => {
   const { deck: { deck } } = useContext(DeckContext)
+  const [searchedCards, setSearchedCards] = useState([])
+  const [search] = useContext(SearchContext)
+
   const empty = Object.keys(deck).length === 0
+
+  useEffect(() => {
+    if (search) {
+      const lowerSearch = search.toLowerCase()
+      setSearchedCards(deck.cards.filter(card => card.front.toLowerCase().includes(lowerSearch) || card.back.toLowerCase().includes(lowerSearch)))
+    }
+  }, [search])
+
+  const cardsMap = search ? searchedCards : deck.cards
   return <Container>
-    {!empty && deck.cards.map((card, index) => <Card key={index} card={card}/>)}
+    {!empty && (
+      cardsMap.length === 0 ?
+        <NoCardsSpan>There are no cards available</NoCardsSpan>
+        :
+        cardsMap.map((card, index) => <Card key={index} card={card}/>)
+    )}
   </Container>
 }
 
-const Card = ({ card }) => {
+const Card = React.memo(({ card }) => {
   const [flipped, setFlipped] = useState(false)
   const handleOnClick = () => setFlipped(state => !state)
   const { transform, opacity } = useSpring({
@@ -42,7 +60,13 @@ const Card = ({ card }) => {
       {card.back}
     </CardSide>
   </CardWrapper>
-}
+})
+
+const NoCardsSpan = styled.span`
+  font-size: 2rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.textColor}
+`
 
 const CardWrapper = styled.div`
   flex-basis: 30%;

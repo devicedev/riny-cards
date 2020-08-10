@@ -8,7 +8,7 @@ import defaultCard from '../../res/default-card.png'
 import defaultCardNotFinished from '../../res/default-card-not-finished.jpg'
 import { ProgressBar } from '../../components'
 
-export const RinyDeck = ({ deck: { _id, id, title, description, cards, progress } }) => {
+export const RinyDeck = React.memo(({ deck: { _id, id, title, description, cards, progress } }) => {
   const formatString = (string, max) => {
     return string.length > max ? `${string.slice(0, max).trim()}...` : string
   }
@@ -33,7 +33,7 @@ export const RinyDeck = ({ deck: { _id, id, title, description, cards, progress 
       </ContentWrapper>
     </Wrapper>
   )
-}
+})
 
 const Wrapper = styled(Link)`
   height: 17rem;
