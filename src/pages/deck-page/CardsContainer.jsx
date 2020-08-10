@@ -18,6 +18,7 @@ export const CardsContainer = () => {
       const lowerSearch = search.toLowerCase()
       setSearchedCards(deck.cards.filter(card => card.front.toLowerCase().includes(lowerSearch) || card.back.toLowerCase().includes(lowerSearch)))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
   const cardsMap = search ? searchedCards : deck.cards

@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components'
-import React, { useEffect } from 'react'
-import { isEqual } from 'lodash'
-import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
+import React, { useEffect, useMemo } from 'react'
+import { ErrorMessage, FastField, FieldArray, Form, Formik } from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { isEqual } from 'lodash'
 import {
   faExclamationCircle,
   faLayerGroup,
@@ -43,8 +43,8 @@ export const CreateContinueUpdate = ({ onSubmit, initialValues, unfinishedDeckId
     }
   </Wrapper>
 
-const FormComponent = ({ isSubmitting, values, unfinishedDeckId, onDelete, path, updatePath, initialValues }) => {
-  const unfinishedDeck = { ...values, path }
+const FormComponent = React.memo(({ isSubmitting, values, unfinishedDeckId, onDelete, path, updatePath, initialValues }) => {
+  const unfinishedDeck = useMemo(() => ({ ...values, path }), [values, path])
   const timeoutValue = 100
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -61,7 +61,7 @@ const FormComponent = ({ isSubmitting, values, unfinishedDeckId, onDelete, path,
     <Header isSubmitting={isSubmitting} path={path} onDelete={onDelete}/>
     <Body/>
   </Form>
-}
+})
 
 const Header = React.memo(({ isSubmitting, path, onDelete }) => {
   return <HeaderWrapper>
@@ -103,7 +103,7 @@ const Header = React.memo(({ isSubmitting, path, onDelete }) => {
   </HeaderWrapper>
 })
 
-const Body = () => {
+const Body = React.memo(() => {
   return <BodyWrapper>
     <Table>
       <thead>
@@ -130,7 +130,7 @@ const Body = () => {
       </tbody>
     </Table>
   </BodyWrapper>
-}
+})
 const BodyRow = React.memo(({ index, length, push, remove }) => {
   const deleteAble = length > 1
   const handleRemove = () => deleteAble && remove(index)
@@ -339,7 +339,7 @@ const Table = styled.table`
   }
 `
 
-const CardInput = styled(Field)`
+const CardInput = styled(FastField)`
   border: none;
   outline-color: ${({ theme }) => theme.colors.primaryColor};
   font-size: inherit;
