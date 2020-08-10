@@ -1,14 +1,16 @@
-import React, { useContext, useState } from 'react'
+import React, {useContext, useRef, useState} from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
 import pSBC from 'shade-blend-color'
 
+import { SearchContext } from '../utils/SearchContext'
+
 export const NavbarSearch = () => {
   const theme = useContext(ThemeContext)
   const [isFocused, setIsFocused] = useState(false)
-  const [search, setSearch] = useState('')
-  const searchBox = React.createRef()
+  const [search, setSearch] = useContext(SearchContext)
+  const searchBox = useRef()
 
   const handleClear = () => {
     searchBox.current.focus()
@@ -25,7 +27,7 @@ export const NavbarSearch = () => {
         type="text"
         placeholder={'SEARCH'}
         value={search}
-        onChange={(e) => setSearch(searchBox.current.value)}
+        onChange={() => setSearch(searchBox.current.value)}
         isFocused={isFocused}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}

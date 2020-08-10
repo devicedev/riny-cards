@@ -61,6 +61,7 @@ const CardsMenu = ({ onChange }) => {
   const [menuItems, setMenuItems] = useState(initialCardMenuItems)
   useEffect(() => {
     setMenuItems(initialCardMenuItems)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
   return (
     <Menu items={menuItems} updateMenuItems={setMenuItems}/>

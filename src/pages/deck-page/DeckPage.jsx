@@ -24,6 +24,7 @@ export const DeckPageWrapper = () => {
   }
   useEffect(() => {
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const content = <>
     <DeckInfoTab/>

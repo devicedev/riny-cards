@@ -18,11 +18,11 @@ export const LessonsContainer = () => {
     <Container>
       {!empty && deck.parts.map((part, index) =>
         part.locked ?
-          <LockedLessonWrapper>
+          <LockedLessonWrapper key={index}>
             <Image src={lockedLesson}/>
           </LockedLessonWrapper>
           :
-          <LessonWrapperLink to={`/decks/${deck._id}/${index}`}>
+          <LessonWrapperLink key={index} to={`/decks/${deck._id}/${index}`}>
             <LessonWrapperLinkContainer completed={part.progress === 100}>
               {part.progress === 100 ?
                 <Image src={completedLesson}/> :

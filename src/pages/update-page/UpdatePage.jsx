@@ -28,6 +28,7 @@ export const UpdatePage = () => {
   }
   useEffect(() => {
     fetchDeck()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleSubmit = submitUpdate(id, history)

@@ -3,16 +3,17 @@ import styled from 'styled-components'
 
 import { Navbar } from './Navbar'
 import { Footer } from './Footer'
+import {SearchProvider} from '../utils/SearchContext'
 
 export const Root = (content) => {
   return (
-    <>
+    <SearchProvider>
       <Navbar/>
       <Content>
         {content}
       </Content>
       <Footer/>
-    </>
+    </SearchProvider>
   )
 }
 

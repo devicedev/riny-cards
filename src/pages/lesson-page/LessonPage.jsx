@@ -11,8 +11,6 @@ import { calcCardStyle } from '../../utils'
 
 import { EmptyButton, FullButton, LoadingIcon, ProgressBar, Root } from '../../components'
 
-let timeout
-
 export const LessonPage = () => {
   const { params: { id, lesson: lessonIndex } } = useRouteMatch()
   const history = useHistory()
@@ -29,6 +27,7 @@ export const LessonPage = () => {
   const [shouldFocus, setShouldFocus] = useState(false)
   const [fail, setFail] = useState(false)
   const [value, setValue] = useState('')
+  const [pageTimeout, setPageTimeout] = useState()
 
   const [progress, setProgress] = useState(0)
 
@@ -47,7 +46,8 @@ export const LessonPage = () => {
 
   useEffect(() => {
     fetchLesson()
-    return () => clearTimeout(timeout)
+    return () => clearTimeout(pageTimeout)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const calcProgress = (updateCb, newQuestions, question) => {
@@ -86,7 +86,7 @@ export const LessonPage = () => {
       setValue('')
 
     const newQuestions = [...questions, question]
-    clearTimeout(timeout)
+    clearTimeout(pageTimeout)
 
     if (correct) {
       setFail(false)
@@ -95,9 +95,9 @@ export const LessonPage = () => {
       if (index < lesson.length - 1) {
         calcProgress(null, newQuestions, question)
         setIndex(state => state + 1)
-        timeout = setTimeout(() => {
+        setPageTimeout(setTimeout(() => {
           setValue('')
-        }, 100)
+        }, 100))
       } else {
         calcProgress(100)
         setValue(back)
@@ -116,14 +116,14 @@ export const LessonPage = () => {
       }
     } else {
       setFail(true)
-      timeout = setTimeout(() => {
+      setPageTimeout(setTimeout(() => {
         setFail(false)
         lesson.push(lesson[index])
         setLesson(lesson => lesson)
         calcProgress(progress => progress - (.2 / lesson.length) * 100)
         setQuestions(newQuestions)
         setIndex(state => state + 1)
-      }, waitTime)
+      }, waitTime))
     }
   }
 
@@ -334,6 +334,7 @@ const RinyCardFB = ({ style, card, onNext, shouldFocus, fail, valueProp }) => {
       }
       setLoaded(true)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldFocus])
 
   return <RinyCardWrapper style={style}>

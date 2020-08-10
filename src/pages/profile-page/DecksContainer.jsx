@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
@@ -6,12 +6,17 @@ import { toast } from 'react-toastify'
 import decksService from '../../services/decksService'
 import unfinishedDecksService from '../../services/unfinishedDecksService'
 
+import { SearchContext } from '../../utils/SearchContext'
+
 import { RinyDeck } from './'
 import { LoadingIcon } from '../../components'
 
+
 export const DecksContainer = () => {
   const [decks, setDecks] = useState([])
+  const [searchedDecks, setSearchedDecks] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [search] = useContext(SearchContext)
 
   const fetchData = async () => {
     try {
@@ -24,8 +29,9 @@ export const DecksContainer = () => {
         })
       }
       mergeDecks()
+      let allDecks = [...unfinishedDecks, ...apiDecks]
 
-      setDecks([...unfinishedDecks, ...apiDecks])
+      setDecks(allDecks)
     } catch ({ response }) {
       if (response && response.data) {
         toast.error(response.data)
@@ -34,16 +40,28 @@ export const DecksContainer = () => {
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (search) {
+      setSearchedDecks(decks.filter((deck) => deck.title.toLowerCase().includes(search.toLowerCase())))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search])
   useEffect(() => {
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const decksMap = search ? searchedDecks : decks
   return (
     <Wrapper>
       {isLoading ? (
         <LoadingIcon icon={faSpinner} pulse/>
       ) : (
-        decks.map((deck) => <RinyDeck key={deck._id || deck.id} deck={deck}/>)
+        decksMap.length === 0 ?
+        <NoDecksSpan>There are no decks available</NoDecksSpan>
+        :
+        decksMap.map((deck) => <RinyDeck key={deck._id || deck.id} deck={deck}/>)
       )}
     </Wrapper>
   )
@@ -54,4 +72,9 @@ const Wrapper = styled.div`
   flex-direction: column;
   padding: 4rem 5rem;
   height: auto;
+`
+const NoDecksSpan = styled.span`
+  font-size: 2rem;
+  font-weight: 500;
+  color: ${({theme}) => theme.colors.textColor}
 `

@@ -55,6 +55,7 @@ const FormComponent = ({ isSubmitting, values, unfinishedDeckId, onDelete, path,
       unfinishedDecksService.saveUnfinishedDeck(unfinishedDeckId, unfinishedDeck)
     }, timeoutValue)
     return () => clearTimeout(timeout)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values])
   return <Form autoComplete={'off'}>
     <Header isSubmitting={isSubmitting} path={path} onDelete={onDelete}/>

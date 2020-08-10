@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react'
 
-export const DeckContext = createContext()
+export const DeckContext = createContext(null)
 
 export const DeckProvider = ({ children }) => {
   const [deck, setDeck] = useState({})
