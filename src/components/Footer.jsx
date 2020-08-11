@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import {NavLink} from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 export const Footer = () => {
   return (
     <Wrapper>
       {footerItems.map((item, index) => (
-        <FooterItem item={item} key={index} />
+        <FooterItem item={item} key={index}/>
       ))}
     </Wrapper>
   )
@@ -30,28 +30,28 @@ const Wrapper = styled.div`
 const footerItems = [
   {
     title: 'About',
-    url: '/main',
+    url: '/main'
   },
   {
     title: 'Terms',
-    url: '/terms',
+    url: '/terms'
   },
   {
     title: 'Privacy',
-    url: '/privacy',
+    url: '/privacy'
   },
   {
     title: 'Duolingo',
-    url: '/duolingo',
+    url: '/duolingo'
   },
   {
     title: 'Facebook',
-    url: '/facebook',
+    url: '/facebook'
   },
   {
     title: 'Twitter',
-    url: '/twitter',
-  },
+    url: '/twitter'
+  }
 ]
 
 const NavLinkWrapper = styled(NavLink)`

@@ -1,6 +1,6 @@
-import { ErrorMessage, Field } from 'formik'
-import styled from 'styled-components'
 import React from 'react'
+import styled from 'styled-components'
+import { ErrorMessage, Field } from 'formik'
 
 export const FormInput = (props) => {
   const { type, name, placeholder, margin, fontSize } = props

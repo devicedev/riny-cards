@@ -1,4 +1,4 @@
-import React  from 'react'
+import React from 'react'
 import styled, { css } from 'styled-components'
 
 export const Menu = ({ items, updateMenuItems }) => {
@@ -20,7 +20,11 @@ export const Menu = ({ items, updateMenuItems }) => {
     </Wrapper>
   )
 }
-export const MenuItem = ({ item: { name, active }, onClick }) => <MenuItemWrapper active={active} onClick={() => onClick(name)}>{name}</MenuItemWrapper>
+export const MenuItem = ({ item: { name, active }, onClick }) =>
+  <MenuItemWrapper
+    active={active}
+    onClick={() => onClick(name)}>{name}
+  </MenuItemWrapper>
 
 const Wrapper = styled.div`
   display: flex;

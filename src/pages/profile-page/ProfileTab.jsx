@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faShareSquare, faCog } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faShareSquare } from '@fortawesome/free-solid-svg-icons'
 
 import authService from '../../services/authService'
 
@@ -80,7 +80,7 @@ const Button = styled.button`
   color: ${({ theme }) => theme.colors.primaryColor};
   cursor: pointer;
   outline: none;
-  &:hover{
+  &:hover {
     filter: brightness(95%);
   }
 `

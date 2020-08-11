@@ -7,7 +7,7 @@ function get(deckId, index) {
 }
 
 function send(deckId, questions) {
-  return httpService.post(`${apiEndpoint}/${deckId}`, {questions})
+  return httpService.post(`${apiEndpoint}/${deckId}`, { questions })
 }
 
 export default { get, send }

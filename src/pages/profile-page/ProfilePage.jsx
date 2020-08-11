@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Root } from '../../components'
-import { ProfileTab, DecksTab } from './'
+import { DecksTab, ProfileTab } from './'
 
 export const ProfilePage = () => {
   const content = <>

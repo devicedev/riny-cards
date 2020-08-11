@@ -1,19 +1,19 @@
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
 import { ToastContainer } from 'react-toastify'
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 
 import { ProtectedRoute } from './components'
 import {
-  ProfilePage,
-  DeckPage,
-  LogInPage,
-  SignUpPage,
-  NotFoundPage,
-  LogOutPage,
-  LessonPage,
-  CreatePage,
   ContinuePage,
+  CreatePage,
+  DeckPage,
+  LessonPage,
+  LogInPage,
+  LogOutPage,
+  NotFoundPage,
+  ProfilePage,
+  SignUpPage,
   UpdatePage
 } from './pages'
 

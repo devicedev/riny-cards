@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { RightTab, Menu } from '../../components'
+import { Menu, RightTab } from '../../components'
 import { DecksContainer } from './'
 
 export const DecksTab = () => {

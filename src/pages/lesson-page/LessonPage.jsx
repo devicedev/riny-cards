@@ -294,7 +294,7 @@ const RinyCardCH = ({ style, card, onNext, shouldFocus }) => {
               {index + 1}
             </RinyCardChoiceSpan>
           </RinyCardChoiceSpanWrapper>
-          <RinyCardChoiceText className={'riny-card-choice'}>
+          <RinyCardChoiceText>
             {choice}
           </RinyCardChoiceText>
         </RinyCardChoiceWrapper>
@@ -508,7 +508,7 @@ const RinyCardChoiceWrapper = styled.div`
   if (!clicked) {
     return css`
         &:hover {
-          & > .riny-card-choice {
+          ${RinyCardChoiceText} {
             border: solid 3px ${({ theme }) => theme.colors.primaryColor};
           }
         }
@@ -516,14 +516,14 @@ const RinyCardChoiceWrapper = styled.div`
   } else if (clicked && !correct) {
     return css`
             opacity: .5;
-            & > .riny-card-choice {
+            ${RinyCardChoiceText} {
               border: solid 3px ${({ theme }) => theme.colors.menuTextColor};
               color: ${({ theme }) => theme.colors.menuTextColor}
             }
       `
   } else if (clicked && correct) {
     return css`
-         & > .riny-card-choice {
+         ${RinyCardChoiceText} {
             border: solid 3px ${({ theme }) => theme.colors.primaryColor};
          }
       `

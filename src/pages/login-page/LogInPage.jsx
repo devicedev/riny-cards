@@ -5,18 +5,8 @@ import { toast } from 'react-toastify'
 
 import authService from '../../services/authService'
 
-import {
-  Auth,
-  ContentWrapper,
-  TitleWrapper,
-  SubTitle,
-  LinkWrapper,
-  FormWrapper
-} from '../../components/Auth'
-import {
-  FullButton,
-  FormInput
-} from '../../components'
+import { Auth, ContentWrapper, FormWrapper, LinkWrapper, SubTitle, TitleWrapper } from '../../components/Auth'
+import { FormInput, FullButton } from '../../components'
 
 export const LogInPage = ({ history }) => {
   const handleSubmit = (credentials, { setSubmitting }) => {
