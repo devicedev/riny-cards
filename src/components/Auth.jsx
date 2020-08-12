@@ -15,12 +15,28 @@ export const Auth = (authContent) => {
 
 const Wrapper = styled.div`
   flex: 1;
-  padding: 0 35rem;
+  height: 80vh;
   text-align: center;
-  height: 70vh; 
+  
+  @media (min-width: 320px) and (max-width: 480px) {
+    
+  }
+  @media (min-width: 481px) and (max-width: 767px) {
+    
+  }
+  @media (min-width: 768px) and (max-width: 1024px) {
+
+  }
+  @media (min-width: 1025px) and (max-width: 1280px) {
+  
+  }
+  @media (min-width: 1281px) {
+    padding: 0 35rem;
+  }
+  
 `
 export const ContentWrapper = styled.div`
-  border-radius: 25px;
+  border-radius: 15px;
   background-color: #fff;
   display: flex;
   flex-direction: column;

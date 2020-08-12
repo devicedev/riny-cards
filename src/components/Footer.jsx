@@ -23,34 +23,22 @@ const FooterItem = ({ item: { title, url } }) => {
 
 const Wrapper = styled.div`
   display: flex;
+  position: fixed;
+  bottom: 0;
+  z-index: -1;
   height: 8vh;
   justify-content: center;
   padding: 0 15rem;
+  width: 100%;
 `
 const footerItems = [
   {
     title: 'About',
-    url: '/main'
+    url: '/about'
   },
   {
-    title: 'Terms',
-    url: '/terms'
-  },
-  {
-    title: 'Privacy',
-    url: '/privacy'
-  },
-  {
-    title: 'Duolingo',
-    url: '/duolingo'
-  },
-  {
-    title: 'Facebook',
-    url: '/facebook'
-  },
-  {
-    title: 'Twitter',
-    url: '/twitter'
+    title: 'Donate',
+    url: '/donate'
   }
 ]
 
