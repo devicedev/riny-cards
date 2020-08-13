@@ -44,14 +44,17 @@ export const NavbarSearch = () => {
 }
 
 const Wrapper = styled.div`
-  flex: auto;
-  margin-left: 2rem;
+  flex: 1;
+  margin-left: 1rem;
   margin-right: 5rem;
   padding: 1rem 0;
   background-color: ${({ isFocused, theme }) => (isFocused ? '#FFF' : pSBC(0.3, theme.colors.primaryColor))};
   border-radius: 10px;
   display: flex;
   transition: all 0.5s;
+  @media (min-width: 768px) {
+    margin-left: 2rem;
+  }
 `
 const NavSearchIcon = styled(FontAwesomeIcon)`
   font-size: 2rem;

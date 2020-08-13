@@ -51,6 +51,9 @@ export const DecksContainer = () => {
   useEffect(() => {
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+
+    }
   }, [])
 
   const decksMap = search ? searchedDecks : decks

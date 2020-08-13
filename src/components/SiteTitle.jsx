@@ -2,12 +2,16 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { ReactComponent as Logo } from '../res/new-logo.svg'
+import { useMediaQuery } from 'react-responsive'
+import authService from '../services/authService'
 
 export const SiteTitle = () => {
+  const user = authService.getCurrentUser()
+  const isMobileOrTablet = useMediaQuery({ maxWidth: 1023 })
   return (
     <LinkWrapper to={'/'}>
       <BeneLogo/>
-      <SiteTitleWrapper>rinycards</SiteTitleWrapper>
+      {(!user || !isMobileOrTablet) && <SiteTitleWrapper>rinycards</SiteTitleWrapper>}
     </LinkWrapper>
   )
 }

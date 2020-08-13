@@ -10,7 +10,7 @@ export const RightTab = (content) => {
 }
 
 const Wrapper = styled.div`
-  flex-basis: 75%;
+  flex: 1;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
   border: 1px solid ${({ theme }) => theme.colors.borderColor};
   border-radius: 15px;

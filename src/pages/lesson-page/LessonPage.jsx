@@ -385,7 +385,7 @@ const CloseModal = ({ onClose, onQuit }) => {
 }
 
 const Wrapper = styled.div`
-  height: 70vh;   
+  height: 100%;   
   border-radius: 15px;
   background-color: #FFF;
   width: 100%;
@@ -425,7 +425,7 @@ const RinyCardWrapper = styled(animated.div)`
   outline: none;
   ${({ type }) => type !== 'STANDARD' ? css`
       justify-content: center;
-      padding: 5rem 10rem 12rem 10rem;
+      padding: 7rem 10rem 17rem;
   ` : css`
       justify-content: flex-start;
       flex-direction: column;

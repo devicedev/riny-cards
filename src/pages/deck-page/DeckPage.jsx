@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react'
+import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -26,10 +27,10 @@ export const DeckPageWrapper = () => {
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  const content = <>
+  const content = <Wrapper>
     <DeckInfoTab/>
     <CardsTab/>
-  </>
+  </Wrapper>
   return Root(content)
 }
 export const DeckPage = () => {
@@ -37,3 +38,7 @@ export const DeckPage = () => {
     <DeckPageWrapper/>
   </DeckProvider>
 }
+
+const Wrapper = styled.div`
+  display: flex;
+`

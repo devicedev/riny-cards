@@ -31,7 +31,6 @@ const RootWrapper = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  display: flex;
   flex: 1;
   margin: 8vh 0;
   padding: 2rem;

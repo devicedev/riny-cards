@@ -9,6 +9,14 @@ export const LeftTab = (content) => {
 
 const Wrapper = styled.div`
   flex-basis: 25%;
-  padding-right: 5rem;
   height: auto;
+  margin-bottom: 3rem;
+  @media (min-width: 768px) {
+    padding-right: 3rem;
+    flex-basis: 30%;
+  }
+  @media (min-width: 1024px) {
+    padding-right: 5rem;
+  }
+  
 `

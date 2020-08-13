@@ -1,6 +1,11 @@
 import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
   html {
     font-size: 8px;
     line-height: 1.5rem;
@@ -23,18 +28,11 @@ export const GlobalStyle = createGlobalStyle`
     
     }
   }
-  
-  
   body {
     overflow-x: hidden;
     background-color: ${({ theme }) => theme.colors.backGroundColor};
-    padding: 0;
-    margin: 0;
   }
   
-  * {
-    box-sizing: border-box;
-  }
   .Toastify__toast--success,
   .Toastify__toast--info,
   .Toastify__toast--error {
