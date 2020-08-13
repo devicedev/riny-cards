@@ -7,15 +7,15 @@ export const Footer = () => {
   return (
     <Wrapper>
       {footerItems.map((item, index) => (
-        <FooterItem item={item} key={index}/>
+        <FooterItem item={item} last={index + 1 === footerItems.length ? 1 : 0} key={index}/>
       ))}
     </Wrapper>
   )
 }
 
-const FooterItem = ({ item: { title, url } }) => {
+const FooterItem = ({ last, item: { title, url } }) => {
   return (
-    <NavLinkWrapper to={url}>
+    <NavLinkWrapper to={url} last={last}>
       <FooterItemTitle>{title}</FooterItemTitle>
     </NavLinkWrapper>
   )
@@ -28,8 +28,18 @@ const Wrapper = styled.div`
   z-index: -1;
   height: 8vh;
   justify-content: center;
-  padding: 0 15rem;
   width: 100%;
+  padding: 0 5rem;
+
+  @media (min-width: 768px) {
+    padding: 0 10rem;
+  }
+  @media (min-width: 1024px) {
+    padding: 0 15rem;
+  }
+  @media (min-width: 1281px) {
+    padding: 0 20rem;
+  }
 `
 const footerItems = [
   {
@@ -45,7 +55,7 @@ const footerItems = [
 const NavLinkWrapper = styled(NavLink)`
   display: flex;
   padding: 2rem 0;
-  margin-left: 4rem;
+  margin-right: ${({ last }) => last ? '0' : '4rem'};
   align-items: center;
   font-size: 1.5rem;
   color: ${({ theme }) => theme.colors.menuTextColor};

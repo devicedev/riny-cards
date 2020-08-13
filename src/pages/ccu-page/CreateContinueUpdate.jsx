@@ -20,27 +20,29 @@ import unfinishedDecksService from '../../services/unfinishedDecksService'
 
 export const CreateContinueUpdate = ({ onSubmit, initialValues, unfinishedDeckId, onDelete, path, updatePath, loading = false }) =>
   <Wrapper>
-    {loading ?
-      <LoadingIcon icon={faSpinner} pulse/> :
-      <Formik
-        initialValues={mapToInitialValues(initialValues)}
-        onSubmit={onSubmit}
-        validationSchema={validationSchema}
-        validateOnMount
-      >
-        {({ isSubmitting, values, initialValues }) =>
-          <FormComponent
-            values={values}
-            initialValues={initialValues}
-            isSubmitting={isSubmitting}
-            unfinishedDeckId={unfinishedDeckId}
-            path={path}
-            onDelete={onDelete}
-            updatePath={updatePath}
-          />
-        }
-      </Formik>
-    }
+    <Content>
+      {loading ?
+        <LoadingIcon icon={faSpinner} pulse/> :
+        <Formik
+          initialValues={mapToInitialValues(initialValues)}
+          onSubmit={onSubmit}
+          validationSchema={validationSchema}
+          validateOnMount
+        >
+          {({ isSubmitting, values, initialValues }) =>
+            <FormComponent
+              values={values}
+              initialValues={initialValues}
+              isSubmitting={isSubmitting}
+              unfinishedDeckId={unfinishedDeckId}
+              path={path}
+              onDelete={onDelete}
+              updatePath={updatePath}
+            />
+          }
+        </Formik>
+      }
+    </Content>
   </Wrapper>
 
 const FormComponent = React.memo(({ isSubmitting, values, unfinishedDeckId, onDelete, path, updatePath, initialValues }) => {
@@ -204,7 +206,8 @@ const mapToInitialValues = (deck) => {
 
 const Wrapper = styled.div`
   width: 100%;
-  height: auto;
+`
+const Content = styled.div`
   text-align: center;
   border-radius: 15px;
   background-color: #FFF;

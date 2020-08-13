@@ -2,24 +2,25 @@ import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
   html {
-    font-size: 10px;
+    font-size: 8px;
     line-height: 1.5rem;
     font-family: 'Roboto', sans-serif;
     
-    @media (min-width: 320px) and (max-width: 480px) {
-    
-    }
-    @media (min-width: 481px) and (max-width: 767px) {
-      
-    }
-    @media (min-width: 768px) and (max-width: 1024px) {
-  
-    }
-    @media (min-width: 1025px) and (max-width: 1280px) {
-      
+    @media (min-width: 1024px) {
+      font-size: 9px;
     }
     @media (min-width: 1281px) {
-      
+      font-size: 10px;
+    }
+    
+    @media (min-width: 768px) {
+  
+    }
+    @media (min-width: 1024px) {
+    
+    }
+    @media (min-width: 1281px) {
+    
     }
   }
   

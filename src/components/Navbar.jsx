@@ -12,7 +12,7 @@ import { NavbarSearch } from './'
 
 export const Navbar = () => {
   const user = authService.getCurrentUser()
-  const isMobile = useMediaQuery({ minWidth: 320, maxWidth: 480 })
+  const isMobile = useMediaQuery({ minWidth: 320, maxWidth: 767 })
 
   return <Wrapper>
     <NavbarLeft user={user}/>
@@ -83,43 +83,26 @@ const Wrapper = styled.div`
   display: flex;
   z-index: 100;
   width: 100%;
-  
-  @media (min-width: 320px) and (max-width: 480px) {
-    padding: 0 2rem;
-  }
-  @media (min-width: 481px) and (max-width: 767px) {
-    
-  }
-  @media (min-width: 768px) and (max-width: 1024px) {
+  padding: 0 5rem;
 
+  @media (min-width: 768px) {
+    padding: 0 10rem;
   }
-  @media (min-width: 1025px) and (max-width: 1280px) {
-    
-  }
-  @media (min-width: 1281px) {
+  @media (min-width: 1024px) {
     padding: 0 15rem;
   }
-
+  @media (min-width: 1281px) {
+    padding: 0 20rem;
+  }
 `
 
 const NavLeftWrapper = styled.div`
   flex: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
   
-  @media (min-width: 320px) and (max-width: 480px) {
-    justify-content: center;
-  }
-  @media (min-width: 481px) and (max-width: 767px) {
-    
-  }
-  @media (min-width: 768px) and (max-width: 1024px) {
-
-  }
-  @media (min-width: 1025px) and (max-width: 1280px) {
-    
-  }
-  @media (min-width: 1281px) {
+  @media (min-width: 768px) {
     justify-content: flex-start;
   }
 `

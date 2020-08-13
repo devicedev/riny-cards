@@ -15,23 +15,17 @@ export const Auth = (authContent) => {
 
 const Wrapper = styled.div`
   flex: 1;
-  height: 80vh;
   text-align: center;
+  padding: 2rem 2rem 0;
   
-  @media (min-width: 320px) and (max-width: 480px) {
-    
+  @media (min-width: 768px) {
+    padding: 2rem 15rem 0;
   }
-  @media (min-width: 481px) and (max-width: 767px) {
-    
-  }
-  @media (min-width: 768px) and (max-width: 1024px) {
-
-  }
-  @media (min-width: 1025px) and (max-width: 1280px) {
-  
+  @media (min-width: 1024px) {
+    padding: 2rem 20rem 0;
   }
   @media (min-width: 1281px) {
-    padding: 0 35rem;
+    padding: 2rem 30rem 0;
   }
   
 `
@@ -40,9 +34,14 @@ export const ContentWrapper = styled.div`
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  padding: 5rem 5rem;
   justify-content: center;
   font-size: 1.5rem;
+  padding: 3rem;
+  
+  @media (min-width: 768px) {
+    padding: 5rem;
+  }  
+
 `
 export const TitleWrapper = styled.div`
   font-weight: 500;

@@ -8,36 +8,41 @@ import { SearchProvider } from '../utils/SearchContext'
 export const Root = (content) => {
   return (
     <SearchProvider>
-      <Navbar/>
-      <Content>
-        {content}
-      </Content>
-      <Footer/>
+      <RootWrapper>
+        <Navbar/>
+        <Content>
+          {content}
+        </Content>
+        <Footer/>
+      </RootWrapper>
     </SearchProvider>
   )
 }
 
 const Content = ({ children }) => {
-  return <Wrapper>{children}</Wrapper>
+  return <ContentWrapper>{children}</ContentWrapper>
 }
 
-const Wrapper = styled.div`
+const RootWrapper = styled.div`
   display: flex;
-  margin: 8vh 0;
-  
-  @media (min-width: 320px) and (max-width: 480px) {
-    padding: 2rem;
-  }
-  @media (min-width: 481px) and (max-width: 767px) {
-    
-  }
-  @media (min-width: 768px) and (max-width: 1024px) {
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+`
 
+const ContentWrapper = styled.div`
+  display: flex;
+  flex: 1;
+  margin: 8vh 0;
+  padding: 2rem;
+
+  @media (min-width: 768px) {
+    padding: 2rem 10rem;
   }
-  @media (min-width: 1025px) and (max-width: 1280px) {
-  
+  @media (min-width: 1024px) {
+    padding: 2rem 15rem;
   }
   @media (min-width: 1281px) {
-    padding: 2rem 15rem;
+    padding: 2rem 20rem;
   }
 `
