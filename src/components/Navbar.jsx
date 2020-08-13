@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -28,6 +28,7 @@ const NavbarLeft = ({ user }) => {
 }
 const NavRightBurger = ({ user }) => {
   const [open, setIsOpen] = useState(false)
+  const divRef = useRef()
   const navItems = user ? [
     {
       title: 'HOME',
@@ -56,7 +57,7 @@ const NavRightBurger = ({ user }) => {
       url: '/login'
     }
   ]
-  return <>
+  return <NavRightBurgerWrapper tabIndex={0} ref={divRef} onBlur={() => setIsOpen(false)}>
     <BurgerIconWrapper onClick={() => setIsOpen(open => !open)}>
       <BurgerIcon open={open}>
         <BurgerPart/>
@@ -64,12 +65,12 @@ const NavRightBurger = ({ user }) => {
         <BurgerPart/>
       </BurgerIcon>
     </BurgerIconWrapper>
-    <NavRightBurgerWrapper open={open}>
+    <NavRightBurgerItemsWrapper open={open}>
       {navItems.map((item, index) => (
         <NavItem key={index} item={item} logout={(index + 1 === navItems.length) && user ? 1 : 0}/>
       ))}
-    </NavRightBurgerWrapper>
-  </>
+    </NavRightBurgerItemsWrapper>
+  </NavRightBurgerWrapper>
 }
 const NavbarRight = ({ user }) => {
   const navItems = user ? [
@@ -180,8 +181,8 @@ const NavItemIcon = styled(FontAwesomeIcon)`
 const NavItemTitle = styled.div`
   font-weight: 500;
 `
-
-const NavRightBurgerWrapper = styled.div`
+const NavRightBurgerWrapper = styled.div``
+const NavRightBurgerItemsWrapper = styled.div`
   position: fixed;
   display: flex;
   flex-direction: column;
