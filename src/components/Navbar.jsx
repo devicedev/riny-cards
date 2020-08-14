@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faPlus, faSignInAlt, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons'
 import { useMediaQuery } from 'react-responsive'
-import pSBC from 'shade-blend-color'
 
 import authService from '../services/authService'
 
@@ -57,7 +56,7 @@ const NavRightBurger = ({ user }) => {
       url: '/login'
     }
   ]
-  return <NavRightBurgerWrapper tabIndex={0} ref={divRef} onBlur={() => setIsOpen(false)}>
+  return <NavRightBurgerWrapper tabIndex={0} ref={divRef} /*onBlur={() => setIsOpen(false)}*/>
     <BurgerIconWrapper onClick={() => setIsOpen(open => !open)}>
       <BurgerIcon open={open}>
         <BurgerPart/>
@@ -181,7 +180,9 @@ const NavItemIcon = styled(FontAwesomeIcon)`
 const NavItemTitle = styled.div`
   font-weight: 500;
 `
-const NavRightBurgerWrapper = styled.div``
+const NavRightBurgerWrapper = styled.div`
+  outline: none;
+`
 const NavRightBurgerItemsWrapper = styled.div`
   position: fixed;
   display: flex;
@@ -195,9 +196,11 @@ const NavRightBurgerItemsWrapper = styled.div`
   margin-top: 8vh;
   padding: 2rem;
   background-color: ${({ theme }) => theme.colors.primaryColor};
+  ${({ open }) => open && css`
+    box-shadow: -10px 0 20px -5px rgba(0,0,0,.5);
+  `};
   transform: translateX(${({ open }) => open ? '0' : '100%'});
   transition: all .3s ease-in-out;
-  border-top: 1px solid ${({ theme }) => pSBC(0.3, theme.colors.primaryColor)};
 `
 const BurgerIconWrapper = styled.div`
   position: fixed;
@@ -226,7 +229,7 @@ const BurgerIcon = styled.div`
     transform: rotate(${({ open }) => open ? '53deg' : '0'})
   }
   & > ${BurgerPart}:nth-child(2){
-    transform: translateX(${({ open }) => open ? '100%' : '0'});
+    transform: translateX(${({ open }) => open ? '-100%' : '0'});
     opacity: ${({ open }) => open ? 0 : 1};
   }
   & > ${BurgerPart}:nth-child(3){

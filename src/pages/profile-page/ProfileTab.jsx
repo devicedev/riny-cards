@@ -8,7 +8,6 @@ import authService from '../../services/authService'
 import { LeftTab } from '../../components'
 
 import profile from '../../res/profile.jpg'
-import { useMediaQuery } from 'react-responsive'
 
 export const ProfileTab = () => {
   const { name } = authService.getCurrentUser()

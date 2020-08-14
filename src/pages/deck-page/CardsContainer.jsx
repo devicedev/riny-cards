@@ -51,9 +51,7 @@ const Card = React.memo(({ card }) => {
     transform: transform.interpolate(t => `${t} rotateY(-180deg)`),
     ...calcCardStyle(card.back.length, scale)
   }
-  return <CardWrapper
-    onClick={handleOnClick}
-  >
+  return <CardWrapper onClick={handleOnClick}>
     <CardSide style={frontCardStyle}>
       {card.front}
     </CardSide>
@@ -79,6 +77,10 @@ const CardWrapper = styled.div`
   font-weight: 500;
   position: relative;
   color: ${({ theme }) => theme.colors.textColor};
+  
+  &:nth-child(3n){
+    margin: 0 0 3rem 0;
+  }
 `
 const CardSide = styled(animated.div)`
   display: flex;

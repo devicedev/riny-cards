@@ -18,5 +18,7 @@ const Wrapper = styled.div`
   @media (min-width: 1024px) {
     padding-right: 5rem;
   }
-  
+  @media (min-width: 1281px) {
+    flex-basis: 25%;
+  }
 `

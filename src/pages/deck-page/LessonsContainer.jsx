@@ -61,7 +61,10 @@ const LockedLessonWrapper = styled.div`
     0 6px 0 -1px #eaedf2,
     0 6px 5px rgba(0,0,0,.1),
     0 10px 0 -1px #eaedf2,
-    0 10px 5px rgba(0,0,0,.1)
+    0 10px 5px rgba(0,0,0,.1);
+  &:nth-child(4n){
+    margin: 0 0 2rem 0;
+  }
 `
 const LessonWrapperLink = styled(Link)`
   text-decoration: none;
@@ -72,6 +75,9 @@ const LessonWrapperLink = styled(Link)`
   margin: 0 3rem 2rem 0;
   font-size: 3rem;
   color: ${({ theme }) => theme.colors.textColor};
+  &:nth-child(4n){
+    margin: 0 0 2rem 0;
+  }
 `
 const LessonWrapperLinkContainer = styled.div`
   display: flex;

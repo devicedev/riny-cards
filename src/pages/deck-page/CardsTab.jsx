@@ -30,8 +30,9 @@ export const Container = ({ children }) => {
 export const Wrapper = styled.div`
   display: inline-flex;
   position: relative;
-  padding: 4rem 7rem;
-  height: auto;
+  justify-content: space-evenly;
+  padding: 4rem 5rem;
+  flex: 1;
   flex-wrap: wrap;
   text-align: center;
   max-width: 100%;
