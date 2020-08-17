@@ -23,9 +23,6 @@ const FooterItem = ({ last, item: { title, url } }) => {
 
 const Wrapper = styled.div`
   display: flex;
-  position: fixed;
-  bottom: 0;
-  z-index: -1;
   height: 8vh;
   justify-content: center;
   width: 100%;

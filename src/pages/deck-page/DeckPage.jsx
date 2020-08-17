@@ -40,5 +40,10 @@ export const DeckPage = () => {
 }
 
 const Wrapper = styled.div`
+  min-height: calc(84vh - 4rem);
   display: flex;
+  flex-direction: column;
+  @media (min-width: 1024px) {
+    flex-direction: row;
+  }
 `

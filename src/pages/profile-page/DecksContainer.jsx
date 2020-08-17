@@ -74,8 +74,11 @@ export const DecksContainer = () => {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 4rem 5rem;
   height: auto;
+  padding: 2rem 3rem;
+  @media (min-width: 768px) {
+    padding: 4rem 5rem;
+  }
 `
 const NoDecksSpan = styled.span`
   font-size: 2rem;

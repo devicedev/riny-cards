@@ -49,7 +49,7 @@ const ProfileImgTxtWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     flex-direction: column;
   }
 `
@@ -58,7 +58,7 @@ const ProfileImgWrapper = styled.img`
   border-radius: 50%;
   border: .5rem solid #FFF;
   margin-right: 2rem;
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     height: 15rem;
     margin-right: 0;
   }
@@ -69,7 +69,7 @@ const TextContainer = styled.div`
   justify-content: center;
   width: 100%;
   align-items: flex-start;
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     align-items: center;
   }
 `
@@ -78,7 +78,7 @@ const NameWrapper = styled.div`
   font-weight: 500;
   color: ${({ theme }) => theme.colors.textColor};
   margin-top: 1rem;
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     margin-top: 3rem;
   }
 `
@@ -92,13 +92,13 @@ const FollowersContainer = styled.div`
   font-weight: 500;
   text-align: center;
   width: 100%;
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     justify-content: space-evenly;
   }
 `
 const FollowerSpan = styled.span`
   margin-right: 2rem;
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     margin-right: 0;
   }
 `
@@ -128,7 +128,7 @@ const SettingsIcon = styled(FontAwesomeIcon)`
   font-size: 2rem;
 `
 const SettingsButton = styled(Button)`
-  flex: 5;
+  flex-basis: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -142,6 +142,6 @@ const ShareIcon = styled(FontAwesomeIcon)`
   font-size: 1.8rem;
 `
 const ShareButton = styled(Button)`
-  flex: 1;
+  flex-basis: 20%;
   margin-left: 1rem;
 `

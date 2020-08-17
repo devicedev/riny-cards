@@ -385,10 +385,10 @@ const CloseModal = ({ onClose, onQuit }) => {
 }
 
 const Wrapper = styled.div`
-  height: 100%;   
+  height: calc(84vh - 4rem);
+  width: 100%;
   border-radius: 15px;
   background-color: #FFF;
-  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

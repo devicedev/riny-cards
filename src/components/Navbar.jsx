@@ -165,7 +165,7 @@ const NavLinkWrapper = styled(NavLink)`
     font-size: 1.5rem;
     height: 100%;
     margin-left: 4rem;
-    margin-top: 0;
+    margin-bottom: 0;
     &:hover {
       opacity: .8;
     }

@@ -68,18 +68,43 @@ const NoCardsSpan = styled.span`
 `
 
 const CardWrapper = styled.div`
-  flex-basis: 30%;
+  flex-basis: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 23rem;
-  margin: 0 2rem 3rem 0;
+  height: 30rem;
   font-weight: 500;
   position: relative;
   color: ${({ theme }) => theme.colors.textColor};
-  
-  &:nth-child(3n){
-    margin: 0 0 3rem 0;
+  margin: 2rem;
+  padding: .2rem;
+  @media (min-width: 425px) {
+    height: 35rem;
+    margin: 2rem 5rem;
+  }
+  @media (min-width: 576px){
+    margin: 0 2rem 3rem 0;
+  }
+  @media (min-width: 576px) and (max-width: 767px){
+    flex-basis: 47%;
+    height: 30rem;
+    &:nth-child(2n){
+      margin: 0 0 3rem 0;
+    }  
+  }
+  @media (min-width: 768px) and (max-width: 1023px),(min-width: 1281px) {
+    flex-basis: 30%;
+    height: 25rem;
+    &:nth-child(3n){
+      margin: 0 0 3rem 0;
+    }
+  }
+  @media (min-width: 1024px) and (max-width: 1281px){
+    flex-basis: 47%;
+    height: 25rem;
+    &:nth-child(2n){
+      margin: 0 0 3rem 0;
+    }
   }
 `
 const CardSide = styled(animated.div)`

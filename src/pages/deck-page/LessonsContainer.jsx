@@ -22,7 +22,7 @@ export const LessonsContainer = () => {
             <Image src={lockedLesson}/>
           </LockedLessonWrapper>
           :
-          <LessonWrapperLink key={index} to={`/decks/${deck._id}/${index}`}>
+          <LessonLink key={index} to={`/decks/${deck._id}/${index}`}>
             <LessonWrapperLinkContainer completed={part.progress === 100}>
               {part.progress === 100 ?
                 <Image src={completedLesson}/> :
@@ -38,7 +38,7 @@ export const LessonsContainer = () => {
                 </>
               }
             </LessonWrapperLinkContainer>
-          </LessonWrapperLink>
+          </LessonLink>
       )}
       {!empty && !deck.parts.some(part => part.progress !== 100) &&
       <TrainingButton to={`/decks/${deck._id}/training`}>
@@ -48,11 +48,37 @@ export const LessonsContainer = () => {
     </Container>
   )
 }
-
-const LockedLessonWrapper = styled.div`
-  height: 16rem;
-  flex-basis: 20%;
-  margin: 0 3rem 2rem 0;
+const LessonWrapper = styled.div`
+  height: 11rem;
+  flex-basis: 29%;
+  margin: 0 1.5rem 2rem 0;
+  flex-grow: 0;
+  &:nth-child(3n){
+    margin: 0 0 2rem 0;
+  }
+  @media (min-width: 375px) {
+    flex-basis: 30%;
+    height: 14rem;
+  }
+  @media (min-width: 768px){
+    margin: 0 2.5rem 2rem 0;
+    height: 16rem;
+  }
+  @media (min-width: 768px) and (max-width: 1023px), (min-width: 1281px){
+    flex-basis: 22%;
+    &:nth-child(3n){
+      margin: 0 2.5rem 2rem 0;
+    }
+    &:nth-child(4n){
+      margin: 0 0 2rem 0;
+    }
+  }
+  @media (min-width: 1024px) and (max-width: 1280px){
+    flex-basis: 29%;
+  }
+ 
+`
+const LockedLessonWrapper = styled(LessonWrapper)`
   background-color: #eaedf2;
   border-radius: 15px;
   overflow: hidden;
@@ -62,22 +88,15 @@ const LockedLessonWrapper = styled.div`
     0 6px 5px rgba(0,0,0,.1),
     0 10px 0 -1px #eaedf2,
     0 10px 5px rgba(0,0,0,.1);
-  &:nth-child(4n){
-    margin: 0 0 2rem 0;
-  }
 `
-const LessonWrapperLink = styled(Link)`
-  text-decoration: none;
-  height: 16rem;
+const LessonWrapperLink = styled(LessonWrapper)`
   cursor: pointer;
-  flex-basis: 20%;
   font-weight: bold;
-  margin: 0 3rem 2rem 0;
   font-size: 3rem;
   color: ${({ theme }) => theme.colors.textColor};
-  &:nth-child(4n){
-    margin: 0 0 2rem 0;
-  }
+`
+const LessonLink = styled(LessonWrapperLink)`
+  text-decoration: none;
 `
 const LessonWrapperLinkContainer = styled.div`
   display: flex;
@@ -118,7 +137,13 @@ const Image = styled.img`
   height: 100%;
 `
 const LessonIndex = styled.span`
-  margin-bottom: ${({ center }) => center ? '6.5rem' : '4.5rem'};
+  margin-bottom: ${({ center }) => center ? '4rem' : '1.5rem'};
+  @media (min-width: 375px) {
+    margin-bottom: ${({ center }) => center ? '5rem' : '2.5rem'};
+  }
+  @media (min-width: 768px) {
+    margin-bottom: ${({ center }) => center ? '6.5rem' : '4rem'};
+  }
 `
 const ProgressBarWrapper = styled.div`
   width: 100%;

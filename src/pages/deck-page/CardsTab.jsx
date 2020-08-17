@@ -7,7 +7,8 @@ import { CardsContainer, LessonsContainer } from './'
 import { DeckContext } from '../../utils/DeckContext'
 
 export const CardsTab = () => {
-  const [activeTab, setActiveTab] = useState(<LessonsContainer/>)
+  //todo remove
+  const [activeTab, setActiveTab] = useState(<CardsContainer/>)
   const handleOnChange = (component) => setActiveTab(component)
   const content = <>
     <CardsMenu onChange={handleOnChange}/>
@@ -19,31 +20,30 @@ export const Container = ({ children }) => {
   const { loading: { loading } } = useContext(DeckContext)
   return <>
     {loading ? (
-      <LoadingIconWrapperCards> <LoadingIcon icon={faSpinner} pulse/></LoadingIconWrapperCards>
+      <Wrapper justify={'center'}> <LoadingIcon icon={faSpinner} pulse/></Wrapper>
     ) : (
-      <ContainerWrapper>
+      <Wrapper justify={'flex-start'}>
         {children}
-      </ContainerWrapper>
+      </Wrapper>
     )}
   </>
 }
-export const Wrapper = styled.div`
+const Wrapper = styled.div`
+  flex: 1;
+  width: 100%;
+  flex-direction: row;
   display: inline-flex;
   position: relative;
-  justify-content: space-evenly;
-  padding: 4rem 5rem;
-  flex: 1;
+  justify-content: ${({ justify }) => justify};
   flex-wrap: wrap;
   text-align: center;
-  max-width: 100%;
+  align-items: center;
+  align-content: flex-start;
+  padding: 2rem 3rem;
+  @media (min-width: 768px) {
+    padding: 4rem 5rem;
+  }
 `
-export const ContainerWrapper = styled(Wrapper)`
-  justify-content: flex-start;
-`
-export const LoadingIconWrapperCards = styled(Wrapper)`
-  justify-content: center;
-`
-
 const CardsMenu = ({ onChange }) => {
   const { deck: { deck }, loading: { loading } } = useContext(DeckContext)
   const cardsName = `Cards${loading ? '' : ` (${deck.cards ? deck.cards.length : ''})`}`

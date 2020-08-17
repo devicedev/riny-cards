@@ -24,16 +24,14 @@ const Content = ({ children }) => {
 }
 
 const RootWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+  height: 92vh;
   width: 100vw;
 `
 
 const ContentWrapper = styled.div`
-  flex: 1;
-  margin: 8vh 0;
+  margin-top: 8vh;
   padding: 2rem;
+  min-height: 84vh;
 
   @media (min-width: 768px) {
     padding: 2rem 10rem;
