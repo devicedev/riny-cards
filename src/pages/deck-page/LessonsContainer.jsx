@@ -22,23 +22,25 @@ export const LessonsContainer = () => {
             <Image src={lockedLesson}/>
           </LockedLessonWrapper>
           :
-          <LessonLink key={index} to={`/decks/${deck._id}/${index}`}>
-            <LessonWrapperLinkContainer completed={part.progress === 100}>
-              {part.progress === 100 ?
-                <Image src={completedLesson}/> :
-                <>
-                  <LessonIndex center={part.progress === 0}>
-                    {index + 1}
-                  </LessonIndex>
-                  {part.progress !== 0 &&
-                  <ProgressBarWrapper>
-                    <ProgressBar progress={part.progress} height={'1.5rem'}/>
-                  </ProgressBarWrapper>
-                  }
-                </>
-              }
-            </LessonWrapperLinkContainer>
-          </LessonLink>
+          <LessonWrapperLink key={index}>
+            <LessonLink key={index} to={`/decks/${deck._id}/${index}`}>
+              <LessonWrapperLinkContainer completed={part.progress === 100}>
+                {part.progress === 100 ?
+                  <Image src={completedLesson}/> :
+                  <>
+                    <LessonIndex center={part.progress === 0}>
+                      {index + 1}
+                    </LessonIndex>
+                    {part.progress !== 0 &&
+                    <ProgressBarWrapper>
+                      <ProgressBar progress={part.progress} height={'1.5rem'}/>
+                    </ProgressBarWrapper>
+                    }
+                  </>
+                }
+              </LessonWrapperLinkContainer>
+            </LessonLink>
+          </LessonWrapperLink>
       )}
       {!empty && !deck.parts.some(part => part.progress !== 100) &&
       <TrainingButton to={`/decks/${deck._id}/training`}>
@@ -93,10 +95,10 @@ const LessonWrapperLink = styled(LessonWrapper)`
   cursor: pointer;
   font-weight: bold;
   font-size: 3rem;
-  color: ${({ theme }) => theme.colors.textColor};
 `
-const LessonLink = styled(LessonWrapperLink)`
+const LessonLink = styled(Link)`
   text-decoration: none;
+  color: ${({ theme }) => theme.colors.textColor};
 `
 const LessonWrapperLinkContainer = styled.div`
   display: flex;
