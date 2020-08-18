@@ -7,8 +7,7 @@ import { CardsContainer, LessonsContainer } from './'
 import { DeckContext } from '../../utils/DeckContext'
 
 export const CardsTab = () => {
-  //todo remove
-  const [activeTab, setActiveTab] = useState(<CardsContainer/>)
+  const [activeTab, setActiveTab] = useState(<LessonsContainer/>)
   const handleOnChange = (component) => setActiveTab(component)
   const content = <>
     <CardsMenu onChange={handleOnChange}/>
@@ -55,7 +54,7 @@ const CardsMenu = ({ onChange }) => {
     },
     {
       name: cardsName,
-      change: () => onChange(<CardsContainer/>),
+      change: () => !loading && onChange(<CardsContainer/>),
       active: false
     }
   ]

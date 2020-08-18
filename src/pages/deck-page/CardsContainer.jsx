@@ -71,17 +71,23 @@ const CardWrapper = styled.div`
   flex-basis: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
   height: 30rem;
+  align-items: center;
   font-weight: 500;
   position: relative;
   color: ${({ theme }) => theme.colors.textColor};
   margin: 2rem;
   padding: .2rem;
-  @media (min-width: 425px) {
+  @media (min-width: 375px) {
     height: 35rem;
+  }
+  @media (min-width: 425px) {
     margin: 2rem 5rem;
   }
+  @media (min-width: 525px) {
+    margin: 2rem 10rem;
+  }
+
   @media (min-width: 576px){
     margin: 0 2rem 3rem 0;
   }
