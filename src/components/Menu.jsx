@@ -32,7 +32,6 @@ const Wrapper = styled.div`
   @media (min-width: 1024px) {
     justify-content: flex-start;
   }
-  
 `
 
 const MenuItemWrapper = styled.div`
@@ -69,5 +68,4 @@ const MenuItemWrapper = styled.div`
       margin-right: 0;
     }
   }
-
 `

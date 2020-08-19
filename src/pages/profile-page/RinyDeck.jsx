@@ -95,7 +95,6 @@ const NumberOfCardsWrapper = styled.div`
   @media (min-width: 768px) {
     margin-bottom: 2rem;
   }
-
 `
 const NumberOfCardsSpan = styled.span`
   margin-left: 1rem;

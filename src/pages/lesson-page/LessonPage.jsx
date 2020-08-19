@@ -10,6 +10,7 @@ import lessonService from '../../services/lessonService'
 import { calcCardStyle } from '../../utils'
 
 import { EmptyButton, FullButton, LoadingIcon, ProgressBar, Root } from '../../components'
+import { useMediaQuery } from 'react-responsive'
 
 export const LessonPage = () => {
   const { params: { id, lesson: lessonIndex } } = useRouteMatch()
@@ -134,21 +135,37 @@ export const LessonPage = () => {
     onStart: (_, phase) => phase === 'enter' && setShouldFocus(index === 0),
     onRest: (_, phase) => phase === 'leave' && setShouldFocus(true)
   })
+  const isTouchable = useMediaQuery({ maxWidth: 1023 })
+  const progressBarHeight = isTouchable ? '1.5rem' : '1rem'
 
+  const isMobile = useMediaQuery({ maxWidth: 425 })
+  const isTablet = useMediaQuery({ maxWidth: 768 })
+  const isSmallLaptop = useMediaQuery({ maxWidth: 1024 })
+  let args
+  if (isMobile) {
+    args = [100]
+  } else if (isTablet) {
+    args = [100, 3, 5]
+  } else if (isSmallLaptop) {
+    args = [80]
+  } else {
+    args = [90]
+  }
   const content = <Wrapper>
     {isLoading ?
-      <LoadingIcon style={{ fontSize: '10rem' }} icon={faSpinner} pulse/>
+      <LessonPageIcon icon={faSpinner} pulse/>
       : <>
         <ProgressBarContainer>
           <ProgressBarCloseIcon onClick={handleCloseModal} icon={faTimes}/>
           <ProgressBarWrapper>
-            <ProgressBar progress={progress} height={'1rem'}/>
+            <ProgressBar progress={progress} height={progressBarHeight}/>
           </ProgressBarWrapper>
         </ProgressBarContainer>
         <CardsSlider>
           {transitions.map(({ item, props, key }) => {
             const card = lesson[item]
             let component
+            const cardStyle = calcCardStyle(card.front.length, ...args)
             switch (card.type) {
               case 'STANDARD':
                 component = <RinyCardSTD
@@ -166,6 +183,7 @@ export const LessonPage = () => {
                   card={card}
                   onNext={handleOnNext}
                   shouldFocus={shouldFocus}
+                  cardStyle={cardStyle}
                 />
                 break
               default:
@@ -175,6 +193,7 @@ export const LessonPage = () => {
                   card={card}
                   onNext={handleOnNext}
                   shouldFocus={shouldFocus}
+                  cardStyle={cardStyle}
                   fail={fail}
                   valueProp={value}
                 />
@@ -200,7 +219,7 @@ const RinyCardSTD = ({ style, card, onNext, shouldFocus }) => {
     transform: `perspective(900px) rotateY(${flipped ? -180 : 0}deg)`,
     config: { mass: 5, tension: 600, friction: 80 }
   })
-  const scale = 100
+  const scale = 90
   const frontCardStyle = {
     opacity: opacity.interpolate(o => 1 - o * 3),
     transform,
@@ -229,8 +248,14 @@ const RinyCardSTD = ({ style, card, onNext, shouldFocus }) => {
     divRef.current.focus()
   }, [])
 
-  return <RinyCardWrapper type={card.type} style={style} tabIndex={0} ref={divRef}
-                          onKeyDown={shouldFocus ? handleOnKeyDown : null}>
+  const isTouchable = useMediaQuery({ maxWidth: 1023 })
+
+  return <RinyCardWrapperSTD
+    style={style}
+    tabIndex={0}
+    ref={divRef}
+    onKeyDown={shouldFocus ? handleOnKeyDown : null}
+  >
     <NewCardLabel>New Card</NewCardLabel>
     <CardSTD onClick={handleCardClick}>
       <CardSide style={frontCardStyle}>
@@ -242,22 +267,36 @@ const RinyCardSTD = ({ style, card, onNext, shouldFocus }) => {
     </CardSTD>
     {firstFlipped ?
       <>
-        <FullButton onClick={handleButtonClick} width={'25%'} fontSize={'1.5rem'}>Continue</FullButton>
-        <SpaceLabel>Press <SpecialSpan>ENTER</SpecialSpan> to continue</SpaceLabel>
+        <LessonPageContinueFullButton onClick={handleButtonClick}>Continue</LessonPageContinueFullButton>
+        {!isTouchable && <SpaceLabel>Press <SpecialSpan>ENTER</SpecialSpan> to continue</SpaceLabel>}
       </>
       :
-      <SpaceLabel>Click card or press <SpecialSpan>SPACE</SpecialSpan> to flip</SpaceLabel>
+      <SpaceLabel>Click card {!isTouchable && <>or press <SpecialSpan>SPACE</SpecialSpan></>} to flip</SpaceLabel>
     }
-  </RinyCardWrapper>
+  </RinyCardWrapperSTD>
 }
-const RinyCardCH = ({ style, card, onNext, shouldFocus }) => {
+const RinyCardCH = ({ style, card, onNext, shouldFocus, cardStyle }) => {
   const [choices, setChoices] = useState(card.choices.map((choice) => ({
     choice,
     clicked: false,
     correct: choice === card.back
   })))
 
-  const cardStyle = calcCardStyle(card.front.length, 100)
+  let choiceScale
+
+  const isMobile = useMediaQuery({ maxWidth: 425 })
+  const isTablet = useMediaQuery({ maxWidth: 768 })
+  const isSmallLaptop = useMediaQuery({ maxWidth: 1024 })
+
+  if (isMobile) {
+    choiceScale = 40
+  } else if (isTablet) {
+    choiceScale = 60
+  } else if (isSmallLaptop) {
+    choiceScale = 80
+  } else {
+    choiceScale = 80
+  }
 
   const divRef = useRef()
 
@@ -275,41 +314,40 @@ const RinyCardCH = ({ style, card, onNext, shouldFocus }) => {
     divRef.current.focus()
   }, [])
 
-  return <RinyCardWrapper style={style} tabIndex={0} ref={divRef} onKeyDown={shouldFocus ? handleOnKeyDown : null}>
-    <CardCH style={cardStyle}>
+  return <RinyCardWrapperCHFB style={style} tabIndex={0} ref={divRef} onKeyDown={shouldFocus ? handleOnKeyDown : null}>
+    <Card style={cardStyle}>
       {card.front}
-    </CardCH>
+    </Card>
     <RinyCardChoiceContainer>
-      {choices.map(({ choice, clicked, correct }, index) =>
-        <RinyCardChoiceWrapper
-          style={calcCardStyle(choice.length, 50)}
-          clicked={clicked}
-          correct={correct}
-          key={index}
-          last={index === card.choices.length - 1}
-          onClick={() => handleOnClick(index)}
-        >
-          <RinyCardChoiceSpanWrapper>
-            <RinyCardChoiceSpan>
-              {index + 1}
-            </RinyCardChoiceSpan>
-          </RinyCardChoiceSpanWrapper>
-          <RinyCardChoiceText>
-            {choice}
-          </RinyCardChoiceText>
-        </RinyCardChoiceWrapper>
+      {choices.map(({ choice, clicked, correct }, index) => {
+          return <RinyCardChoiceWrapper
+            style={calcCardStyle(choice.length, choiceScale)}
+            clicked={clicked}
+            correct={correct}
+            key={index}
+            onClick={() => handleOnClick(index)}
+          >
+            <RinyCardChoiceSpanWrapper>
+              <RinyCardChoiceSpan>
+                {index + 1}
+              </RinyCardChoiceSpan>
+            </RinyCardChoiceSpanWrapper>
+            <RinyCardChoiceText>
+              {choice}
+            </RinyCardChoiceText>
+          </RinyCardChoiceWrapper>
+        }
       )}
     </RinyCardChoiceContainer>
-  </RinyCardWrapper>
+  </RinyCardWrapperCHFB>
 }
-const RinyCardFB = ({ style, card, onNext, shouldFocus, fail, valueProp }) => {
+const RinyCardFB = ({ style, card, onNext, shouldFocus, cardStyle, fail, valueProp }) => {
   const [answer, setAnswer] = useState('')
   const [loaded, setLoaded] = useState(false)
 
   const inputRef = useRef()
 
   const value = valueProp || fail ? card.back : answer
-  const cardStyle = calcCardStyle(card.front.length, 100)
 
   const handleChange = (e) => !fail && setAnswer(e.currentTarget.value)
   const handleKeyDown = ({ key }) => {
@@ -337,10 +375,12 @@ const RinyCardFB = ({ style, card, onNext, shouldFocus, fail, valueProp }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldFocus])
 
-  return <RinyCardWrapper style={style}>
-    <CardFB style={cardStyle}>
+  const isTouchable = useMediaQuery({ maxWidth: 1023 })
+
+  return <RinyCardWrapperCHFB style={style}>
+    <Card style={cardStyle}>
       {card.front}
-    </CardFB>
+    </Card>
     <TextFieldContainer>
       <CardInputWrapper disabled={fail}>
         <CardInput
@@ -359,13 +399,14 @@ const RinyCardFB = ({ style, card, onNext, shouldFocus, fail, valueProp }) => {
       <IdkButtonWrapper fail={fail}>
         {fail &&
         <ContinueLabel onClick={loaded ? handleLabelClick : null}>
-          Press <SpecialSpanFB>R</SpecialSpanFB> to mark as right
+          {!isTouchable ? <> Press <SpecialSpanFB>R</SpecialSpanFB> </> : <>Click </>}
+          to mark as right
         </ContinueLabel>
         }
         <IdkButton onClick={loaded ? handleIdkClick : null}>I don't know</IdkButton>
       </IdkButtonWrapper>
     </TextFieldContainer>
-  </RinyCardWrapper>
+  </RinyCardWrapperCHFB>
 }
 const CloseModal = ({ onClose, onQuit }) => {
   return <CloseModalOverlay>
@@ -377,8 +418,8 @@ const CloseModal = ({ onClose, onQuit }) => {
         Are you sure you want to quit?
       </CloseModalQuestion>
       <ButtonsContainer>
-        <FullButton marginRight={'0.5rem'} onClick={onQuit}>Quit</FullButton>
-        <EmptyButton marginLeft={'0.5rem'} onClick={onClose}>Cancel</EmptyButton>
+        <ModalFullButton onClick={onQuit}>Quit</ModalFullButton>
+        <ModalEmptyButton onClick={onClose}>Cancel</ModalEmptyButton>
       </ButtonsContainer>
     </CloseModalWrapper>
   </CloseModalOverlay>
@@ -394,6 +435,9 @@ const Wrapper = styled.div`
   justify-content: center;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
 `
+const LessonPageIcon = styled(LoadingIcon)`
+  font-size: 10rem;
+`
 const ProgressBarContainer = styled.div`
   display: flex;
   flex-basis: 10%;
@@ -402,15 +446,21 @@ const ProgressBarContainer = styled.div`
   justify-content: center;
 `
 const ProgressBarCloseIcon = styled(FontAwesomeIcon)`
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: ${({ theme }) => theme.colors.menuTextColor};
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
 `
 const ProgressBarWrapper = styled.div`
   flex: 1;
-  margin-left: 3rem;
+  margin-left: 1.5rem;
+  @media (min-width: 768px){
+    margin-left: 3rem;
+  }
 `
 const CardsSlider = styled.div`
-  flex-basis: 90%;
+  flex: 1;
   position: relative;
   width: 100%;
   overflow-x: hidden;
@@ -423,15 +473,25 @@ const RinyCardWrapper = styled(animated.div)`
   align-items: center;
   will-change: transform, opacity;
   outline: none;
-  ${({ type }) => type !== 'STANDARD' ? css`
-      justify-content: center;
-      padding: 7rem 10rem 17rem;
-  ` : css`
-      justify-content: flex-start;
-      flex-direction: column;
-  `};
 `
 
+const RinyCardWrapperSTD = styled(RinyCardWrapper)`
+  flex-direction: column;
+  padding: 0 12vw 2rem;
+  justify-content: flex-start;
+  @media (min-width: 425px){
+    padding: 0 18vw 2rem;
+  }
+  @media (min-width: 768px) {
+    padding: 0 22vw 2rem;
+  }
+  @media (min-width: 1024px){
+    padding: 0 24vw 2rem;
+  }
+  @media (min-width: 1400px){
+    padding: 0 26vw 2rem;
+  }
+`
 const NewCardLabel = styled.span`
   color: ${({ theme }) => theme.colors.progressBarFillColor};
   text-transform: uppercase;
@@ -440,8 +500,8 @@ const NewCardLabel = styled.span`
   margin-bottom: 1.5rem;
 `
 const CardSTD = styled.div`
-  width: 25%;
-  height: 65%;
+  width: 100%;
+  height: 35vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -449,6 +509,9 @@ const CardSTD = styled.div`
   font-weight: 500;
   position: relative;
   color: ${({ theme }) => theme.colors.textColor};
+  @media (min-width: 768px) {
+    height: 40vh;
+  }
 `
 const CardSide = styled(animated.div)`
   display: flex;
@@ -468,6 +531,10 @@ const SpecialSpan = styled.span`
   border: 2px solid ${({ theme }) => theme.colors.menuTextColor};
   padding: .4rem;
 `
+const LessonPageContinueFullButton = styled(FullButton)`
+  width: 100%;
+  font-size: 1.5rem;
+`
 const SpaceLabel = styled.span`
   margin-top: 2rem;
   font-size: 1.5rem;
@@ -475,11 +542,25 @@ const SpaceLabel = styled.span`
   color: ${({ theme }) => theme.colors.menuTextColor}
 `
 
-const CardCH = styled.div`
+const RinyCardWrapperCHFB = styled(RinyCardWrapper)`
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 2rem;
+  @media (min-width: 1024px) {
+    justify-content: center;
+    flex-direction: row;
+    padding: 10rem 5rem 22rem;
+  }
+  @media (min-width: 1281px){
+    padding: 7rem 10rem 17rem;
+  }
+`
+
+const Card = styled.div`
   background-color: #FFF;
   border-radius: 30px;
-  flex-basis: 30%;
-  height: 100%;
+  min-height: 35vh;
+  width: 70vw;
   box-shadow: 0 3px 10px 0 rgba(0,0,0,.18);
   display: flex;
   justify-content: center;
@@ -487,46 +568,65 @@ const CardCH = styled.div`
   font-weight: 500;
   padding: 2rem;
   text-align: center;
-  color: ${({ theme }) => theme.colors.textColor}
+  color: ${({ theme }) => theme.colors.textColor};
+  @media (min-width: 768px){
+    min-height: 40vh;
+    width: 40vw;
+  }
+  @media (min-width: 1024px){
+    flex-basis: 35%;
+    height: 100%;
+  }
+  @media (min-width: 1281px){
+    flex-basis: 30%;
+  }
 `
 const RinyCardChoiceContainer = styled.div`
-  flex-basis: 70%;
-  height: 100%;
-  margin-left: 4rem;
+  flex: 1;
+  width: 100%;
   display: flex;
+  margin-top: 4rem;
   justify-content: center;
   flex-direction: column;
   font-size: 2rem;
-  padding: 1rem;
+  padding: 0 1rem 2rem;
+  @media (min-width: 1024px){
+    height: 100%;
+    margin: 0 0 0 4rem;
+    padding: 2rem;
+  }
 `
 const RinyCardChoiceWrapper = styled.div`
-  flex-basis: 33% ;
+  flex-basis: 33%;
   display: flex;
   width: 100%;
-  margin-bottom: ${({ last }) => last ? '0' : '2rem'};
+  margin-bottom: 2rem;
+  &:last-child{
+    margin-bottom: 0;
+  }
   ${({ clicked, correct }) => {
   if (!clicked) {
     return css`
-        &:hover {
-          ${RinyCardChoiceText} {
-            border: solid 3px ${({ theme }) => theme.colors.primaryColor};
-          }
+      &:hover {
+        ${RinyCardChoiceText} {
+          border: solid 3px ${({ theme }) => theme.colors.primaryColor};
         }
-      `
+      }
+    `
   } else if (clicked && !correct) {
     return css`
-            opacity: .5;
-            ${RinyCardChoiceText} {
-              border: solid 3px ${({ theme }) => theme.colors.menuTextColor};
-              color: ${({ theme }) => theme.colors.menuTextColor}
-            }
-      `
+      opacity: .5;
+      ${RinyCardChoiceText} {
+        border: solid 3px ${({ theme }) => theme.colors.menuTextColor};
+        color: ${({ theme }) => theme.colors.menuTextColor}
+      }
+    `
   } else if (clicked && correct) {
     return css`
-         ${RinyCardChoiceText} {
-            border: solid 3px ${({ theme }) => theme.colors.primaryColor};
-         }
-      `
+       ${RinyCardChoiceText} {
+          border: solid 3px ${({ theme }) => theme.colors.primaryColor};
+       }
+    `
   }
 }};
 `
@@ -553,28 +653,20 @@ const RinyCardChoiceText = styled.div`
   padding: 1rem;
 `
 
-const CardFB = styled.div`
-  background-color: #FFF;
-  border-radius: 30px;
-  flex-basis: 30%;
-  height: 100%;
-  box-shadow: 0 2px 20px 0 rgba(0,0,0,.1);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 500;
-  padding: 2rem;
-  text-align: center;
-  color: ${({ theme }) => theme.colors.textColor}
-`
 const TextFieldContainer = styled.div`
-  flex-basis: 70%;
-  margin-left: 4rem;
+  flex: 1;
   display: flex;
+  width: 70vw;
   justify-content: center;
   align-items: flex-end;
   flex-direction: column;
   font-size: 2rem;
+  @media (min-width: 768px){
+    width: 60vw;
+  }
+  @media (min-width: 1024px){
+    margin: 0 0 0 4rem;
+  }
 `
 const CardInputWrapper = styled.div`
   width: 100%;
@@ -611,6 +703,7 @@ const IdkButtonWrapper = styled.div`
 const ContinueLabel = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
+  margin-right: 1rem;
   color: ${({ theme }) => theme.colors.menuTextColor}
 `
 const SpecialSpanFB = styled.span`
@@ -657,6 +750,12 @@ const CloseModalQuestion = styled.div`
 const ButtonsContainer = styled.div`
   display: flex;
   font-size: 1.3rem;
+`
+const ModalFullButton = styled(FullButton)`
+  margin-right: .5rem;
+`
+const ModalEmptyButton = styled(EmptyButton)`
+  margin-left: .5rem;
 `
 const CloseModalIconWrapper = styled.div`
   width: 100%;

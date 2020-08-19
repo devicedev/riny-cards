@@ -124,7 +124,6 @@ const Wrapper = styled.div`
   z-index: 100;
   width: 100%;
   padding: 0 5rem;
-
   @media (min-width: 768px) {
     padding: 0 10rem;
   }
@@ -155,12 +154,10 @@ const NavLinkWrapper = styled(NavLink)`
   cursor: pointer;
   text-decoration: none;
   margin-bottom: 4rem;
-  
   ${({ logout }) => logout && css`
     position: fixed;
     bottom: 8vh;
   `};
-  
   @media (min-width: 768px) {
     font-size: 1.5rem;
     height: 100%;

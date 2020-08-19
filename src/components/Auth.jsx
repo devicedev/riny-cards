@@ -17,7 +17,6 @@ const Wrapper = styled.div`
   flex: 1;
   text-align: center;
   padding: 2rem 2rem 0;
-  
   @media (min-width: 768px) {
     padding: 2rem 15rem 0;
   }
@@ -37,7 +36,6 @@ export const ContentWrapper = styled.div`
   justify-content: center;
   font-size: 1.5rem;
   padding: 3rem;
-  
   @media (min-width: 768px) {
     padding: 5rem;
   }  

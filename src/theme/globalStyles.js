@@ -10,7 +10,6 @@ export const GlobalStyle = createGlobalStyle`
     font-size: 8px;
     line-height: 1.5rem;
     font-family: 'Roboto', sans-serif;
-    
     @media (min-width: 1024px) {
       font-size: 9px;
     }

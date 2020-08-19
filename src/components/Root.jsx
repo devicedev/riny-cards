@@ -32,7 +32,6 @@ const ContentWrapper = styled.div`
   margin-top: 8vh;
   padding: 2rem;
   min-height: 84vh;
-
   @media (min-width: 768px) {
     padding: 2rem 10rem;
   }

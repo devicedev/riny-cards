@@ -19,7 +19,7 @@ export const Container = ({ children }) => {
   const { loading: { loading } } = useContext(DeckContext)
   return <>
     {loading ? (
-      <Wrapper justify={'center'}> <LoadingIcon icon={faSpinner} pulse/></Wrapper>
+      <Wrapper justify={'center'}><LoadingIcon icon={faSpinner} pulse/></Wrapper>
     ) : (
       <Wrapper justify={'flex-start'}>
         {children}

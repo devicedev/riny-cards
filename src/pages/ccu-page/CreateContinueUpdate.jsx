@@ -20,29 +20,27 @@ import unfinishedDecksService from '../../services/unfinishedDecksService'
 
 export const CreateContinueUpdate = ({ onSubmit, initialValues, unfinishedDeckId, onDelete, path, updatePath, loading = false }) =>
   <Wrapper>
-    <Content>
-      {loading ?
-        <LoadingIcon icon={faSpinner} pulse/> :
-        <Formik
-          initialValues={mapToInitialValues(initialValues)}
-          onSubmit={onSubmit}
-          validationSchema={validationSchema}
-          validateOnMount
-        >
-          {({ isSubmitting, values, initialValues }) =>
-            <FormComponent
-              values={values}
-              initialValues={initialValues}
-              isSubmitting={isSubmitting}
-              unfinishedDeckId={unfinishedDeckId}
-              path={path}
-              onDelete={onDelete}
-              updatePath={updatePath}
-            />
-          }
-        </Formik>
-      }
-    </Content>
+    {loading ?
+      <LoadingIcon icon={faSpinner} pulse/> :
+      <Formik
+        initialValues={mapToInitialValues(initialValues)}
+        onSubmit={onSubmit}
+        validationSchema={validationSchema}
+        validateOnMount
+      >
+        {({ isSubmitting, values, initialValues }) =>
+          <FormComponent
+            values={values}
+            initialValues={initialValues}
+            isSubmitting={isSubmitting}
+            unfinishedDeckId={unfinishedDeckId}
+            path={path}
+            onDelete={onDelete}
+            updatePath={updatePath}
+          />
+        }
+      </Formik>
+    }
   </Wrapper>
 
 const FormComponent = React.memo(({ isSubmitting, values, unfinishedDeckId, onDelete, path, updatePath, initialValues }) => {
@@ -99,7 +97,8 @@ const Header = React.memo(({ isSubmitting, path, onDelete }) => {
     </MainContainer>
     <SubmitContainer>
       <FullButtonWrapper>
-        <FullButton type={'submit'} disabled={isSubmitting}>{path === 'update' ? 'Update' : 'Create'}</FullButton>
+        <FullButton type={'submit'}
+                    disabled={isSubmitting}>{path === 'update' ? 'Update' : 'Create'}</FullButton>
       </FullButtonWrapper>
     </SubmitContainer>
   </HeaderWrapper>
@@ -206,15 +205,12 @@ const mapToInitialValues = (deck) => {
 
 const Wrapper = styled.div`
   width: 100%;
-`
-const Content = styled.div`
   text-align: center;
   border-radius: 15px;
   background-color: #FFF;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1), 0 0 25px 0 rgba(0, 0, 0, 0.04);
   padding: 3.5rem 3rem;
 `
-
 const HeaderWrapper = styled.div`
   width: 100%;
   height: 20vh;
